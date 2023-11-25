@@ -9,6 +9,8 @@ import UIKit
 import SnapKit
 
 final class MainTrackerViewController: UIViewController {
+    var categories: [TrackerCategory] = []
+    var completedTrackers: [TrackerRecord] = []
 
     // MARK: - UI
     private lazy var navBarTitle: UILabel = {
