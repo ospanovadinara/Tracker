@@ -1,5 +1,5 @@
 //
-//  MainStatisticsViewController.swift
+//  StatisticsViewController.swift
 //  Tracker
 //
 //  Created by Dinara on 23.11.2023.
