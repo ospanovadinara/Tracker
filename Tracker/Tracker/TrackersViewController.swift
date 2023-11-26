@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class MainTrackerViewController: UIViewController {
+final class TrackersViewController: UIViewController {
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
 
@@ -23,11 +23,20 @@ final class MainTrackerViewController: UIViewController {
     }()
 
     private lazy var navBarButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(image: UIImage(named: "plus_icon"),
-                                     style: .plain,
-                                     target: self,
-                                     action: #selector(navBarButtonTapped))
+        let button = UIBarButtonItem(
+            image: UIImage(named: "plus_icon"),
+            style: .plain,
+            target: self,
+            action: #selector(navBarButtonTapped)
+        )
         return button
+    }()
+
+    private lazy var datePicker: UIDatePicker = {
+        let datePicker = UIDatePicker()
+        datePicker.datePickerMode = .date
+        datePicker.preferredDatePickerStyle = .compact
+        return datePicker
     }()
 
     override func viewDidLoad() {
@@ -39,7 +48,8 @@ final class MainTrackerViewController: UIViewController {
 
     private func setupNavigationBar() {
         navigationItem.leftBarButtonItem = navBarButton
-        let navigationController = UINavigationController(rootViewController: MainTrackerViewController())
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
+        let navigationController = UINavigationController(rootViewController: TrackersViewController())
     }
 
     private func setupViews() {
@@ -48,7 +58,7 @@ final class MainTrackerViewController: UIViewController {
 
     private func setupConstraints() {
         navBarTitle.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(88)
+            make.top.equalToSuperview().offset(93)
             make.leading.equalToSuperview().offset(16)
             make.height.equalTo(41)
         }

@@ -16,8 +16,8 @@ final class MainTabBarViewController: UITabBarController {
 
     private func setupTabBar() {
         view.backgroundColor = .systemBackground
-        let tracker = UINavigationController(rootViewController: MainTrackerViewController())
-        let statistics = UINavigationController(rootViewController: MainStatisticsViewController())
+        let tracker = UINavigationController(rootViewController: TrackersViewController())
+        let statistics = UINavigationController(rootViewController: StatisticsViewController())
         tracker.tabBarItem = tabItem(for: .tracker, title: "Трекеры")
         statistics.tabBarItem = tabItem(for: .statistics, title: "Статистика")
         setViewControllers([tracker, statistics], animated: true)

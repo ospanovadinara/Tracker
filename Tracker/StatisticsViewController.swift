@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MainStatisticsViewController: UIViewController {
+class StatisticsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
