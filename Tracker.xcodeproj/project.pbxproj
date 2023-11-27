@@ -55,15 +55,39 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2791E1312B121C030045E6C2 /* Tracker */ = {
+		2702DC152B14B19500F1491D /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				27936A372B120AEA00514242 /* Tracker.swift */,
 				27936A3B2B120B2900514242 /* TrackerRecord.swift */,
 				27936A392B120B0600514242 /* TrackerCategory.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		2702DC162B14B1A600F1491D /* View */ = {
+			isa = PBXGroup;
+			children = (
 				27C07F1E2B13879600FBFBEC /* TrackersCell.swift */,
-				27AA2B0A2B0F8D7A0073F156 /* TrackersViewController.swift */,
 				2702DC132B14AFA900F1491D /* TrackersEmptyView.swift */,
+				27AA2B0A2B0F8D7A0073F156 /* TrackersViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		2702DC172B14B22900F1491D /* Statistics */ = {
+			isa = PBXGroup;
+			children = (
+				27AA2B202B0F99EE0073F156 /* StatisticsViewController.swift */,
+			);
+			path = Statistics;
+			sourceTree = "<group>";
+		};
+		2791E1312B121C030045E6C2 /* Tracker */ = {
+			isa = PBXGroup;
+			children = (
+				2702DC152B14B19500F1491D /* Model */,
+				2702DC162B14B1A600F1491D /* View */,
 			);
 			path = Tracker;
 			sourceTree = "<group>";
@@ -90,7 +114,7 @@
 				27AA2B1D2B0F97E50073F156 /* App */,
 				27AA2B1C2B0F97D70073F156 /* TabBar */,
 				2791E1312B121C030045E6C2 /* Tracker */,
-				27AA2B202B0F99EE0073F156 /* StatisticsViewController.swift */,
+				2702DC172B14B22900F1491D /* Statistics */,
 				27AA2B0F2B0F8D7C0073F156 /* Assets.xcassets */,
 				27AA2B112B0F8D7C0073F156 /* LaunchScreen.storyboard */,
 				27AA2B142B0F8D7C0073F156 /* Info.plist */,

@@ -27,13 +27,10 @@ final class TrackersViewController: UIViewController {
         return title
     }()
 
-    private lazy var navBarButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(
-            image: UIImage(named: "plus_icon"),
-            style: .plain,
-            target: self,
-            action: #selector(navBarButtonTapped)
-        )
+    private lazy var navBarButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "plus_icon"), for: .normal)
+        button.addTarget(self, action: #selector(navBarButtonTapped), for: .touchUpInside)
         return button
     }()
 
@@ -66,6 +63,7 @@ final class TrackersViewController: UIViewController {
 
     private lazy var emptyView: TrackersEmptyView = {
         let view = TrackersEmptyView()
+        return view
     }()
 
     // MARK: - Lifecycle
@@ -78,15 +76,16 @@ final class TrackersViewController: UIViewController {
 
     // MARK: - Setup NavigationBar
     private func setupNavigationBar() {
-        navigationItem.leftBarButtonItem = navBarButton
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navBarButton)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
         let navigationController = UINavigationController(rootViewController: TrackersViewController())
     }
 
     // MARK: - Setup Views
     private func setupViews() {
-        [navBarTitle,
-         collectionView].forEach {
+        [collectionView,
+         navBarTitle
+        ].forEach {
             view.addSubview($0)
         }
     }
@@ -94,8 +93,8 @@ final class TrackersViewController: UIViewController {
     // MARK: - Setup Constraints
     private func setupConstraints() {
         navBarTitle.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(93)
-            make.leading.equalToSuperview().offset(16)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading).offset(16)
             make.height.equalTo(41)
         }
 
@@ -129,7 +128,14 @@ extension TrackersViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        <#code#>
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: TrackersCell.cellID,
+            for: indexPath
+        ) as? TrackersCell else {
+            fatalError("Could not cast to TrackersCell")
+        }
+
+        return cell
     }
 }
 
