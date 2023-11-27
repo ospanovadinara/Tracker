@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2702DC142B14AFA900F1491D /* TrackersEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2702DC132B14AFA900F1491D /* TrackersEmptyView.swift */; };
 		27936A382B120AEA00514242 /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27936A372B120AEA00514242 /* Tracker.swift */; };
 		27936A3A2B120B0600514242 /* TrackerCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27936A392B120B0600514242 /* TrackerCategory.swift */; };
 		27936A3C2B120B2900514242 /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27936A3B2B120B2900514242 /* TrackerRecord.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2702DC132B14AFA900F1491D /* TrackersEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersEmptyView.swift; sourceTree = "<group>"; };
 		27936A372B120AEA00514242 /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		27936A392B120B0600514242 /* TrackerCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategory.swift; sourceTree = "<group>"; };
 		27936A3B2B120B2900514242 /* TrackerRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
@@ -61,6 +63,7 @@
 				27936A392B120B0600514242 /* TrackerCategory.swift */,
 				27C07F1E2B13879600FBFBEC /* TrackersCell.swift */,
 				27AA2B0A2B0F8D7A0073F156 /* TrackersViewController.swift */,
+				2702DC132B14AFA900F1491D /* TrackersEmptyView.swift */,
 			);
 			path = Tracker;
 			sourceTree = "<group>";
@@ -198,6 +201,7 @@
 				27AA2B072B0F8D7A0073F156 /* AppDelegate.swift in Sources */,
 				27936A3C2B120B2900514242 /* TrackerRecord.swift in Sources */,
 				27AA2B1F2B0F97FD0073F156 /* TabItem.swift in Sources */,
+				2702DC142B14AFA900F1491D /* TrackersEmptyView.swift in Sources */,
 				27AA2B092B0F8D7A0073F156 /* SceneDelegate.swift in Sources */,
 				27936A382B120AEA00514242 /* Tracker.swift in Sources */,
 			);

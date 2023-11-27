@@ -11,8 +11,11 @@ import SnapKit
 final class TrackersViewController: UIViewController {
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
-    //    var completedTrackers: Set<UUID> = []
     var currentDate: Date = Date()
+    private var trackersModel: [Tracker] = []
+//  var completedTrackers: Set<UUID> = []
+
+
 
     // MARK: - UI
     private lazy var navBarTitle: UILabel = {
@@ -59,6 +62,10 @@ final class TrackersViewController: UIViewController {
                                 forCellWithReuseIdentifier: TrackersCell.cellID)
 
         return collectionView
+    }()
+
+    private lazy var emptyView: TrackersEmptyView = {
+        let view = TrackersEmptyView()
     }()
 
     // MARK: - Lifecycle
@@ -112,7 +119,13 @@ extension TrackersViewController {
 // MARK: - UICollectionViewDataSource
 extension TrackersViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        <#code#>
+        if trackersModel.isEmpty {
+            collectionView.backgroundView = emptyView
+        } else {
+            collectionView.backgroundView = nil
+        }
+
+        return trackersModel.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
