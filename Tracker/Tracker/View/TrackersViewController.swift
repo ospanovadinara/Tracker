@@ -12,10 +12,25 @@ final class TrackersViewController: UIViewController {
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     var currentDate: Date = Date()
-    private var trackersModel: [Tracker] = []
+//    private var trackersModel: [Tracker] = []
+    private var trackersModel: [Tracker] = [
+        Tracker(id: UUID(),
+                title: "Помыть посуду",
+                color: UIColor.blue,
+                emoji: "❤️",
+                scedule: nil)
+    ]
 //  var completedTrackers: Set<UUID> = []
 
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        self.categories = [TrackerCategory(title: "Домашний уют",
+                                           trackers: self.trackersModel)]
+    }
 
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     // MARK: - UI
     private lazy var navBarTitle: UILabel = {
@@ -27,10 +42,10 @@ final class TrackersViewController: UIViewController {
         return title
     }()
 
-    private lazy var navBarButton: UIButton = {
+    private lazy var addNavBarButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "plus_icon"), for: .normal)
-        button.addTarget(self, action: #selector(navBarButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(addNavBarButtonTapped), for: .touchUpInside)
         return button
     }()
 
@@ -76,9 +91,8 @@ final class TrackersViewController: UIViewController {
 
     // MARK: - Setup NavigationBar
     private func setupNavigationBar() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navBarButton)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: addNavBarButton)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
-        let navigationController = UINavigationController(rootViewController: TrackersViewController())
     }
 
     // MARK: - Setup Views
@@ -106,8 +120,8 @@ final class TrackersViewController: UIViewController {
 
 // MARK: - Actions
 extension TrackersViewController {
-    @objc private func navBarButtonTapped() {
-
+    @objc private func addNavBarButtonTapped() {
+        print("Add NavBar Button Tapped")
     }
 
     @objc private func datePickerValueChanged() {
@@ -117,7 +131,12 @@ extension TrackersViewController {
 
 // MARK: - UICollectionViewDataSource
 extension TrackersViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return categories.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
         if trackersModel.isEmpty {
             collectionView.backgroundView = emptyView
         } else {
@@ -127,7 +146,8 @@ extension TrackersViewController: UICollectionViewDataSource {
         return trackersModel.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, 
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: TrackersCell.cellID,
             for: indexPath
@@ -135,12 +155,24 @@ extension TrackersViewController: UICollectionViewDataSource {
             fatalError("Could not cast to TrackersCell")
         }
 
+        let model = trackersModel[indexPath.item]
+        cell.configureCell(with: model)
         return cell
     }
 }
 
 // MARK: - UICollectionViewDelegate
 extension TrackersViewController: UICollectionViewDelegate {
-
+    func collectionView(_ collectionView: UICollectionView, 
+                        viewForSupplementaryElementOfKind kind: String,
+                        at indexPath: IndexPath) -> UICollectionReusableView {
+        guard let headerView = collectionView.dequeueReusableSupplementaryView(
+            ofKind: <#T##String#>,
+            withReuseIdentifier: <#T##String#>,
+            for: <#T##IndexPath#>) as? TrackerHeaderView else {
+            fatalError("Could not cast to TrackerHeaderView")
+        }
+        return headerView
+    }
 }
 
