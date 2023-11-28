@@ -72,6 +72,9 @@ final class TrackersViewController: UIViewController {
         collectionView.delegate = self
         collectionView.register(TrackersCell.self,
                                 forCellWithReuseIdentifier: TrackersCell.cellID)
+        collectionView.register(TrackerHeaderView.self,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                withReuseIdentifier: TrackerHeaderView.cellID)
 
         return collectionView
     }()
@@ -162,17 +165,40 @@ extension TrackersViewController: UICollectionViewDataSource {
 }
 
 // MARK: - UICollectionViewDelegate
-extension TrackersViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, 
+extension TrackersViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView,
                         viewForSupplementaryElementOfKind kind: String,
                         at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let headerView = collectionView.dequeueReusableSupplementaryView(
-            ofKind: <#T##String#>,
-            withReuseIdentifier: <#T##String#>,
-            for: <#T##IndexPath#>) as? TrackerHeaderView else {
+        guard let sectionHeaderView = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: TrackerHeaderView.cellID,
+            for: indexPath) as? TrackerHeaderView else {
             fatalError("Could not cast to TrackerHeaderView")
         }
-        return headerView
+
+        sectionHeaderView.configureCell(with: categories)
+        return sectionHeaderView
+    }
+
+    func collectionView(_ collectionView: UICollectionView, 
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 20) 
+    }
+
+    func collectionView(_ collectionView: UICollectionView, 
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 167, height: 90)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, 
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0,
+                            left: 16,
+                            bottom: 0,
+                            right: 0)
     }
 }
 

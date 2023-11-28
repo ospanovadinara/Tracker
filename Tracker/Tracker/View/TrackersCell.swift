@@ -80,12 +80,5 @@ private extension TrackersCell {
             make.trailing.equalToSuperview().offset(-12)
             make.bottom.equalToSuperview().offset(-12)
         }
-
-        contentView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.leading.equalToSuperview().offset(16)
-            make.width.equalTo(167)
-            make.height.equalTo(90)
-        }
     }
 }
