@@ -13,6 +13,11 @@ final class TrackerHeaderView: UICollectionReusableView {
     public static let cellID = String(describing: TrackerHeaderView.self)
 
     // MARK: - UI
+    private lazy var  containerView: UIView = {
+        let view = UIView()
+        return view
+    }()
+
     private lazy var title: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 19)
@@ -41,13 +46,20 @@ final class TrackerHeaderView: UICollectionReusableView {
 
 private extension TrackerHeaderView {
     func setupViews() {
-        self.addSubview(title)
+        self.addSubview(containerView)
+        containerView.addSubview(title)
     }
 
     func setupConstraints() {
-        title.snp.makeConstraints { make in
-//            make.top.bottom.equalToSuperview()
+        containerView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
+            make.height.equalTo(30)
+        }
+
+        title.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview().offset(28)
+            make.trailing.equalToSuperview()
             make.height.equalTo(18)
         }
     }

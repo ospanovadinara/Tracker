@@ -12,7 +12,6 @@ final class TrackersViewController: UIViewController {
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     var currentDate: Date = Date()
-//    private var trackersModel: [Tracker] = []
     private var trackersModel: [Tracker] = [
         Tracker(id: UUID(),
                 title: "Помыть посуду",
@@ -20,7 +19,6 @@ final class TrackersViewController: UIViewController {
                 emoji: "❤️",
                 scedule: nil)
     ]
-//  var completedTrackers: Set<UUID> = []
 
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -116,7 +114,8 @@ final class TrackersViewController: UIViewController {
         }
 
         collectionView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalTo(navBarTitle.snp.bottom).offset(24)
+            make.leading.trailing.bottom.equalToSuperview()
         }
     }
 }
@@ -183,7 +182,7 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewDele
     func collectionView(_ collectionView: UICollectionView, 
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 20) 
+        return CGSize(width: collectionView.frame.width, height: 30) 
     }
 
     func collectionView(_ collectionView: UICollectionView, 

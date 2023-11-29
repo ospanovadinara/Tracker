@@ -61,7 +61,6 @@ final class TrackersCell: UICollectionViewCell {
 private extension TrackersCell {
     // MARK: - Setup Views
     func setupViews() {
-//        contentView.backgroundColor = UIColor.green
         contentView.layer.masksToBounds = true
         contentView.layer.cornerRadius = 16
 
