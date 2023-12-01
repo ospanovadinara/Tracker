@@ -13,6 +13,13 @@ final class TrackersCell: UICollectionViewCell {
     public static let cellID = String(describing: TrackersCell.self)
 
     // MARK: - UI
+    private lazy var trackerContainer: UIView = {
+        let view = UIView()
+        view.layer.masksToBounds = true
+        view.layer.cornerRadius = 16
+        return view
+    }()
+
     private lazy var emojiLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
@@ -54,17 +61,15 @@ final class TrackersCell: UICollectionViewCell {
     public func configureCell(with model: Tracker) {
         emojiLabel.text = model.emoji
         trackerLabel.text = model.title
-        contentView.backgroundColor = model.color
+        trackerContainer.backgroundColor = model.color
     }
 }
 
 private extension TrackersCell {
     // MARK: - Setup Views
     func setupViews() {
-        contentView.layer.masksToBounds = true
-        contentView.layer.cornerRadius = 16
-
-        contentView.addSubview(stackView)
+        contentView.addSubview(trackerContainer)
+        trackerContainer.addSubview(stackView)
         [emojiLabel,
         trackerLabel
         ].forEach {
@@ -73,6 +78,13 @@ private extension TrackersCell {
     }
 
     func setupConstraints() {
+        trackerContainer.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.width.equalTo(167)
+            make.height.equalTo(90)
+        }
+
         stackView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(12)
             make.leading.equalToSuperview().offset(12)
