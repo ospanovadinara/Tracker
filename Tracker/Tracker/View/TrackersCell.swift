@@ -46,6 +46,25 @@ final class TrackersCell: UICollectionViewCell {
         return color
     }()
 
+    private lazy var roundedPlusButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.layer.cornerRadius = 16
+        button.addTarget(self, 
+                         action: #selector(roundedPlusButtonDidTap),
+                         for: .touchUpInside)
+        return button
+    }()
+
+    private lazy var trackersDaysCounter: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.text = "1 день"
+        return label
+    }()
+
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -62,13 +81,21 @@ final class TrackersCell: UICollectionViewCell {
         emojiLabel.text = model.emoji
         trackerLabel.text = model.title
         trackerContainer.backgroundColor = model.color
+        roundedPlusButton.backgroundColor = model.color
     }
 }
 
 private extension TrackersCell {
     // MARK: - Setup Views
     func setupViews() {
-        contentView.addSubview(trackerContainer)
+
+        [trackerContainer,
+         roundedPlusButton,
+         trackersDaysCounter
+        ].forEach {
+            contentView.addSubview($0)
+        }
+
         trackerContainer.addSubview(stackView)
         [emojiLabel,
         trackerLabel
@@ -77,6 +104,7 @@ private extension TrackersCell {
         }
     }
 
+    // MARK: - Setup Constraints
     func setupConstraints() {
         trackerContainer.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -91,5 +119,24 @@ private extension TrackersCell {
             make.trailing.equalToSuperview().offset(-12)
             make.bottom.equalToSuperview().offset(-12)
         }
+
+        trackersDaysCounter.snp.makeConstraints { make in
+            make.top.equalTo(trackerContainer.snp.bottom).offset(16)
+            make.leading.equalToSuperview().offset(12)
+            make.width.equalTo(101)
+            make.height.equalTo(18)
+        }
+
+        roundedPlusButton.snp.makeConstraints { make in
+            make.centerY.equalTo(trackersDaysCounter.snp.centerY)
+            make.trailing.equalToSuperview().offset(-16)
+            make.height.equalTo(34)
+            make.width.equalTo(34)
+        }
+    }
+
+    // MARK: - Actions
+    @objc func roundedPlusButtonDidTap() {
+        print("Rounded Button Did Tap")
     }
 }
