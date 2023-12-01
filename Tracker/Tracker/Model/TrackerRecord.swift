@@ -10,4 +10,5 @@ import Foundation
 struct TrackerRecord {
     let id: UUID
     let date: Date?
+    let trackerID: UUID
 }

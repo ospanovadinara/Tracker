@@ -17,7 +17,8 @@ final class TrackersViewController: UIViewController {
                 title: "Помыть посуду",
                 color: UIColor.blue,
                 emoji: "❤️",
-                scedule: nil)
+                scedule: nil, 
+                completedDays: [])
     ]
 
     init() {
@@ -158,7 +159,7 @@ extension TrackersViewController: UICollectionViewDataSource {
         }
 
         let model = trackersModel[indexPath.item]
-        cell.configureCell(with: model)
+        cell.configureCell(with: model, trackersModel: trackersModel)
         return cell
     }
 }

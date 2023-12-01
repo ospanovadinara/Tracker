@@ -13,4 +13,9 @@ struct Tracker {
     let color: UIColor
     let emoji: String
     let scedule: Date?
+    var completedDays: [Date]
+
+    var daysCount: Int {
+           return completedDays.count
+       }
 }
