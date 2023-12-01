@@ -58,6 +58,15 @@ final class TrackersViewController: UIViewController {
         return datePicker
     }()
 
+    private lazy var searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.placeholder = "Поиск"
+        searchBar.searchBarStyle = .minimal
+        searchBar.delegate = self
+        return searchBar
+    }()
+
     private lazy var layout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -100,7 +109,8 @@ final class TrackersViewController: UIViewController {
     // MARK: - Setup Views
     private func setupViews() {
         [collectionView,
-         navBarTitle
+         navBarTitle,
+         searchBar
         ].forEach {
             view.addSubview($0)
         }
@@ -114,8 +124,14 @@ final class TrackersViewController: UIViewController {
             make.height.equalTo(41)
         }
 
+        searchBar.snp.makeConstraints { make in
+            make.top.equalTo(navBarTitle.snp.bottom)
+            make.leading.equalToSuperview().offset(8)
+            make.trailing.equalToSuperview().offset(-8)
+        }
+
         collectionView.snp.makeConstraints { make in
-            make.top.equalTo(navBarTitle.snp.bottom).offset(24)
+            make.top.equalTo(searchBar.snp.bottom).offset(24)
             make.leading.trailing.bottom.equalToSuperview()
         }
     }
@@ -130,6 +146,10 @@ extension TrackersViewController {
     @objc private func datePickerValueChanged() {
 
     }
+}
+
+extension TrackersViewController: UISearchBarDelegate {
+
 }
 
 // MARK: - UICollectionViewDataSource
