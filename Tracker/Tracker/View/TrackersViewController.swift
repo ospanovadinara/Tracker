@@ -140,15 +140,8 @@ final class TrackersViewController: UIViewController {
 // MARK: - Actions
 extension TrackersViewController {
     @objc private func addNavBarButtonTapped() {
-        let viewController = TrackersCreationViewController()
+        let viewController = TrackersTypeSelectionViewController()
         present(viewController, animated: true, completion: nil)
-        
-//        if let navigationController = navigationController {
-//            navigationController.pushViewController(viewController, animated: true)
-//        } else {
-//            let navigationController = UINavigationController(rootViewController: viewController)
-//            present(navigationController, animated: true, completion: nil)
-//        }
     }
 
     @objc private func datePickerValueChanged() {
