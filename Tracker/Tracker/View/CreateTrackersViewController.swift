@@ -40,6 +40,12 @@ final class CreateTrackersViewController: UIViewController {
 
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
+        tableView.register(CreateTrackerCell.self,
+                           forCellReuseIdentifier: CreateTrackerCell.cellID)
         tableView.backgroundColor = UIColor(named: "YP Gray")?.withAlphaComponent(0.3)
         tableView.layer.cornerRadius = 16
         return tableView
@@ -92,8 +98,43 @@ final class CreateTrackersViewController: UIViewController {
     }
 }
 
-extension TrackersCreationViewController: UITextFieldDelegate {
+// MARK: - UITextFieldDelegate
+extension CreateTrackersViewController: UITextFieldDelegate {
     // MARK: - Text Field Change Handler
     @objc private func textFieldDidChange(_ textField: UITextField) {
     }
+}
+
+// MARK: - UITableViewDataSource
+extension CreateTrackersViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        1
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        2
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: CreateTrackerCell.cellID,
+            for: indexPath) as? CreateTrackerCell else {
+            fatalError("Could not cast to CreateTrackerCell")
+        }
+
+        if indexPath.row == 0 {
+            cell.configureCell(with: "Категория", isFirstCell: true)
+        }  else {
+            cell.configureCell(with: "Расписание", isFirstCell: false)
+        }
+        
+        let imageView = UIImageView(image: UIImage(named: "right_array_icon"))
+        cell.accessoryView = imageView
+        return cell
+    }
+}
+
+// MARK: - UITableViewDelegate
+extension CreateTrackersViewController: UITableViewDelegate {
+
 }

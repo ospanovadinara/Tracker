@@ -38,7 +38,7 @@ final class TrackersEmptyView: UIView {
     }
 
     // MARK: - Setup Views
-    func setupViews() {
+    private func setupViews() {
         [image,
          titleLabel
         ].forEach {
@@ -47,7 +47,7 @@ final class TrackersEmptyView: UIView {
     }
 
     // MARK: - Setup Constraints
-    func setupConstraints() {
+    private func setupConstraints() {
         image.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()

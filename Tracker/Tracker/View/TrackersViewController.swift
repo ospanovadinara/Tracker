@@ -140,7 +140,7 @@ final class TrackersViewController: UIViewController {
 // MARK: - Actions
 extension TrackersViewController {
     @objc private func addNavBarButtonTapped() {
-        let viewController = TrackersTypeSelectionViewController()
+        let viewController = SelectTrackersViewController()
         present(viewController, animated: true, completion: nil)
     }
 
