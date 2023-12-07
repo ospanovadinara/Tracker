@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class TrackersTypeSelectionViewController: UIViewController {
+final class SelectTrackersViewController: UIViewController {
     
     // MARK: - UI
     private lazy var navBarLabel: UILabel = {
@@ -83,7 +83,7 @@ final class TrackersTypeSelectionViewController: UIViewController {
 
     // MARK: - Actions
     @objc private func trackerButtonTapped() {
-        let viewController = TrackersCreationViewController()
+        let viewController = CreateTrackersViewController()
         present(viewController, animated: true, completion: nil)
     }
 
