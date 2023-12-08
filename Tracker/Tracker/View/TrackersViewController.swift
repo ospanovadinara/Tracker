@@ -12,6 +12,7 @@ final class TrackersViewController: UIViewController {
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     var currentDate: Date = Date()
+    // Оставила как пример реализации ячейки
     private var trackersModel: [Tracker] = [
         Tracker(id: UUID(),
                 title: "Помыть посуду",
@@ -150,6 +151,23 @@ extension TrackersViewController {
 
 extension TrackersViewController: UISearchBarDelegate {
 
+}
+
+// MARK: - CreateTrackerDelegate
+extension TrackersViewController: CreateTrackerDelegate {
+    func didCreateTracker(_ tracker: Tracker) {
+        categories = categories.map({ category in
+            var updatedTrackers = category.trackers
+            updatedTrackers.append(tracker)
+            return TrackerCategory(title: category.title, trackers: updatedTrackers)
+        })
+        trackersModel.append(tracker)
+        reloadData()
+    }
+
+    func reloadData() {
+        collectionView.reloadData()
+    }
 }
 
 // MARK: - UICollectionViewDataSource

@@ -11,6 +11,14 @@ import SnapKit
 final class ScheduleViewController: UIViewController {
 
     // MARK: - UI
+    private lazy var navBarLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Расписание"
+        label.textColor = UIColor(named: "YP Black")
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        return label
+    }()
+
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.dataSource = self
@@ -24,15 +32,85 @@ final class ScheduleViewController: UIViewController {
         return tableView
     }()
 
+    private lazy var doneButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Готово", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16,
+                                                    weight: .medium)
+        button.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
+        button.layer.cornerRadius = 16
+        button.backgroundColor = UIColor(named: "YP Black")
+        return button
+    }()
+
+    // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupViews()
+        setupConstraints()
+    }
+
+    private func setupViews() {
+        view.backgroundColor = UIColor.white
+
+        [navBarLabel,
+         tableView,
+         doneButton
+        ].forEach  {
+            view.addSubview($0)
+        }
+    }
+
+    private func setupConstraints() {
+        navBarLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(15)
+            make.centerX.equalToSuperview()
+        }
+
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(navBarLabel.snp.bottom).offset(24)
+            make.leading.equalToSuperview().offset(16)
+            make.trailing.equalToSuperview().offset(-16)
+            make.height.equalTo(525)
+        }
+
+        doneButton.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.bottom.equalToSuperview().offset(-50)
+            make.height.equalTo(60)
+        }
+    }
+
+    // MARK: - Actions
+    @objc private func doneButtonTapped() {
+        dismiss(animated: true)
+    }
 }
 
 extension ScheduleViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        1
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        <#code#>
+        7
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        <#code#>
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: ScheduleCell.cellID,
+            for: indexPath) as? ScheduleCell else {
+            fatalError("Could not cast to CreateTrackerCell")
+        }
+        let weekDay = WeekDay.allCases[indexPath.row]
+        if indexPath.row == 6 {
+            cell.configureCell(with: weekDay, isLastCell: true)
+        } else {
+            cell.configureCell(with: weekDay, isLastCell: false)
+        }
+        return cell
     }
 }
 

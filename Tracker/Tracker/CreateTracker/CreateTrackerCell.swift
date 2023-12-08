@@ -26,6 +26,7 @@ final class CreateTrackerCell: UITableViewCell {
         return view
     }()
 
+    // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
@@ -70,7 +71,7 @@ final class CreateTrackerCell: UITableViewCell {
         }
     }
 
-    // MARK: - Public Properties
+    // MARK: - Public Methods
     func configureCell(with title: String, isFirstCell: Bool) {
         titleLabel.text = title
         customSeparatorView.isHidden = !isFirstCell

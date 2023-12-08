@@ -88,7 +88,7 @@ final class SelectTrackersViewController: UIViewController {
     }
 
     @objc private func irregularEventButtonTapped() {
-        let viewController = IrregularEventCreationViewController()
+        let viewController = IrregularEventViewController()
         present(viewController, animated: true, completion: nil)
     }
 }
