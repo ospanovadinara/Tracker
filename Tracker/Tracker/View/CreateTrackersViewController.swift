@@ -15,7 +15,7 @@ final class CreateTrackersViewController: UIViewController {
         let label = UILabel()
         label.text = "Новая привычка"
         label.textColor = UIColor(named: "YP Black")
-        label.font = UIFont.systemFont(ofSize: 16)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return label
     }()
 
@@ -51,6 +51,33 @@ final class CreateTrackersViewController: UIViewController {
         return tableView
     }()
 
+    private lazy var cancelButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Отменить", for: .normal)
+        button.setTitleColor(UIColor(named: "YP Red"), for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16,
+                                                    weight: .medium)
+        button.backgroundColor = .white
+        button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        button.layer.cornerRadius = 16
+        button.layer.borderWidth = 1.0
+        button.layer.borderColor = UIColor(named: "YP Red")?.cgColor
+        return button
+    }()
+
+    private lazy var createButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Создать", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16,
+                                                    weight: .medium)
+        button.backgroundColor = .white
+        button.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
+        button.layer.cornerRadius = 16
+        button.backgroundColor = UIColor(named: "YP Dark Gray")
+        return button
+    }()
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,7 +91,9 @@ final class CreateTrackersViewController: UIViewController {
 
         [navBarLabel,
          textFieldContainerView,
-         tableView
+         tableView,
+         cancelButton,
+         createButton
         ].forEach  {
             view.addSubview($0)
         }
@@ -95,6 +124,29 @@ final class CreateTrackersViewController: UIViewController {
             make.trailing.equalToSuperview().offset(-16)
             make.height.equalTo(150)
         }
+
+        cancelButton.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.bottom.equalToSuperview().offset(-34)
+            make.height.equalTo(60)
+            make.width.equalTo(166)
+        }
+
+        createButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-20)
+            make.bottom.equalToSuperview().offset(-34)
+            make.height.equalTo(60)
+            make.width.equalTo(161)
+        }
+    }
+
+    // MARK: - Actions
+    @objc private func cancelButtonTapped() {
+        dismiss(animated: true)
+    }
+
+    @objc private func createButtonTapped() {
+       
     }
 }
 
@@ -127,7 +179,7 @@ extension CreateTrackersViewController: UITableViewDataSource {
         }  else {
             cell.configureCell(with: "Расписание", isFirstCell: false)
         }
-        
+
         let imageView = UIImageView(image: UIImage(named: "right_array_icon"))
         cell.accessoryView = imageView
         return cell
