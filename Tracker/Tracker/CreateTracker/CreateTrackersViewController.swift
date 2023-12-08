@@ -8,7 +8,13 @@
 import UIKit
 import SnapKit
 
+protocol CreateTrackerDelegate: AnyObject {
+    func didCreateTracker(_ tracker: Tracker)
+    func reloadData()
+}
+
 final class CreateTrackersViewController: UIViewController {
+    weak var delegate: CreateTrackerDelegate?
 
     // MARK: -  UI
     private lazy var navBarLabel: UILabel = {
@@ -146,7 +152,19 @@ final class CreateTrackersViewController: UIViewController {
     }
 
     @objc private func createButtonTapped() {
-       
+        guard let trackersTitle = trackersNameTextField.text, !trackersTitle.isEmpty else {
+            return
+        }
+
+        let newTracker = Tracker(id: UUID(),
+                                 title: trackersTitle,
+                                 color: .green,
+                                 emoji: "😍",
+                                 scedule: nil,
+                                 completedDays: [])
+        delegate?.didCreateTracker(newTracker)
+        delegate?.reloadData()
+        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
 }
 
@@ -176,7 +194,7 @@ extension CreateTrackersViewController: UITableViewDataSource {
 
         if indexPath.row == 0 {
             cell.configureCell(with: "Категория", isFirstCell: true)
-        }  else {
+        }  else if indexPath.row == 1 {
             cell.configureCell(with: "Расписание", isFirstCell: false)
         }
 
@@ -188,5 +206,13 @@ extension CreateTrackersViewController: UITableViewDataSource {
 
 // MARK: - UITableViewDelegate
 extension CreateTrackersViewController: UITableViewDelegate {
-
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        if indexPath.row == 0 {
+            print("Category Selected")
+        } else if indexPath.row == 1 {
+            let viewController = ScheduleViewController()
+            present(viewController, animated: true, completion: nil)
+        }
+    }
 }

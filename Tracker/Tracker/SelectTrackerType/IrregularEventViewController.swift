@@ -8,6 +8,6 @@
 import UIKit
 import SnapKit
 
-final class IrregularEventCreationViewController: UIViewController {
+final class IrregularEventViewController: UIViewController {
 
 }
