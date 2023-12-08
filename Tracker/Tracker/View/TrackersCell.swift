@@ -31,7 +31,7 @@ final class TrackersCell: UICollectionViewCell {
 
     private lazy var trackerLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textColor = UIColor.white
         label.textAlignment = .left
         return label
@@ -157,7 +157,7 @@ private extension TrackersCell {
             }
         } else {
             tracker.completedDays.append(currentDate)
-            roundedPlusButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+            roundedPlusButton.setImage(UIImage(named: "done_icon"), for: .normal)
         }
         
         self.trackersModel[indexPath.item] = tracker

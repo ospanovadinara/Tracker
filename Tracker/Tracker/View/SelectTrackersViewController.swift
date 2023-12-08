@@ -15,7 +15,7 @@ final class SelectTrackersViewController: UIViewController {
         let label = UILabel()
         label.text = "Создание трекера"
         label.textColor = UIColor(named: "YP Black")
-        label.font = UIFont.systemFont(ofSize: 16)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return label
     }()
 
