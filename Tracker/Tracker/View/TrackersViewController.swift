@@ -10,8 +10,11 @@ import SnapKit
 
 final class TrackersViewController: UIViewController {
     var categories: [TrackerCategory] = []
+    private var visibleCategories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
+
     var currentDate: Date = Date()
+
     // Оставила как пример реализации ячейки
     private var trackersModel: [Tracker] = [
         Tracker(id: UUID(),
@@ -146,6 +149,8 @@ extension TrackersViewController {
     }
 
     @objc private func datePickerValueChanged() {
+        currentDate = datePicker.date
+        collectionView.reloadData()
     }
 }
 
@@ -196,9 +201,52 @@ extension TrackersViewController: UICollectionViewDataSource {
             fatalError("Could not cast to TrackersCell")
         }
 
-        let model = trackersModel[indexPath.item]
-        cell.configureCell(with: model, trackersModel: trackersModel)
+        let cellData = categories
+        let tracker = cellData[indexPath.section].trackers[indexPath.row]
+
+        cell.delegate = self
+        let isCompletedToday = isTrackerCompletedToday(id: tracker.id)
+        let completedDays = completedTrackers.filter {
+            $0.trackerID == tracker.id
+        }.count
+
+
+        cell.configureCell(
+            with: tracker,
+            isCompletedToday: isCompletedToday, 
+            completedDays: completedDays,
+            indexPath: indexPath
+        )
         return cell
+    }
+
+    private func isTrackerCompletedToday(id: UUID) -> Bool {
+        completedTrackers.contains { trackerRecord in
+            isSameTrackerRecord(trackerRecord: trackerRecord, id: id)
+        }
+    }
+
+    private func isSameTrackerRecord(trackerRecord: TrackerRecord, id: UUID) -> Bool {
+        let isSameDay = Calendar.current.isDate(trackerRecord.date,
+                                                inSameDayAs: datePicker.date)
+        return trackerRecord.trackerID == id && isSameDay
+    }
+}
+
+extension TrackersViewController: TrackersCellDelgate {
+    func completeTracker(id: UUID, at indexPath: IndexPath) {
+        let trackerRecord = TrackerRecord(date: datePicker.date, trackerID: id)
+        completedTrackers.append(trackerRecord)
+
+        collectionView.reloadItems(at: [indexPath])
+    }
+    
+    func uncompleteTracker(id: UUID, at indexPath: IndexPath) {
+        completedTrackers.removeAll { trackerRecord in
+            isSameTrackerRecord(trackerRecord: trackerRecord, id: id)
+        }
+
+        collectionView.reloadItems(at: [indexPath])
     }
 }
 

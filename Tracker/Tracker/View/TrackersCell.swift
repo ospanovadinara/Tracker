@@ -8,12 +8,24 @@
 import UIKit
 import SnapKit
 
+// MARK: - TrackersCellDelegate
+protocol TrackersCellDelgate: AnyObject {
+    func completeTracker(id: UUID, at indexPath: IndexPath)
+    func uncompleteTracker(id: UUID, at indexPath: IndexPath)
+}
+
 final class TrackersCell: UICollectionViewCell {
+
+    weak var delegate: TrackersCellDelgate?
+
     // MARK: - Public properties
     public static let cellID = String(describing: TrackersCell.self)
 
     // MARK: - Private properties
     private var trackersModel: [Tracker] = []
+    private var isCompletedToday: Bool = false
+    private var indexPath: IndexPath?
+    private var trackerId: UUID?
 
     // MARK: - UI
     private lazy var trackerContainer: UIView = {
@@ -52,12 +64,26 @@ final class TrackersCell: UICollectionViewCell {
     private lazy var roundedPlusButton: UIButton = {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.layer.cornerRadius = 16
         button.addTarget(self,
                          action: #selector(roundedPlusButtonDidTap),
                          for: .touchUpInside)
         return button
+    }()
+
+    private lazy var doneImage: UIImage = {
+        let image = UIImage(named: "done_icon") ?? UIImage()
+        return image
+
+    }()
+
+    private lazy var plusImage: UIImage = {
+        let pointSize = UIImage.SymbolConfiguration(pointSize: 11)
+        let image = UIImage(
+            systemName: "plus",
+            withConfiguration: pointSize
+        ) ?? UIImage()
+        return image
     }()
 
     private lazy var trackersDaysCounter: UILabel = {
@@ -80,14 +106,47 @@ final class TrackersCell: UICollectionViewCell {
     }
 
     // MARK: - Public Method
-    public func configureCell(with model: Tracker, trackersModel: [Tracker]) {
-        emojiLabel.text = model.emoji
-        trackerLabel.text = model.title
-        trackerContainer.backgroundColor = model.color
-        roundedPlusButton.backgroundColor = model.color
+    public func configureCell(
+        with tracker: Tracker,
+        isCompletedToday: Bool,
+        completedDays:Int,
+        indexPath: IndexPath
+    ) {
+        self.trackerId = tracker.id
+        self.isCompletedToday = isCompletedToday
+        self.indexPath = indexPath
 
-        self.trackersModel = trackersModel
+        emojiLabel.text = tracker.emoji
+        trackerLabel.text = tracker.title
+        trackerContainer.backgroundColor = tracker.color
+        roundedPlusButton.backgroundColor = tracker.color
+
+        let wordDays = convertCompletedDays(completedDays)
+        trackersDaysCounter.text = wordDays
+
+        let image = isCompletedToday ? doneImage : plusImage
+        roundedPlusButton.setImage(image, for: .normal)
+
     }
+
+    private func convertCompletedDays(_ completedDays: Int) -> String {
+        let lasyNumber = completedDays % 10
+        let lastTwoNumbers = completedDays % 100
+        if lastTwoNumbers >= 11 && lastTwoNumbers <= 19 {
+            return "\(completedDays) дней"
+        }
+
+        switch lasyNumber {
+        case 1:
+            return "\(completedDays) день"
+        case 2, 3, 4:
+            return "\(completedDays) дня"
+        default:
+            return "\(completedDays) дней"
+        }
+    }
+
+
 }
 
 private extension TrackersCell {
@@ -142,35 +201,15 @@ private extension TrackersCell {
 
     // MARK: - Actions
     @objc func roundedPlusButtonDidTap() {
-        print("Rounded Button Did Tap")
-        guard let collectionView = self.superview as? UICollectionView,
-              let indexPath = collectionView.indexPath(for: self) else {
+        guard let trackerId = trackerId, let indexPath = indexPath else {
+            assertionFailure("No trackerId")
             return
         }
-        var tracker = trackersModel[indexPath.item]
-        let currentDate = Date()
 
-        if tracker.completedDays.contains(currentDate) {
-            if let index = tracker.completedDays.firstIndex(of: currentDate) {
-                tracker.completedDays.remove(at: index)
-                roundedPlusButton.setImage(UIImage(systemName: "plus"), for: .normal)
-            }
+        if isCompletedToday {
+            delegate?.uncompleteTracker(id: trackerId, at: indexPath)
         } else {
-            tracker.completedDays.append(currentDate)
-            roundedPlusButton.setImage(UIImage(named: "done_icon"), for: .normal)
+            delegate?.completeTracker(id: trackerId, at: indexPath)
         }
-        
-        self.trackersModel[indexPath.item] = tracker
-        updateDaysCounterLabel()
-    }
-
-    func updateDaysCounterLabel() {
-        guard let collectionView = self.superview as? UICollectionView,
-              let indexPath = collectionView.indexPath(for: self) else {
-            return
-        }
-
-        let tracker = trackersModel[indexPath.item]
-        trackersDaysCounter.text = "\(tracker.daysCount) дней"
     }
 }
