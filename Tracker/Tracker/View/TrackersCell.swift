@@ -127,7 +127,15 @@ final class TrackersCell: UICollectionViewCell {
         let image = isCompletedToday ? doneImage : plusImage
         
         roundedPlusButton.setImage(image, for: .normal)
+        adjustOpacity(to: isCompletedToday)
+    }
 
+    private func adjustOpacity(to isCompleted: Bool) {
+        if isCompleted {
+            roundedPlusButton.layer.opacity = 0.2
+        } else {
+            roundedPlusButton.layer.opacity = 1
+        }
     }
 
     private func convertCompletedDays(_ completedDays: Int) -> String {
