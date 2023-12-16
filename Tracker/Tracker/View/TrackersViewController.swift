@@ -12,28 +12,9 @@ final class TrackersViewController: UIViewController {
     var categories: [TrackerCategory] = []
     private var visibleCategories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
+    private var trackersModel: [Tracker] = []
 
     var currentDate: Date = Date()
-
-    // Оставила как пример реализации ячейки
-    private var trackersModel: [Tracker] = [
-        Tracker(id: UUID(),
-                title: "Помыть посуду",
-                color: UIColor.blue,
-                emoji: "❤️",
-                scedule: nil, 
-                completedDays: [])
-    ]
-
-    init() {
-        super.init(nibName: nil, bundle: nil)
-        self.categories = [TrackerCategory(title: "Домашний уют",
-                                           trackers: self.trackersModel)]
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 
     // MARK: - UI
     private lazy var navBarTitle: UILabel = {
@@ -115,7 +96,8 @@ final class TrackersViewController: UIViewController {
     private func setupViews() {
         [collectionView,
          navBarTitle,
-         searchBar
+         searchBar,
+         emptyView
         ].forEach {
             view.addSubview($0)
         }
@@ -138,6 +120,10 @@ final class TrackersViewController: UIViewController {
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(searchBar.snp.bottom).offset(24)
             make.leading.trailing.bottom.equalToSuperview()
+        }
+
+        emptyView.snp.makeConstraints { make in
+            make.top.leading.trailing.bottom.equalToSuperview()
         }
     }
 }
