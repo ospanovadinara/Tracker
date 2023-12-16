@@ -125,6 +125,7 @@ final class TrackersCell: UICollectionViewCell {
         trackersDaysCounter.text = wordDays
 
         let image = isCompletedToday ? doneImage : plusImage
+        
         roundedPlusButton.setImage(image, for: .normal)
 
     }
