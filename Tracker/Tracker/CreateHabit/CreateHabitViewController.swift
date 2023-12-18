@@ -40,8 +40,20 @@ final class CreateHabitViewController: UIViewController {
         textField.textColor = UIColor.black
         textField.font = UIFont.systemFont(ofSize: 17)
         textField.delegate = self
-        textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        textField.rightView = clearTextFieldButton
+        textField.rightViewMode = .whileEditing
         return textField
+    }()
+
+
+    private lazy var clearTextFieldButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: "clear_icon"), for: .normal)
+        button.frame = CGRect(x: 0, y: 0, width: 17, height: 17)
+        button.contentMode = .scaleAspectFit
+        button.addTarget(self, action: #selector(clearTextFieldButtonTapped), for: .touchUpInside)
+        return button
     }()
 
     private lazy var tableView: UITableView = {
@@ -94,6 +106,7 @@ final class CreateHabitViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = UIColor.white
         textFieldContainerView.addSubview(trackersNameTextField)
+        trackersNameTextField.addSubview(clearTextFieldButton)
 
         [navBarLabel,
          textFieldContainerView,
@@ -166,12 +179,22 @@ final class CreateHabitViewController: UIViewController {
         delegate?.reloadData()
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
+
+    @objc private func clearTextFieldButtonTapped() {
+        trackersNameTextField.text = ""
+        clearTextFieldButton.isHidden = true
+    }
 }
 
 // MARK: - UITextFieldDelegate
 extension CreateHabitViewController: UITextFieldDelegate {
     // MARK: - Text Field Change Handler
-    @objc private func textFieldDidChange(_ textField: UITextField) {
+    @objc private func textFieldDidChange() {
+        if let text = trackersNameTextField.text, !text.isEmpty {
+            clearTextFieldButton.isHidden = false
+        } else {
+            clearTextFieldButton.isHidden = true
+        }
     }
 }
 
