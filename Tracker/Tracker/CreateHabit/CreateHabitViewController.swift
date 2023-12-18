@@ -1,5 +1,5 @@
 //
-//  TrackersCreationViewController.swift
+//  CreateHabitViewController.swift
 //  Tracker
 //
 //  Created by Dinara on 02.12.2023.
@@ -8,13 +8,13 @@
 import UIKit
 import SnapKit
 
-protocol CreateTrackerDelegate: AnyObject {
+protocol CreateHabitDelegate: AnyObject {
     func didCreateTracker(_ tracker: Tracker)
     func reloadData()
 }
 
-final class CreateTrackersViewController: UIViewController {
-    weak var delegate: CreateTrackerDelegate?
+final class CreateHabitViewController: UIViewController {
+    weak var delegate: CreateHabitDelegate?
 
     // MARK: -  UI
     private lazy var navBarLabel: UILabel = {
@@ -50,8 +50,8 @@ final class CreateTrackersViewController: UIViewController {
         tableView.delegate = self
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
-        tableView.register(CreateTrackerCell.self,
-                           forCellReuseIdentifier: CreateTrackerCell.cellID)
+        tableView.register(CreateHabitCell.self,
+                           forCellReuseIdentifier: CreateHabitCell.cellID)
         tableView.backgroundColor = UIColor(named: "YP Gray")?.withAlphaComponent(0.3)
         tableView.layer.cornerRadius = 16
         return tableView
@@ -169,14 +169,14 @@ final class CreateTrackersViewController: UIViewController {
 }
 
 // MARK: - UITextFieldDelegate
-extension CreateTrackersViewController: UITextFieldDelegate {
+extension CreateHabitViewController: UITextFieldDelegate {
     // MARK: - Text Field Change Handler
     @objc private func textFieldDidChange(_ textField: UITextField) {
     }
 }
 
 // MARK: - UITableViewDataSource
-extension CreateTrackersViewController: UITableViewDataSource {
+extension CreateHabitViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         1
     }
@@ -187,8 +187,8 @@ extension CreateTrackersViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: CreateTrackerCell.cellID,
-            for: indexPath) as? CreateTrackerCell else {
+            withIdentifier: CreateHabitCell.cellID,
+            for: indexPath) as? CreateHabitCell else {
             fatalError("Could not cast to CreateTrackerCell")
         }
 
@@ -205,7 +205,7 @@ extension CreateTrackersViewController: UITableViewDataSource {
 }
 
 // MARK: - UITableViewDelegate
-extension CreateTrackersViewController: UITableViewDelegate {
+extension CreateHabitViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.row == 0 {

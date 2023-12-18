@@ -146,7 +146,7 @@ extension TrackersViewController: UISearchBarDelegate {
 }
 
 // MARK: - CreateTrackerDelegate
-extension TrackersViewController: CreateTrackerDelegate {
+extension TrackersViewController: CreateHabitDelegate {
     func didCreateTracker(_ tracker: Tracker) {
         categories = categories.map({ category in
             var updatedTrackers = category.trackers

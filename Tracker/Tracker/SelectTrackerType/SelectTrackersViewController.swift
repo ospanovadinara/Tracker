@@ -83,7 +83,7 @@ final class SelectTrackersViewController: UIViewController {
 
     // MARK: - Actions
     @objc private func trackerButtonTapped() {
-        let viewController = CreateTrackersViewController()
+        let viewController = CreateHabitViewController()
         present(viewController, animated: true, completion: nil)
     }
 

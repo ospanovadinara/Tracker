@@ -1,5 +1,5 @@
 //
-//  CreateTrackerCell.swift
+//  CreateHabitCell.swift
 //  Tracker
 //
 //  Created by Dinara on 07.12.2023.
@@ -8,9 +8,9 @@
 import UIKit
 import SnapKit
 
-final class CreateTrackerCell: UITableViewCell {
+final class CreateHabitCell: UITableViewCell {
     // MARK: - Public properties
-    public static let cellID = String(describing: CreateTrackerCell.self)
+    public static let cellID = String(describing: CreateHabitCell.self)
 
     // MARK: - UI
     private lazy var titleLabel: UILabel = {
