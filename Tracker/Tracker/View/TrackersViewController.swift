@@ -9,9 +9,14 @@ import UIKit
 import SnapKit
 
 final class TrackersViewController: UIViewController {
-    var categories: [TrackerCategory] = []
+    private var trackers: [Tracker] = []
+    private var categories: [TrackerCategory] = []
+    //для теста
+    private lazy var category: TrackerCategory = {
+        return TrackerCategory(title: "Домашние дела", trackers: self.trackers)
+    }()
     private var visibleCategories: [TrackerCategory] = []
-    var completedTrackers: [TrackerRecord] = []
+    private var completedTrackers: [TrackerRecord] = []
     private var trackersModel: [Tracker] = []
 
     var currentDate: Date = Date()
@@ -131,7 +136,7 @@ final class TrackersViewController: UIViewController {
 // MARK: - Actions
 extension TrackersViewController {
     @objc private func addNavBarButtonTapped() {
-        let viewController = SelectTrackersViewController()
+        let viewController = ChooseTrackerViewController()
         present(viewController, animated: true, completion: nil)
     }
 
@@ -148,17 +153,17 @@ extension TrackersViewController: UISearchBarDelegate {
 // MARK: - CreateTrackerDelegate
 extension TrackersViewController: CreateHabitDelegate {
     func didCreateTracker(_ tracker: Tracker) {
-        categories = categories.map({ category in
+        self.trackers.append(tracker)
+        self.categories = categories.map({ category in
             var updatedTrackers = category.trackers
             updatedTrackers.append(tracker)
             return TrackerCategory(title: category.title, trackers: updatedTrackers)
         })
-        trackersModel.append(tracker)
         reloadData()
     }
 
     func reloadData() {
-        collectionView.reloadData()
+        self.collectionView.reloadData()
     }
 }
 

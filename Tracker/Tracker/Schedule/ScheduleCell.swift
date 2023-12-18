@@ -7,11 +7,14 @@
 
 import UIKit
 import SnapKit
+protocol ScheduleCellDelegate: AnyObject {
+    func switchButtonDidTap(to isSelected: Bool, of weekDay: WeekDay)
+}
 
 final class ScheduleCell: UITableViewCell {
     // MARK: - Public properties
     public static let cellID = String(describing: ScheduleCell.self)
-
+    weak var delegate: ScheduleCellDelegate?
     private var weekDay: WeekDay?
 
     // MARK: - UI
@@ -31,7 +34,7 @@ final class ScheduleCell: UITableViewCell {
     private lazy var switchButton: UISwitch = {
         let view = UISwitch()
         view.onTintColor = UIColor(named: "YP Blue")
-        view.addTarget(self, action: #selector(switchButtonTapped), for: .valueChanged)
+        view.addTarget(self, action: #selector(switchButtonTapped(_:)), for: .valueChanged)
         return view
     }()
 
@@ -87,13 +90,15 @@ final class ScheduleCell: UITableViewCell {
     }
 
     // MARK: - Actions
-    @objc private func switchButtonTapped() {
-
+    @objc private func switchButtonTapped(_ sender: UISwitch) {
+        guard let weekDay = weekDay else { return }
+        delegate?.switchButtonDidTap(to: sender.isOn, of: weekDay)
     }
 
     // MARK: - Public Methods
-    public func configureCell(with weekDay: WeekDay, isLastCell: Bool) {
+    public func configureCell(with weekDay: WeekDay, isLastCell: Bool, isSelected: Bool) {
         titleLabel.text = weekDay.rawValue
         customSeparatorView.isHidden = isLastCell
+        switchButton.isOn = isSelected
     }
 }

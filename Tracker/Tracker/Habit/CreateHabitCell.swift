@@ -12,12 +12,27 @@ final class CreateHabitCell: UITableViewCell {
     // MARK: - Public properties
     public static let cellID = String(describing: CreateHabitCell.self)
 
+    weak var delegate: ScheduleViewControllerDelegate?
     // MARK: - UI
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.black
         label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         return label
+    }()
+
+    let subtitleLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor(named: "YP Dark Gray")
+        label.font = UIFont.systemFont(ofSize: 16)
+        return label
+    }()
+
+    private let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.spacing = 2
+        stackView.axis = .vertical
+        return stackView
     }()
 
     private lazy var customSeparatorView: UIView = {
@@ -40,8 +55,10 @@ final class CreateHabitCell: UITableViewCell {
     // MARK: Setup Views
     private func setupViews() {
         contentView.backgroundColor = UIColor(named: "YP Gray")?.withAlphaComponent(0.3)
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(subtitleLabel)
 
-        [titleLabel,
+        [stackView,
          customSeparatorView
         ].forEach {
             contentView.addSubview($0)
@@ -57,10 +74,10 @@ final class CreateHabitCell: UITableViewCell {
             make.height.equalTo(75)
         }
 
-        titleLabel.snp.makeConstraints { make in
+        stackView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(27)
             make.leading.trailing.equalToSuperview().inset(16)
-            make.height.equalTo(22)
+            make.height.equalTo(44)
         }
 
         customSeparatorView.snp.makeConstraints { make in
@@ -72,8 +89,13 @@ final class CreateHabitCell: UITableViewCell {
     }
 
     // MARK: - Public Methods
-    func configureCell(with title: String, isFirstCell: Bool) {
+    func configureCell(with title: String, subtitle: String?, isFirstCell: Bool) {
         titleLabel.text = title
         customSeparatorView.isHidden = !isFirstCell
+        if let subtitle {
+            func didSelectDays(_ days: [WeekDay]) {
+                subtitleLabel.text = days.map { $0.rawValue }.joined(separator: ", ")
+            }
+        }
     }
 }

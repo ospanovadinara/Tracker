@@ -8,7 +8,14 @@
 import UIKit
 import SnapKit
 
+protocol ScheduleViewControllerDelegate: AnyObject {
+    func didSelectDays(_ days: [WeekDay])
+}
+
 final class ScheduleViewController: UIViewController {
+    var createHabitViewController: CreateHabitViewController?
+    weak var delegate: ScheduleViewControllerDelegate?
+    private var selectedWeekDays: Set<WeekDay> = []
 
     // MARK: - UI
     private lazy var navBarLabel: UILabel = {
@@ -47,6 +54,7 @@ final class ScheduleViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        delegate = self
         setupViews()
         setupConstraints()
     }
@@ -85,8 +93,29 @@ final class ScheduleViewController: UIViewController {
 
     // MARK: - Actions
     @objc private func doneButtonTapped() {
-        dismiss(animated: true)
+        let weekDays = Array(selectedWeekDays)
+        delegate?.didSelectDays(weekDays)
+//        dismiss(animated: true)
     }
+}
+
+extension ScheduleViewController: ScheduleViewControllerDelegate {
+    func didSelectDays(_ days: [WeekDay]) {
+        let weekDays = Set(selectedWeekDays)
+        selectedWeekDays = weekDays
+    }
+}
+
+extension ScheduleViewController: ScheduleCellDelegate {
+    func switchButtonDidTap(to isSelected: Bool, of weekDay: WeekDay) {
+        if isSelected {
+            selectedWeekDays.insert(weekDay)
+        } else {
+            selectedWeekDays.remove(weekDay)
+        }
+    }
+    
+
 }
 
 extension ScheduleViewController: UITableViewDataSource {
@@ -104,12 +133,18 @@ extension ScheduleViewController: UITableViewDataSource {
             for: indexPath) as? ScheduleCell else {
             fatalError("Could not cast to CreateTrackerCell")
         }
+
         let weekDay = WeekDay.allCases[indexPath.row]
         if indexPath.row == 6 {
-            cell.configureCell(with: weekDay, isLastCell: true)
+            cell.configureCell(with: weekDay, 
+                               isLastCell: true,
+                               isSelected: selectedWeekDays.contains(weekDay))
         } else {
-            cell.configureCell(with: weekDay, isLastCell: false)
+            cell.configureCell(with: weekDay, 
+                               isLastCell: false,
+                               isSelected: selectedWeekDays.contains(weekDay))
         }
+        cell.delegate = self
         return cell
     }
 }

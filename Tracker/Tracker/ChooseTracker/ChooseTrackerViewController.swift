@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class SelectTrackersViewController: UIViewController {
+final class ChooseTrackerViewController: UIViewController {
     
     // MARK: - UI
     private lazy var navBarLabel: UILabel = {

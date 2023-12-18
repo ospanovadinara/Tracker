@@ -14,7 +14,16 @@ protocol CreateHabitDelegate: AnyObject {
 }
 
 final class CreateHabitViewController: UIViewController {
-    weak var delegate: CreateHabitDelegate?
+    weak var delegate: ScheduleViewControllerDelegate?
+    weak var createHabitCell: CreateHabitCell?
+
+    var scheduleViewController: ScheduleViewController?
+    private var selectedWeekDays: [WeekDay] = []
+    private var newTracker: NewTracker?
+
+
+    private var trackers: [Tracker] = []
+    private lazy var category: String? =  TrackerCategory(title: "Домашние дела", trackers: self.trackers).title
 
     // MARK: -  UI
     private lazy var navBarLabel: UILabel = {
@@ -99,6 +108,8 @@ final class CreateHabitViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        delegate = self
+        createHabitCell?.delegate = self
         setupViews()
         setupConstraints()
     }
@@ -173,10 +184,9 @@ final class CreateHabitViewController: UIViewController {
                                  title: trackersTitle,
                                  color: .green,
                                  emoji: "😍",
-                                 scedule: nil,
+                                 scedule: self.selectedWeekDays,
                                  completedDays: [])
-        delegate?.didCreateTracker(newTracker)
-        delegate?.reloadData()
+
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
 
@@ -215,10 +225,13 @@ extension CreateHabitViewController: UITableViewDataSource {
             fatalError("Could not cast to CreateTrackerCell")
         }
 
+
+
         if indexPath.row == 0 {
-            cell.configureCell(with: "Категория", isFirstCell: true)
+            cell.configureCell(with: "Категория", subtitle: category, isFirstCell: true)
         }  else if indexPath.row == 1 {
-            cell.configureCell(with: "Расписание", isFirstCell: false)
+            let scheduleText = selectedWeekDays.isEmpty ? "Empty" : selectedWeekDays.map { $0.rawValue }.joined(separator: ", ")
+            cell.configureCell(with: "Расписание", subtitle: scheduleText, isFirstCell: false)
         }
 
         let imageView = UIImageView(image: UIImage(named: "right_array_icon"))
@@ -235,7 +248,17 @@ extension CreateHabitViewController: UITableViewDelegate {
             print("Category Selected")
         } else if indexPath.row == 1 {
             let viewController = ScheduleViewController()
+            viewController.delegate = self
             present(viewController, animated: true, completion: nil)
         }
+    }
+}
+
+extension CreateHabitViewController: ScheduleViewControllerDelegate {
+    func didSelectDays(_ days: [WeekDay]) {
+//        newTracker?.schedule = days
+        selectedWeekDays = days
+        tableView.reloadData()
+        dismiss(animated: true)
     }
 }

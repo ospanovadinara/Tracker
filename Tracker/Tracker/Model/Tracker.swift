@@ -12,10 +12,13 @@ struct Tracker {
     let title: String
     let color: UIColor
     let emoji: String
-    let scedule: Date?
+    let scedule: [WeekDay]
     var completedDays: [Date]
+}
 
-    var daysCount: Int {
-           return completedDays.count
-       }
+struct NewTracker {
+    var label: String 
+    var emoji: String?
+    var color: UIColor?
+    var schedule: [WeekDay]?
 }
