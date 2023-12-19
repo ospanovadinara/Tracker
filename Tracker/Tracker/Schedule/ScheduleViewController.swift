@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 
+// MARK: - Protocol
 protocol ScheduleViewControllerDelegate: AnyObject {
     func didSelectDays(_ days: [WeekDay])
 }
@@ -61,6 +62,7 @@ final class ScheduleViewController: UIViewController {
         setupConstraints()
     }
 
+    // MARK: - Setup Views
     private func setupViews() {
         view.backgroundColor = UIColor.white
 
@@ -72,6 +74,7 @@ final class ScheduleViewController: UIViewController {
         }
     }
 
+    // MARK: - Setup Constraints
     private func setupConstraints() {
         navBarLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(15)
@@ -101,6 +104,7 @@ final class ScheduleViewController: UIViewController {
     }
 }
 
+// MARK: - ScheduleCellDelegate
 extension ScheduleViewController: ScheduleCellDelegate {
     func switchButtonDidTap(to isSelected: Bool, of weekDay: WeekDay) {
         if isSelected {
@@ -113,6 +117,7 @@ extension ScheduleViewController: ScheduleCellDelegate {
 
 }
 
+// MARK: - UITableViewDataSource
 extension ScheduleViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         1
@@ -144,10 +149,12 @@ extension ScheduleViewController: UITableViewDataSource {
     }
 }
 
+// MARK: - UITableViewDelegate
 extension ScheduleViewController: UITableViewDelegate {
-
+    //TODO
 }
 
+// MARK: - Enum WeekDay
 enum WeekDay: String, CaseIterable {
     case monday = "Понедельник"
     case tuesday = "Вторник"

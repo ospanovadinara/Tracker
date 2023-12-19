@@ -9,12 +9,13 @@ import UIKit
 import SnapKit
 
 final class TrackersViewController: UIViewController {
+
+    // MARK: - Private protperties
     private var trackers: [Tracker] = []
     private var categories: [TrackerCategory] = []
-    //для теста
     private lazy var category: TrackerCategory = {
         return TrackerCategory(title: "Домашние дела", trackers: self.trackers)
-    }()
+    }() //тестовая категория
     private var visibleCategories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
     private var trackersModel: [Tracker] = []
@@ -146,25 +147,9 @@ extension TrackersViewController {
     }
 }
 
+// MARK: - UISearchBarDelegate
 extension TrackersViewController: UISearchBarDelegate {
 
-}
-
-// MARK: - CreateTrackerDelegate
-extension TrackersViewController: CreateHabitDelegate {
-    func didCreateTracker(_ tracker: Tracker) {
-        self.trackers.append(tracker)
-        self.categories = categories.map({ category in
-            var updatedTrackers = category.trackers
-            updatedTrackers.append(tracker)
-            return TrackerCategory(title: category.title, trackers: updatedTrackers)
-        })
-        reloadData()
-    }
-
-    func reloadData() {
-        self.collectionView.reloadData()
-    }
 }
 
 // MARK: - UICollectionViewDataSource
@@ -225,6 +210,7 @@ extension TrackersViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - TrackersCellDelgate
 extension TrackersViewController: TrackersCellDelgate {
     func completeTracker(id: UUID, at indexPath: IndexPath) {
         let trackerRecord = TrackerRecord(date: datePicker.date, trackerID: id)

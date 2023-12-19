@@ -8,11 +8,6 @@
 import UIKit
 import SnapKit
 
-protocol CreateHabitDelegate: AnyObject {
-    func didCreateTracker(_ tracker: Tracker)
-    func reloadData()
-}
-
 final class CreateHabitViewController: UIViewController {
 
     // MARK: - ScheduleViewControllerDelegate
@@ -112,6 +107,7 @@ final class CreateHabitViewController: UIViewController {
         setupConstraints()
     }
 
+    // MARK: - Setup Views
     private func setupViews() {
         view.backgroundColor = UIColor.white
         textFieldContainerView.addSubview(trackersNameTextField)
@@ -127,6 +123,7 @@ final class CreateHabitViewController: UIViewController {
         }
     }
 
+    // MARK: - Setup Constraints
     private func setupConstraints() {
         navBarLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(15)
@@ -174,18 +171,7 @@ final class CreateHabitViewController: UIViewController {
     }
 
     @objc private func createButtonTapped() {
-//        guard let trackersTitle = trackersNameTextField.text, !trackersTitle.isEmpty else {
-//            return
-//        }
-//
-//        let newTracker = Tracker(id: UUID(),
-//                                 title: trackersTitle,
-//                                 color: .green,
-//                                 emoji: "😍",
-//                                 scedule: self.selectedWeekDays,
-//                                 completedDays: [])
-//
-//        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+        //TODO
     }
 
     @objc private func clearTextFieldButtonTapped() {
@@ -251,6 +237,7 @@ extension CreateHabitViewController: UITableViewDelegate {
     }
 }
 
+// MARK: - ScheduleViewControllerDelegate
 extension CreateHabitViewController: ScheduleViewControllerDelegate {
     func didSelectDays(_ days: [WeekDay]) {
         selectedWeekDays = days
