@@ -105,6 +105,7 @@ final class CreateHabitViewController: UIViewController {
         delegate = self
         setupViews()
         setupConstraints()
+        checkCorrectness()
     }
 
     // MARK: - Setup Views
@@ -171,12 +172,22 @@ final class CreateHabitViewController: UIViewController {
     }
 
     @objc private func createButtonTapped() {
-        //TODO
+      //TODO
     }
 
     @objc private func clearTextFieldButtonTapped() {
         trackersNameTextField.text = ""
         clearTextFieldButton.isHidden = true
+    }
+
+    private func checkCorrectness() {
+        if let text = trackersNameTextField.text, !text.isEmpty, !selectedWeekDays.isEmpty {
+            createButton.isEnabled = true
+            createButton.backgroundColor = UIColor(named: "YP Black")
+        } else {
+            createButton.isEnabled = false
+            createButton.backgroundColor = UIColor(named: "YP Dark Gray")
+        }
     }
 }
 
@@ -189,6 +200,7 @@ extension CreateHabitViewController: UITextFieldDelegate {
         } else {
             clearTextFieldButton.isHidden = true
         }
+        checkCorrectness()
     }
 }
 
@@ -232,6 +244,7 @@ extension CreateHabitViewController: UITableViewDelegate {
             let viewController = ScheduleViewController()
             viewController.delegate = self
             self.delegate?.didSelectDays(self.selectedWeekDays)
+            checkCorrectness()
             present(viewController, animated: true, completion: nil)
         }
     }
