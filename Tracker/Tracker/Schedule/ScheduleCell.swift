@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+
 protocol ScheduleCellDelegate: AnyObject {
     func switchButtonDidTap(to isSelected: Bool, of weekDay: WeekDay)
 }

@@ -223,13 +223,11 @@ extension CreateHabitViewController: UITableViewDataSource {
             fatalError("Could not cast to CreateTrackerCell")
         }
 
-
-
         if indexPath.row == 0 {
             cell.configureCell(with: "Категория", subtitle: category, isFirstCell: true)
         }  else if indexPath.row == 1 {
-            let scheduleText = selectedWeekDays.isEmpty ? "" : selectedWeekDays.map { $0.rawValue }.joined(separator: ", ")
-            cell.configureCell(with: "Расписание", subtitle: scheduleText, isFirstCell: false)
+            let schedule = selectedWeekDays.isEmpty ? "" : selectedWeekDays.map { $0.shortTitle }.joined(separator: ", ")
+            cell.configureCell(with: "Расписание", subtitle: schedule, isFirstCell: false)
         }
 
         let imageView = UIImageView(image: UIImage(named: "right_array_icon"))

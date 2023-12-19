@@ -27,13 +27,6 @@ final class CreateHabitCell: UITableViewCell {
         return label
     }()
 
-    private let stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.spacing = 2
-        stackView.axis = .vertical
-        return stackView
-    }()
-
     private lazy var customSeparatorView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(named: "YP Dark Gray")
@@ -54,10 +47,9 @@ final class CreateHabitCell: UITableViewCell {
     // MARK: Setup Views
     private func setupViews() {
         contentView.backgroundColor = UIColor(named: "YP Gray")?.withAlphaComponent(0.3)
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(subtitleLabel)
 
-        [stackView,
+        [titleLabel,
+         subtitleLabel,
          customSeparatorView
         ].forEach {
             contentView.addSubview($0)
@@ -73,10 +65,16 @@ final class CreateHabitCell: UITableViewCell {
             make.height.equalTo(75)
         }
 
-        stackView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(27)
-            make.leading.trailing.equalToSuperview().inset(16)
-            make.height.equalTo(44)
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(15)
+            make.leading.equalToSuperview().inset(16)
+            make.height.equalTo(22)
+        }
+
+        subtitleLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().inset(16)
+            make.bottom.equalToSuperview().offset(-14)
+            make.height.equalTo(22)
         }
 
         customSeparatorView.snp.makeConstraints { make in
