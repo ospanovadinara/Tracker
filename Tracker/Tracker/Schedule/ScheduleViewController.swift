@@ -13,8 +13,11 @@ protocol ScheduleViewControllerDelegate: AnyObject {
 }
 
 final class ScheduleViewController: UIViewController {
-    var createHabitViewController: CreateHabitViewController?
+
+    // MARK: - ScheduleViewControllerDelegate
     weak var delegate: ScheduleViewControllerDelegate?
+
+    // MARK: - Private properties
     private var selectedWeekDays: Set<WeekDay> = []
 
     // MARK: - UI
@@ -54,7 +57,6 @@ final class ScheduleViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        delegate = self
         setupViews()
         setupConstraints()
     }
@@ -95,14 +97,7 @@ final class ScheduleViewController: UIViewController {
     @objc private func doneButtonTapped() {
         let weekDays = Array(selectedWeekDays)
         delegate?.didSelectDays(weekDays)
-//        dismiss(animated: true)
-    }
-}
-
-extension ScheduleViewController: ScheduleViewControllerDelegate {
-    func didSelectDays(_ days: [WeekDay]) {
-        let weekDays = Set(selectedWeekDays)
-        selectedWeekDays = weekDays
+        dismiss(animated: true, completion: nil)
     }
 }
 

@@ -14,14 +14,13 @@ protocol CreateHabitDelegate: AnyObject {
 }
 
 final class CreateHabitViewController: UIViewController {
-    weak var delegate: ScheduleViewControllerDelegate?
-    weak var createHabitCell: CreateHabitCell?
 
-    var scheduleViewController: ScheduleViewController?
+    // MARK: - ScheduleViewControllerDelegate
+    weak var delegate: ScheduleViewControllerDelegate?
+
+    // MARK: - Private properties
     private var selectedWeekDays: [WeekDay] = []
     private var newTracker: NewTracker?
-
-
     private var trackers: [Tracker] = []
     private lazy var category: String? =  TrackerCategory(title: "Домашние дела", trackers: self.trackers).title
 
@@ -109,7 +108,6 @@ final class CreateHabitViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         delegate = self
-        createHabitCell?.delegate = self
         setupViews()
         setupConstraints()
     }
@@ -176,18 +174,18 @@ final class CreateHabitViewController: UIViewController {
     }
 
     @objc private func createButtonTapped() {
-        guard let trackersTitle = trackersNameTextField.text, !trackersTitle.isEmpty else {
-            return
-        }
-
-        let newTracker = Tracker(id: UUID(),
-                                 title: trackersTitle,
-                                 color: .green,
-                                 emoji: "😍",
-                                 scedule: self.selectedWeekDays,
-                                 completedDays: [])
-
-        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+//        guard let trackersTitle = trackersNameTextField.text, !trackersTitle.isEmpty else {
+//            return
+//        }
+//
+//        let newTracker = Tracker(id: UUID(),
+//                                 title: trackersTitle,
+//                                 color: .green,
+//                                 emoji: "😍",
+//                                 scedule: self.selectedWeekDays,
+//                                 completedDays: [])
+//
+//        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
 
     @objc private func clearTextFieldButtonTapped() {
@@ -230,7 +228,7 @@ extension CreateHabitViewController: UITableViewDataSource {
         if indexPath.row == 0 {
             cell.configureCell(with: "Категория", subtitle: category, isFirstCell: true)
         }  else if indexPath.row == 1 {
-            let scheduleText = selectedWeekDays.isEmpty ? "Empty" : selectedWeekDays.map { $0.rawValue }.joined(separator: ", ")
+            let scheduleText = selectedWeekDays.isEmpty ? "" : selectedWeekDays.map { $0.rawValue }.joined(separator: ", ")
             cell.configureCell(with: "Расписание", subtitle: scheduleText, isFirstCell: false)
         }
 
@@ -249,6 +247,7 @@ extension CreateHabitViewController: UITableViewDelegate {
         } else if indexPath.row == 1 {
             let viewController = ScheduleViewController()
             viewController.delegate = self
+            self.delegate?.didSelectDays(self.selectedWeekDays)
             present(viewController, animated: true, completion: nil)
         }
     }
@@ -256,9 +255,7 @@ extension CreateHabitViewController: UITableViewDelegate {
 
 extension CreateHabitViewController: ScheduleViewControllerDelegate {
     func didSelectDays(_ days: [WeekDay]) {
-//        newTracker?.schedule = days
         selectedWeekDays = days
         tableView.reloadData()
-        dismiss(animated: true)
     }
 }

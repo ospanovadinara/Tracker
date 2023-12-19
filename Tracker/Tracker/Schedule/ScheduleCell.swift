@@ -14,7 +14,11 @@ protocol ScheduleCellDelegate: AnyObject {
 final class ScheduleCell: UITableViewCell {
     // MARK: - Public properties
     public static let cellID = String(describing: ScheduleCell.self)
+
+    // MARK: - ScheduleCellDelegate
     weak var delegate: ScheduleCellDelegate?
+
+    // MARK: - Private properties
     private var weekDay: WeekDay?
 
     // MARK: - UI
@@ -97,6 +101,7 @@ final class ScheduleCell: UITableViewCell {
 
     // MARK: - Public Methods
     public func configureCell(with weekDay: WeekDay, isLastCell: Bool, isSelected: Bool) {
+        self.weekDay = weekDay
         titleLabel.text = weekDay.rawValue
         customSeparatorView.isHidden = isLastCell
         switchButton.isOn = isSelected

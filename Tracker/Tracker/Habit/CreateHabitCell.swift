@@ -12,7 +12,6 @@ final class CreateHabitCell: UITableViewCell {
     // MARK: - Public properties
     public static let cellID = String(describing: CreateHabitCell.self)
 
-    weak var delegate: ScheduleViewControllerDelegate?
     // MARK: - UI
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -93,9 +92,7 @@ final class CreateHabitCell: UITableViewCell {
         titleLabel.text = title
         customSeparatorView.isHidden = !isFirstCell
         if let subtitle {
-            func didSelectDays(_ days: [WeekDay]) {
-                subtitleLabel.text = days.map { $0.rawValue }.joined(separator: ", ")
-            }
+            subtitleLabel.text = subtitle
         }
     }
 }
