@@ -8,10 +8,17 @@
 import UIKit
 import SnapKit
 
+protocol CreateHabitViewControllerDelegate: AnyObject {
+    func createButtonidTap(tracker: Tracker, category: String)
+    func reloadData()
+    func cancelButtonDidTap()
+}
+
 final class CreateHabitViewController: UIViewController {
 
     // MARK: - ScheduleViewControllerDelegate
     weak var delegate: ScheduleViewControllerDelegate?
+    weak var createHabitViewControllerDelegate: CreateHabitViewControllerDelegate?
 
     // MARK: - Private properties
     private var selectedWeekDays: [WeekDay] = []
@@ -169,10 +176,29 @@ final class CreateHabitViewController: UIViewController {
     // MARK: - Actions
     @objc private func cancelButtonTapped() {
         dismiss(animated: true)
+        createHabitViewControllerDelegate?.cancelButtonDidTap()
     }
 
     @objc private func createButtonTapped() {
       //TODO
+        guard let category, let text = trackersNameTextField.text, !text.isEmpty else {
+            return
+        }
+
+        let newTracker = Tracker(
+            id: UUID(),
+            title: text,
+            color: .green,
+            emoji: "💙",
+            scedule: self.selectedWeekDays,
+            completedDays: [])
+
+        createHabitViewControllerDelegate?.createButtonidTap(
+            tracker: newTracker,
+            category: category
+        )
+        createHabitViewControllerDelegate?.reloadData()
+        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
 
     @objc private func clearTextFieldButtonTapped() {

@@ -18,8 +18,6 @@ final class TrackersViewController: UIViewController {
     }() //тестовая категория
     private var visibleCategories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
-    private var trackersModel: [Tracker] = []
-
     var currentDate: Date = Date()
 
     // MARK: - UI
@@ -160,13 +158,13 @@ extension TrackersViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        if trackersModel.isEmpty {
+        if trackers.isEmpty {
             collectionView.backgroundView = emptyView
         } else {
             collectionView.backgroundView = nil
         }
 
-        return trackersModel.count
+        return trackers.count
     }
 
     func collectionView(_ collectionView: UICollectionView, 
@@ -263,6 +261,28 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewDele
                             left: 16,
                             bottom: 0,
                             right: 0)
+    }
+}
+
+extension TrackersViewController: CreateHabitViewControllerDelegate {
+    func reloadData() {
+        collectionView.reloadData()
+    }
+    
+    //TODO 
+    func createButtonidTap(tracker: Tracker, category: String) {
+        self.trackers.append(tracker)
+        self.categories = self.categories.map { category in
+            var updatedTrackers = category.trackers
+            updatedTrackers.append(tracker)
+            return TrackerCategory(title: category.title, trackers: updatedTrackers)
+        }
+        collectionView.reloadData()
+        dismiss(animated: true)
+    }
+
+    func cancelButtonDidTap() {
+        dismiss(animated: true)
     }
 }
 
