@@ -9,7 +9,8 @@ import UIKit
 import SnapKit
 
 final class ChooseTrackerViewController: UIViewController {
-    
+    weak var trackersViewController: TrackersViewController?
+
     // MARK: - UI
     private lazy var navBarLabel: UILabel = {
         let label = UILabel()
@@ -84,6 +85,7 @@ final class ChooseTrackerViewController: UIViewController {
     // MARK: - Actions
     @objc private func trackerButtonTapped() {
         let viewController = CreateHabitViewController()
+        viewController.createHabitViewControllerDelegate = self.trackersViewController
         present(viewController, animated: true, completion: nil)
     }
 

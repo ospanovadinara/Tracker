@@ -17,7 +17,7 @@ protocol CreateHabitViewControllerDelegate: AnyObject {
 final class CreateHabitViewController: UIViewController {
 
     // MARK: - ScheduleViewControllerDelegate
-    weak var delegate: ScheduleViewControllerDelegate?
+    weak var scheduleViewControllerdelegate: ScheduleViewControllerDelegate?
     weak var createHabitViewControllerDelegate: CreateHabitViewControllerDelegate?
 
     // MARK: - Private properties
@@ -109,7 +109,7 @@ final class CreateHabitViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        delegate = self
+        scheduleViewControllerdelegate = self
         setupViews()
         setupConstraints()
         checkCorrectness()
@@ -269,7 +269,7 @@ extension CreateHabitViewController: UITableViewDelegate {
         } else if indexPath.row == 1 {
             let viewController = ScheduleViewController()
             viewController.delegate = self
-            self.delegate?.didSelectDays(self.selectedWeekDays)
+            self.scheduleViewControllerdelegate?.didSelectDays(self.selectedWeekDays)
             checkCorrectness()
             present(viewController, animated: true, completion: nil)
         }
