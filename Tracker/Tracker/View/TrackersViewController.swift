@@ -136,6 +136,7 @@ final class TrackersViewController: UIViewController {
 extension TrackersViewController {
     @objc private func addNavBarButtonTapped() {
         let viewController = ChooseTrackerViewController()
+        viewController.trackersViewController = self
         present(viewController, animated: true, completion: nil)
     }
 
@@ -153,9 +154,9 @@ extension TrackersViewController: UISearchBarDelegate {
 // MARK: - UICollectionViewDataSource
 extension TrackersViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return categories.count
+        return trackers.count // поменять на categories
     }
-    
+
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         if trackers.isEmpty {
@@ -176,8 +177,11 @@ extension TrackersViewController: UICollectionViewDataSource {
             fatalError("Could not cast to TrackersCell")
         }
 
-        let cellData = categories
-        let tracker = cellData[indexPath.section].trackers[indexPath.row]
+        let cellData = trackers // поменять на categories
+        let tracker = cellData[indexPath.row]
+//        let tracker = cellData[indexPath.section].trackers[indexPath.row]
+
+
 
         cell.delegate = self
         let isCompletedToday = isTrackerCompletedToday(id: tracker.id)

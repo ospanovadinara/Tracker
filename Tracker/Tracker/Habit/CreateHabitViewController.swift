@@ -18,7 +18,7 @@ final class CreateHabitViewController: UIViewController {
 
     // MARK: - ScheduleViewControllerDelegate
     weak var scheduleViewControllerdelegate: ScheduleViewControllerDelegate?
-    weak var createHabitViewControllerDelegate: CreateHabitViewControllerDelegate?
+    weak var createHabitViewControllerDelegate: TrackersViewController?
 
     // MARK: - Private properties
     private var selectedWeekDays: [WeekDay] = []

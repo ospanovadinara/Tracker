@@ -84,6 +84,8 @@ final class ChooseTrackerViewController: UIViewController {
 
     // MARK: - Actions
     @objc private func trackerButtonTapped() {
+        print("Before setting delegate: \(trackersViewController)")
+
         let viewController = CreateHabitViewController()
         viewController.createHabitViewControllerDelegate = self.trackersViewController
         present(viewController, animated: true, completion: nil)
