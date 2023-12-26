@@ -88,6 +88,10 @@ final class TrackersViewController: UIViewController {
         setupNavigationBar()
         setupViews()
         setupConstraints()
+
+        if !trackers.isEmpty {
+            emptyView.isHidden = true
+        }
     }
 
     // MARK: - Setup NavigationBar
@@ -127,7 +131,8 @@ final class TrackersViewController: UIViewController {
         }
 
         emptyView.snp.makeConstraints { make in
-            make.top.leading.trailing.bottom.equalToSuperview()
+//            make.top.leading.trailing.bottom.equalToSuperview()
+            make.center.equalToSuperview()
         }
     }
 }
@@ -161,8 +166,10 @@ extension TrackersViewController: UICollectionViewDataSource {
                         numberOfItemsInSection section: Int) -> Int {
         if trackers.isEmpty {
             collectionView.backgroundView = emptyView
+            emptyView.isHidden = false
         } else {
             collectionView.backgroundView = nil
+            emptyView.isHidden = true
         }
 
         return trackers.count
