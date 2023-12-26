@@ -24,7 +24,7 @@ final class CreateHabitViewController: UIViewController {
     private var selectedWeekDays: [WeekDay] = []
     private var newTracker: NewTracker?
     private var trackers: [Tracker] = []
-    private lazy var category: String? =  TrackerCategory(title: "Домашние дела", trackers: self.trackers).title
+//    private lazy var category: String? =  TrackerCategory(title: "Домашние дела", trackers: self.trackers).title
 
     // MARK: -  UI
     private lazy var navBarLabel: UILabel = {
@@ -180,8 +180,7 @@ final class CreateHabitViewController: UIViewController {
     }
 
     @objc private func createButtonTapped() {
-      //TODO
-        guard let category, let text = trackersNameTextField.text, !text.isEmpty else {
+        guard let text = trackersNameTextField.text, !text.isEmpty else {
             return
         }
 
@@ -195,7 +194,7 @@ final class CreateHabitViewController: UIViewController {
 
         createHabitViewControllerDelegate?.createButtonidTap(
             tracker: newTracker,
-            category: category
+            category: "Category"
         )
         createHabitViewControllerDelegate?.reloadData()
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
@@ -248,7 +247,7 @@ extension CreateHabitViewController: UITableViewDataSource {
         }
 
         if indexPath.row == 0 {
-            cell.configureCell(with: "Категория", subtitle: category, isFirstCell: true)
+            cell.configureCell(with: "Категория", subtitle: "Category", isFirstCell: true)
         }  else if indexPath.row == 1 {
             let schedule = selectedWeekDays.isEmpty ? "" : selectedWeekDays.map { $0.shortTitle }.joined(separator: ", ")
             cell.configureCell(with: "Расписание", subtitle: schedule, isFirstCell: false)

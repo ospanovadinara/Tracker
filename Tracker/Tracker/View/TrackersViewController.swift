@@ -13,9 +13,6 @@ final class TrackersViewController: UIViewController {
     // MARK: - Private protperties
     private var trackers: [Tracker] = []
     private var categories: [TrackerCategory] = []
-    private lazy var category: TrackerCategory = {
-        return TrackerCategory(title: "Домашние дела", trackers: self.trackers)
-    }() //тестовая категория
     private var visibleCategories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
     var currentDate: Date = Date()
@@ -131,7 +128,6 @@ final class TrackersViewController: UIViewController {
         }
 
         emptyView.snp.makeConstraints { make in
-//            make.top.leading.trailing.bottom.equalToSuperview()
             make.center.equalToSuperview()
         }
     }
@@ -159,7 +155,8 @@ extension TrackersViewController: UISearchBarDelegate {
 // MARK: - UICollectionViewDataSource
 extension TrackersViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return trackers.count // поменять на categories
+        return trackers.count
+//        return categories.count
     }
 
     func collectionView(_ collectionView: UICollectionView,
@@ -173,6 +170,7 @@ extension TrackersViewController: UICollectionViewDataSource {
         }
 
         return trackers.count
+//        return categories[section].trackers.count
     }
 
     func collectionView(_ collectionView: UICollectionView, 
@@ -184,10 +182,10 @@ extension TrackersViewController: UICollectionViewDataSource {
             fatalError("Could not cast to TrackersCell")
         }
 
-        let cellData = trackers // поменять на categories
+        let cellData = trackers
         let tracker = cellData[indexPath.row]
+//        let cellData = categories
 //        let tracker = cellData[indexPath.section].trackers[indexPath.row]
-
 
 
         cell.delegate = self
@@ -280,7 +278,6 @@ extension TrackersViewController: CreateHabitViewControllerDelegate {
         collectionView.reloadData()
     }
     
-    //TODO 
     func createButtonidTap(tracker: Tracker, category: String) {
         self.trackers.append(tracker)
         self.categories = self.categories.map { category in
