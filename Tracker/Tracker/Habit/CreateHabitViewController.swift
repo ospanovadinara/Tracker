@@ -24,7 +24,6 @@ final class CreateHabitViewController: UIViewController {
     private var selectedWeekDays: [WeekDay] = []
     private var newTracker: NewTracker?
     private var trackers: [Tracker] = []
-//    private lazy var category: String? =  TrackerCategory(title: "Домашние дела", trackers: self.trackers).title
 
     // MARK: -  UI
     private lazy var navBarLabel: UILabel = {

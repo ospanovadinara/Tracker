@@ -16,6 +16,7 @@ final class TrackersViewController: UIViewController {
     private var visibleCategories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
     var currentDate: Date = Date()
+    private var createHabitViewControllerDelegate: CreateHabitViewControllerDelegate?
 
     // MARK: - UI
     private lazy var navBarTitle: UILabel = {
@@ -155,8 +156,8 @@ extension TrackersViewController: UISearchBarDelegate {
 // MARK: - UICollectionViewDataSource
 extension TrackersViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return trackers.count
-//        return categories.count
+//        return trackers.count
+        return categories.count
     }
 
     func collectionView(_ collectionView: UICollectionView,
@@ -169,8 +170,8 @@ extension TrackersViewController: UICollectionViewDataSource {
             emptyView.isHidden = true
         }
 
-        return trackers.count
-//        return categories[section].trackers.count
+//        return trackers.count
+        return categories[section].trackers.count
     }
 
     func collectionView(_ collectionView: UICollectionView, 
@@ -182,10 +183,10 @@ extension TrackersViewController: UICollectionViewDataSource {
             fatalError("Could not cast to TrackersCell")
         }
 
-        let cellData = trackers
-        let tracker = cellData[indexPath.row]
-//        let cellData = categories
-//        let tracker = cellData[indexPath.section].trackers[indexPath.row]
+//        let cellData = trackers
+//        let tracker = cellData[indexPath.row]
+        let cellData = categories
+        let tracker = cellData[indexPath.section].trackers[indexPath.row]
 
 
         cell.delegate = self
