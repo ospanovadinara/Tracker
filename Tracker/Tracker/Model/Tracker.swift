@@ -15,10 +15,3 @@ struct Tracker {
     let scedule: [WeekDay]
     var completedDays: [Date]
 }
-
-struct NewTracker {
-    var label: String 
-    var emoji: String?
-    var color: UIColor?
-    var schedule: [WeekDay]?
-}

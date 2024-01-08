@@ -22,7 +22,6 @@ final class CreateHabitViewController: UIViewController {
 
     // MARK: - Private properties
     private var selectedWeekDays: [WeekDay] = []
-    private var newTracker: NewTracker?
     private var trackers: [Tracker] = []
 
     // MARK: -  UI

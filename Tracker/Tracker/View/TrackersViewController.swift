@@ -156,7 +156,6 @@ extension TrackersViewController: UISearchBarDelegate {
 // MARK: - UICollectionViewDataSource
 extension TrackersViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-//        return trackers.count
         return categories.count
     }
 
@@ -169,8 +168,6 @@ extension TrackersViewController: UICollectionViewDataSource {
             collectionView.backgroundView = nil
             emptyView.isHidden = true
         }
-
-//        return trackers.count
         return categories[section].trackers.count
     }
 
@@ -183,8 +180,6 @@ extension TrackersViewController: UICollectionViewDataSource {
             fatalError("Could not cast to TrackersCell")
         }
 
-//        let cellData = trackers
-//        let tracker = cellData[indexPath.row]
         let cellData = categories
         let tracker = cellData[indexPath.section].trackers[indexPath.row]
 
@@ -280,12 +275,21 @@ extension TrackersViewController: CreateHabitViewControllerDelegate {
     }
     
     func createButtonidTap(tracker: Tracker, category: String) {
-        self.trackers.append(tracker)
-        self.categories = self.categories.map { category in
-            var updatedTrackers = category.trackers
-            updatedTrackers.append(tracker)
-            return TrackerCategory(title: category.title, trackers: updatedTrackers)
+        if categories.isEmpty {
+
+            let newCategory = TrackerCategory(title: category, trackers: [tracker])
+            categories.append(newCategory)
+        } else {
+            if let existingCategoryIndex = categories.firstIndex(where: { $0.title == category }) {
+                var updatedTrackers = categories[existingCategoryIndex].trackers
+                updatedTrackers.append(tracker)
+                categories[existingCategoryIndex] = TrackerCategory(title: category, trackers: updatedTrackers)
+            } else {
+                let newCategory = TrackerCategory(title: category, trackers: [tracker])
+                categories.append(newCategory)
+            }
         }
+        self.trackers.append(tracker)
         collectionView.reloadData()
         dismiss(animated: true)
     }
