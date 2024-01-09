@@ -17,6 +17,7 @@ final class TrackersViewController: UIViewController {
     private var completedTrackers: [TrackerRecord] = []
     var currentDate: Date = Date()
     private var createHabitViewControllerDelegate: CreateHabitViewControllerDelegate?
+    private var dataManager = DataManager.shared
 
     // MARK: - UI
     private lazy var navBarTitle: UILabel = {
@@ -39,20 +40,20 @@ final class TrackersViewController: UIViewController {
         let datePicker = UIDatePicker()
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .compact
-        datePicker.maximumDate = Date()
+        datePicker.locale = Locale(identifier: "ru_Ru")
         datePicker.addTarget(self,
                              action: #selector(datePickerValueChanged),
                              for: .valueChanged)
         return datePicker
     }()
 
-    private lazy var searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        searchBar.placeholder = "Поиск"
-        searchBar.searchBarStyle = .minimal
-        searchBar.delegate = self
-        return searchBar
+    private lazy var searchTextField: UISearchTextField = {
+        let textField = UISearchTextField()
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.placeholder = "Поиск"
+//        textField.searchBarStyle = .minimal
+        textField.delegate = self
+        return textField
     }()
 
     private lazy var layout: UICollectionViewFlowLayout = {
@@ -83,6 +84,8 @@ final class TrackersViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        reload()
         setupNavigationBar()
         setupViews()
         setupConstraints()
@@ -102,7 +105,7 @@ final class TrackersViewController: UIViewController {
     private func setupViews() {
         [collectionView,
          navBarTitle,
-         searchBar,
+         searchTextField,
          emptyView
         ].forEach {
             view.addSubview($0)
@@ -117,20 +120,27 @@ final class TrackersViewController: UIViewController {
             make.height.equalTo(41)
         }
 
-        searchBar.snp.makeConstraints { make in
+        searchTextField.snp.makeConstraints { make in
             make.top.equalTo(navBarTitle.snp.bottom)
             make.leading.equalToSuperview().offset(8)
             make.trailing.equalToSuperview().offset(-8)
+            make.height.equalTo(36)
         }
 
         collectionView.snp.makeConstraints { make in
-            make.top.equalTo(searchBar.snp.bottom).offset(24)
+            make.top.equalTo(searchTextField.snp.bottom).offset(24)
             make.leading.trailing.bottom.equalToSuperview()
         }
 
         emptyView.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
+    }
+
+    private func reload() {
+        categories = dataManager.categories
+        visibleCategories = categories
+        datePickerValueChanged()
     }
 }
 
@@ -143,32 +153,72 @@ extension TrackersViewController {
     }
 
     @objc private func datePickerValueChanged() {
-        currentDate = datePicker.date
+        reloadVisibleCategories()
+    }
+
+    private func reloadVisibleCategories() {
+        let calendar = Calendar.current
+        let filterWeekday = calendar.component(.weekday, from: datePicker.date)
+        let filterText = (searchTextField.text ?? "").lowercased()
+
+        visibleCategories = categories.compactMap { category in
+            let trackers = category.trackers.filter { tracker in
+                let textCondition = filterText.isEmpty ||
+                tracker.title.lowercased().contains(filterText)
+
+                let dateCondition = tracker.scedule.contains { weekDay in
+                    weekDay.numberValue == filterWeekday
+                } == true
+
+                return textCondition && dateCondition
+            }
+
+            if trackers.isEmpty {
+                return nil
+            }
+
+            return TrackerCategory(
+                title: category.title,
+                trackers: trackers
+            )
+        }
         collectionView.reloadData()
+        reloadPlaceHolder()
+    }
+
+    private func reloadPlaceHolder()  {
+
+        if !categories.isEmpty && visibleCategories.isEmpty {
+            //отобразить плейсхолдер для фильтрации
+        }
     }
 }
 
 // MARK: - UISearchBarDelegate
-extension TrackersViewController: UISearchBarDelegate {
-
+extension TrackersViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        reloadVisibleCategories()
+        return true
+    }
 }
 
 // MARK: - UICollectionViewDataSource
 extension TrackersViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return categories.count
+        return visibleCategories.count
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        if trackers.isEmpty {
+        if visibleCategories.isEmpty {
             collectionView.backgroundView = emptyView
             emptyView.isHidden = false
         } else {
             collectionView.backgroundView = nil
             emptyView.isHidden = true
         }
-        return categories[section].trackers.count
+        return visibleCategories[section].trackers.count
     }
 
     func collectionView(_ collectionView: UICollectionView, 
@@ -180,7 +230,7 @@ extension TrackersViewController: UICollectionViewDataSource {
             fatalError("Could not cast to TrackersCell")
         }
 
-        let cellData = categories
+        let cellData = visibleCategories
         let tracker = cellData[indexPath.section].trackers[indexPath.row]
 
 
@@ -243,7 +293,7 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewDele
             fatalError("Could not cast to TrackerHeaderView")
         }
 
-        sectionHeaderView.configureCell(with: categories)
+        sectionHeaderView.configureCell(with: visibleCategories)
         return sectionHeaderView
     }
 
@@ -275,18 +325,18 @@ extension TrackersViewController: CreateHabitViewControllerDelegate {
     }
     
     func createButtonidTap(tracker: Tracker, category: String) {
-        if categories.isEmpty {
+        if visibleCategories.isEmpty {
 
             let newCategory = TrackerCategory(title: category, trackers: [tracker])
-            categories.append(newCategory)
+            visibleCategories.append(newCategory)
         } else {
-            if let existingCategoryIndex = categories.firstIndex(where: { $0.title == category }) {
-                var updatedTrackers = categories[existingCategoryIndex].trackers
+            if let existingCategoryIndex = visibleCategories.firstIndex(where: { $0.title == category }) {
+                var updatedTrackers = visibleCategories[existingCategoryIndex].trackers
                 updatedTrackers.append(tracker)
-                categories[existingCategoryIndex] = TrackerCategory(title: category, trackers: updatedTrackers)
+                visibleCategories[existingCategoryIndex] = TrackerCategory(title: category, trackers: updatedTrackers)
             } else {
                 let newCategory = TrackerCategory(title: category, trackers: [tracker])
-                categories.append(newCategory)
+                visibleCategories.append(newCategory)
             }
         }
         self.trackers.append(tracker)

@@ -29,6 +29,7 @@
 		27AA2B272B10C9F70073F156 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 27AA2B262B10C9F70073F156 /* SnapKit */; };
 		27AA2B292B10C9F70073F156 /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 27AA2B282B10C9F70073F156 /* SnapKit-Dynamic */; };
 		27C07F1F2B13879600FBFBEC /* TrackersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C07F1E2B13879600FBFBEC /* TrackersCell.swift */; };
+		27E97A322B4D40C00086A42D /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E97A312B4D40C00086A42D /* DataManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		27AA2B1E2B0F97FD0073F156 /* TabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItem.swift; sourceTree = "<group>"; };
 		27AA2B202B0F99EE0073F156 /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
 		27C07F1E2B13879600FBFBEC /* TrackersCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCell.swift; sourceTree = "<group>"; };
+		27E97A312B4D40C00086A42D /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +143,7 @@
 				275EEB3B2B308C1700FC3409 /* IrregularEvent */,
 				270A9CEC2B22F4F000C0D572 /* Schedule */,
 				2702DC162B14B1A600F1491D /* View */,
+				27E97A312B4D40C00086A42D /* DataManager.swift */,
 			);
 			path = Tracker;
 			sourceTree = "<group>";
@@ -284,6 +287,7 @@
 				27AA2B072B0F8D7A0073F156 /* AppDelegate.swift in Sources */,
 				27827DE12B14E891002741CC /* TrackerHeaderView.swift in Sources */,
 				27936A3C2B120B2900514242 /* TrackerRecord.swift in Sources */,
+				27E97A322B4D40C00086A42D /* DataManager.swift in Sources */,
 				27AA2B1F2B0F97FD0073F156 /* TabItem.swift in Sources */,
 				2702DC142B14AFA900F1491D /* TrackersEmptyView.swift in Sources */,
 				27AA2B092B0F8D7A0073F156 /* SceneDelegate.swift in Sources */,
