@@ -51,7 +51,6 @@ final class TrackersViewController: UIViewController {
         let textField = UISearchTextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "Поиск"
-//        textField.searchBarStyle = .minimal
         textField.delegate = self
         return textField
     }()
@@ -81,6 +80,11 @@ final class TrackersViewController: UIViewController {
         return view
     }()
 
+    private lazy var trackerNotFoundedView: TrackerNotFoundedView = {
+        let view = TrackerNotFoundedView()
+        return view
+    }()
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,10 +93,6 @@ final class TrackersViewController: UIViewController {
         setupNavigationBar()
         setupViews()
         setupConstraints()
-
-        if !trackers.isEmpty {
-            emptyView.isHidden = true
-        }
     }
 
     // MARK: - Setup NavigationBar
@@ -189,7 +189,8 @@ extension TrackersViewController {
     private func reloadPlaceHolder()  {
 
         if !categories.isEmpty && visibleCategories.isEmpty {
-            //отобразить плейсхолдер для фильтрации
+            collectionView.backgroundView = trackerNotFoundedView
+            emptyView.isHidden = true
         }
     }
 }
