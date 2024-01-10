@@ -241,7 +241,8 @@ extension CreateHabitViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: CreateHabitCell.cellID,
             for: indexPath) as? CreateHabitCell else {
-            fatalError("Could not cast to CreateTrackerCell")
+            assertionFailure("Could not cast to CreateTrackerCell")
+            return UITableViewCell()
         }
 
         if indexPath.row == 0 {

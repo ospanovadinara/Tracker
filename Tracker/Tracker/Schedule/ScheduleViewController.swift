@@ -135,15 +135,11 @@ extension ScheduleViewController: UITableViewDataSource {
         }
 
         let weekDay = WeekDay.allCases[indexPath.row]
-        if indexPath.row == 6 {
-            cell.configureCell(with: weekDay, 
-                               isLastCell: true,
-                               isSelected: selectedWeekDays.contains(weekDay))
-        } else {
-            cell.configureCell(with: weekDay, 
-                               isLastCell: false,
-                               isSelected: selectedWeekDays.contains(weekDay))
-        }
+        cell.configureCell(
+            with: weekDay,
+            isLastCell: indexPath.row == 6,
+            isSelected: selectedWeekDays.contains(weekDay)
+        )
         cell.delegate = self
         return cell
     }
