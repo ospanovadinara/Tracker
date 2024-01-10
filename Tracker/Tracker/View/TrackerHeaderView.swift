@@ -37,10 +37,8 @@ final class TrackerHeaderView: UICollectionReusableView {
     }
 
     // MARK: - Public Method
-    public func configureCell(with model: [TrackerCategory]) {
-        if let firstModel = model.first {
-            title.text = firstModel.title
-        }
+    public func configureCell(with model: TrackerCategory) {
+        title.text = model.title
     }
 }
 
@@ -53,14 +51,14 @@ private extension TrackerHeaderView {
     func setupConstraints() {
         containerView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(30)
+            make.height.equalTo(32)
         }
 
         title.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.equalToSuperview().offset(28)
             make.trailing.equalToSuperview()
-            make.height.equalTo(18)
+            make.height.equalTo(20)
         }
     }
 }

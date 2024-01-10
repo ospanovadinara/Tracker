@@ -293,7 +293,8 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewDele
             fatalError("Could not cast to TrackerHeaderView")
         }
 
-        sectionHeaderView.configureCell(with: visibleCategories)
+        let categoryForSection = visibleCategories[indexPath.section]
+        sectionHeaderView.configureCell(with: categoryForSection)
         return sectionHeaderView
     }
 

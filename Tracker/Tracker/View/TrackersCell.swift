@@ -61,29 +61,15 @@ final class TrackersCell: UICollectionViewCell {
         return color
     }()
 
-    private lazy var roundedPlusButton: UIButton = {
+    private lazy var roundedButton: UIButton = {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 16
         button.addTarget(self,
-                         action: #selector(roundedPlusButtonDidTap),
+                         action: #selector(roundedButtonDidTap),
                          for: .touchUpInside)
+        button.setTitle("+", for: .normal)
         return button
-    }()
-
-    private lazy var doneImage: UIImage = {
-        let image = UIImage(named: "done_icon") ?? UIImage()
-        return image
-
-    }()
-
-    private lazy var plusImage: UIImage = {
-        let pointSize = UIImage.SymbolConfiguration(pointSize: 11)
-        let image = UIImage(
-            systemName: "plus",
-            withConfiguration: pointSize
-        ) ?? UIImage()
-        return image
     }()
 
     private lazy var trackersDaysCounter: UILabel = {
@@ -119,22 +105,22 @@ final class TrackersCell: UICollectionViewCell {
         emojiLabel.text = tracker.emoji
         trackerLabel.text = tracker.title
         trackerContainer.backgroundColor = tracker.color
-        roundedPlusButton.backgroundColor = tracker.color
+        roundedButton.backgroundColor = tracker.color
 
         let wordDays = convertCompletedDays(completedDays)
         trackersDaysCounter.text = wordDays
 
-        let image = isCompletedToday ? doneImage : plusImage
-        
-        roundedPlusButton.setImage(image, for: .normal)
+        let roundedButtonTitle = isCompletedToday ? "✓" : "+"
+
+        roundedButton.setTitle(roundedButtonTitle, for: .normal)
         adjustOpacity(to: isCompletedToday)
     }
 
     private func adjustOpacity(to isCompleted: Bool) {
         if isCompleted {
-            roundedPlusButton.layer.opacity = 0.2
+            roundedButton.layer.opacity = 0.2
         } else {
-            roundedPlusButton.layer.opacity = 1
+            roundedButton.layer.opacity = 1
         }
     }
 
@@ -163,7 +149,7 @@ private extension TrackersCell {
     func setupViews() {
 
         [trackerContainer,
-         roundedPlusButton,
+         roundedButton,
          trackersDaysCounter
         ].forEach {
             contentView.addSubview($0)
@@ -200,7 +186,7 @@ private extension TrackersCell {
             make.height.equalTo(18)
         }
 
-        roundedPlusButton.snp.makeConstraints { make in
+        roundedButton.snp.makeConstraints { make in
             make.centerY.equalTo(trackersDaysCounter.snp.centerY)
             make.trailing.equalToSuperview().offset(-16)
             make.height.equalTo(34)
@@ -209,7 +195,7 @@ private extension TrackersCell {
     }
 
     // MARK: - Actions
-    @objc func roundedPlusButtonDidTap() {
+    @objc func roundedButtonDidTap() {
         guard let trackerId = trackerId, let indexPath = indexPath else {
             assertionFailure("No trackerId")
             return
