@@ -225,6 +225,11 @@ extension CreateHabitViewController: UITextFieldDelegate {
         }
         checkCorrectness()
     }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true 
+    }
 }
 
 // MARK: - UITableViewDataSource
