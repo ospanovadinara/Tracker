@@ -267,10 +267,14 @@ extension TrackersViewController: UICollectionViewDataSource {
 // MARK: - TrackersCellDelgate
 extension TrackersViewController: TrackersCellDelgate {
     func completeTracker(id: UUID, at indexPath: IndexPath) {
-        let trackerRecord = TrackerRecord(date: datePicker.date, trackerID: id)
-        completedTrackers.append(trackerRecord)
-
-        collectionView.reloadItems(at: [indexPath])
+        let currentDate = Date()
+        let calendar = Calendar.current
+        let selectedDay = datePicker.date
+        if calendar.compare(selectedDay, to: currentDate, toGranularity: .day) != .orderedDescending {
+            let trackerRecord = TrackerRecord(date: selectedDay, trackerID: id)
+            completedTrackers.append(trackerRecord)
+            collectionView.reloadItems(at: [indexPath])
+        }
     }
     
     func uncompleteTracker(id: UUID, at indexPath: IndexPath) {
