@@ -204,7 +204,7 @@ final class CreateHabitViewController: UIViewController {
     }
 
     private func checkCorrectness() {
-        if let text = trackersNameTextField.text, !text.isEmpty, !selectedWeekDays.isEmpty {
+        if let text = trackersNameTextField.text, !text.isEmpty || !selectedWeekDays.isEmpty {
             createButton.isEnabled = true
             createButton.backgroundColor = UIColor(named: "YP Black")
         } else {
@@ -273,9 +273,9 @@ extension CreateHabitViewController: UITableViewDelegate {
             let viewController = ScheduleViewController()
             viewController.delegate = self
             self.scheduleViewControllerdelegate?.didSelectDays(self.selectedWeekDays)
-            checkCorrectness()
             present(viewController, animated: true, completion: nil)
         }
+        checkCorrectness()
     }
 }
 
