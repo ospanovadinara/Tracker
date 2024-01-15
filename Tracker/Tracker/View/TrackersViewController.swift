@@ -308,7 +308,17 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewDele
     func collectionView(_ collectionView: UICollectionView, 
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 167, height: 148)
+//        return CGSize(width: 167, height: 148)
+
+        let leftInset = CGFloat(16)
+        let rightInset = CGFloat(16)
+        let itemsPerRow = CGFloat(2)
+        let cellSpacing = CGFloat(10)
+        let padding = leftInset + rightInset + CGFloat(itemsPerRow - 1) * cellSpacing
+        let availableWidth = collectionView.frame.width - padding
+        let cellWidth = availableWidth / itemsPerRow
+
+        return CGSize(width: cellWidth, height: 148)
     }
 
     func collectionView(_ collectionView: UICollectionView, 
