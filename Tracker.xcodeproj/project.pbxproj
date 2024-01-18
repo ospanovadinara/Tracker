@@ -30,6 +30,8 @@
 		27AA2B272B10C9F70073F156 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 27AA2B262B10C9F70073F156 /* SnapKit */; };
 		27AA2B292B10C9F70073F156 /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 27AA2B282B10C9F70073F156 /* SnapKit-Dynamic */; };
 		27C07F1F2B13879600FBFBEC /* TrackersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C07F1E2B13879600FBFBEC /* TrackersCell.swift */; };
+		27C58C482B5923C200AE2380 /* EmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C58C472B5923C200AE2380 /* EmojiCell.swift */; };
+		27C58C4C2B594BB100AE2380 /* EmojiHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C58C4B2B594BB100AE2380 /* EmojiHeader.swift */; };
 		27E97A322B4D40C00086A42D /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E97A312B4D40C00086A42D /* DataManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +59,8 @@
 		27AA2B1E2B0F97FD0073F156 /* TabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItem.swift; sourceTree = "<group>"; };
 		27AA2B202B0F99EE0073F156 /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
 		27C07F1E2B13879600FBFBEC /* TrackersCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCell.swift; sourceTree = "<group>"; };
+		27C58C472B5923C200AE2380 /* EmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCell.swift; sourceTree = "<group>"; };
+		27C58C4B2B594BB100AE2380 /* EmojiHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiHeader.swift; sourceTree = "<group>"; };
 		27E97A312B4D40C00086A42D /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -125,6 +129,8 @@
 			children = (
 				275758E52B301EAA00718728 /* CreateHabitCell.swift */,
 				275758E62B301EAA00718728 /* CreateHabitViewController.swift */,
+				27C58C472B5923C200AE2380 /* EmojiCell.swift */,
+				27C58C4B2B594BB100AE2380 /* EmojiHeader.swift */,
 			);
 			path = Habit;
 			sourceTree = "<group>";
@@ -278,6 +284,7 @@
 			files = (
 				2720D2302B4EFCA400C2A0C9 /* TrackerNotFoundedView.swift in Sources */,
 				27AA2B212B0F99EE0073F156 /* StatisticsViewController.swift in Sources */,
+				27C58C4C2B594BB100AE2380 /* EmojiHeader.swift in Sources */,
 				27AA2B0B2B0F8D7A0073F156 /* TrackersViewController.swift in Sources */,
 				27C07F1F2B13879600FBFBEC /* TrackersCell.swift in Sources */,
 				275758E82B301EAA00718728 /* CreateHabitViewController.swift in Sources */,
@@ -291,6 +298,7 @@
 				27AA2B072B0F8D7A0073F156 /* AppDelegate.swift in Sources */,
 				27827DE12B14E891002741CC /* TrackerHeaderView.swift in Sources */,
 				27936A3C2B120B2900514242 /* TrackerRecord.swift in Sources */,
+				27C58C482B5923C200AE2380 /* EmojiCell.swift in Sources */,
 				27E97A322B4D40C00086A42D /* DataManager.swift in Sources */,
 				27AA2B1F2B0F97FD0073F156 /* TabItem.swift in Sources */,
 				2702DC142B14AFA900F1491D /* TrackersEmptyView.swift in Sources */,

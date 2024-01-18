@@ -23,6 +23,13 @@ final class CreateHabitViewController: UIViewController {
     // MARK: - Private properties
     private var selectedWeekDays: [WeekDay] = []
     private var trackers: [Tracker] = []
+    private let emojis: [String] = [
+        "🙂", "😻", "🌺", "🐶", "❤️", "😱",
+        "😇", "😡", "🥶", "🤔", "🙌", "🍔",
+        "🥦", "🏓", "🥇", "🎸", "🏝", "😪"
+    ]
+
+    private var selectedEmoji: String?
 
     // MARK: -  UI
     private lazy var navBarLabel: UILabel = {
@@ -77,6 +84,20 @@ final class CreateHabitViewController: UIViewController {
         return tableView
     }()
 
+    private lazy var emojiCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        let collectionView = UICollectionView(frame: .zero,
+                                              collectionViewLayout: layout)
+        collectionView.register(EmojiCell.self,
+                                forCellWithReuseIdentifier: EmojiCell.cellID)
+        collectionView.register(EmojiHeader.self,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: EmojiHeader.cellID)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.allowsMultipleSelection = false
+        return collectionView
+    }()
+
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Отменить", for: .normal)
@@ -122,6 +143,7 @@ final class CreateHabitViewController: UIViewController {
         [navBarLabel,
          textFieldContainerView,
          tableView,
+         emojiCollectionView,
          cancelButton,
          createButton
         ].forEach  {
@@ -156,6 +178,13 @@ final class CreateHabitViewController: UIViewController {
             make.height.equalTo(150)
         }
 
+        emojiCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(tableView.snp.bottom).offset(32)
+            make.leading.equalToSuperview().offset(18)
+            make.trailing.equalToSuperview().offset(-18)
+            make.height.equalTo(222)
+        }
+
         cancelButton.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.bottom.equalToSuperview().offset(-34)
@@ -178,7 +207,8 @@ final class CreateHabitViewController: UIViewController {
     }
 
     @objc private func createButtonTapped() {
-        guard let text = trackersNameTextField.text, !text.isEmpty else {
+        guard let text = trackersNameTextField.text, !text.isEmpty,
+              let emoji = selectedEmoji else {
             return
         }
 
@@ -186,7 +216,7 @@ final class CreateHabitViewController: UIViewController {
             id: UUID(),
             title: text,
             color: .green,
-            emoji: "💙",
+            emoji: emoji,
             scedule: self.selectedWeekDays,
             completedDays: [])
 
@@ -246,7 +276,7 @@ extension CreateHabitViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: CreateHabitCell.cellID,
             for: indexPath) as? CreateHabitCell else {
-            assertionFailure("Could not cast to CreateTrackerCell")
+            assertionFailure("Could not cast to CreateHabitCell")
             return UITableViewCell()
         }
 
@@ -284,5 +314,76 @@ extension CreateHabitViewController: ScheduleViewControllerDelegate {
     func didSelectDays(_ days: [WeekDay]) {
         selectedWeekDays = days
         tableView.reloadData()
+    }
+}
+
+// MARK: - UICollectionViewDataSource
+extension CreateHabitViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        18
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if collectionView == emojiCollectionView {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmojiCell.cellID,
+                                                                for: indexPath) as? EmojiCell else {
+                assertionFailure("Could not cast to EmojiCell")
+                return UICollectionViewCell()
+            }
+
+            let emoji = emojis[indexPath.item]
+            cell.label.text = emoji
+
+            return cell
+        }
+
+        return UICollectionViewCell()
+    }
+
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if collectionView == emojiCollectionView {
+            guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
+                                                                                   withReuseIdentifier: EmojiHeader.cellID,
+                                                                                   for: indexPath) as? EmojiHeader else {
+                assertionFailure("Could not cast to CreateTrackerCell")
+                return UICollectionReusableView()
+            }
+            return headerView
+        }
+        return UICollectionReusableView()
+    }
+}
+
+extension CreateHabitViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let cellWidth = (collectionView.bounds.width - 36) / 6
+        let cellHeight = 52.0
+        return CGSize(width: cellWidth, height: cellHeight)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 5
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 1
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.bounds.width, height: 18)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 24, left: 0, bottom: 0, right: 0)
+    }
+}
+
+extension CreateHabitViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        //TODO
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        //TODO
     }
 }
