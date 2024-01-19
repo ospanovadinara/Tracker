@@ -29,7 +29,17 @@ final class CreateHabitViewController: UIViewController {
         "🥦", "🏓", "🥇", "🎸", "🏝", "😪"
     ]
 
+    private let colors: [UIColor] = [
+        AppColor.color1.uiColor, AppColor.color2.uiColor, AppColor.color3.uiColor,
+        AppColor.color4.uiColor, AppColor.color5.uiColor, AppColor.color6.uiColor,
+        AppColor.color7.uiColor, AppColor.color8.uiColor, AppColor.color9.uiColor,
+        AppColor.color10.uiColor, AppColor.color11.uiColor, AppColor.color12.uiColor,
+        AppColor.color13.uiColor, AppColor.color14.uiColor, AppColor.color15.uiColor,
+        AppColor.color16.uiColor, AppColor.color17.uiColor, AppColor.color18.uiColor
+    ]
+
     private var selectedEmoji: String?
+    private var selectedColor: UIColor?
 
     // MARK: -  UI
     private lazy var navBarLabel: UILabel = {
@@ -91,10 +101,29 @@ final class CreateHabitViewController: UIViewController {
         collectionView.register(EmojiCell.self,
                                 forCellWithReuseIdentifier: EmojiCell.cellID)
         collectionView.register(EmojiHeader.self,
-                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: EmojiHeader.cellID)
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                withReuseIdentifier: EmojiHeader.cellID)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.allowsMultipleSelection = false
+        collectionView.showsVerticalScrollIndicator = false
+
+        return collectionView
+    }()
+
+    private lazy var colorCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        let collectionView = UICollectionView(frame: .zero,
+                                              collectionViewLayout: layout)
+        collectionView.register(ColorCell.self,
+                                forCellWithReuseIdentifier: ColorCell.cellID)
+        collectionView.register(ColorHeader.self,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                withReuseIdentifier: ColorHeader.cellID)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.allowsMultipleSelection = false
+        collectionView.showsVerticalScrollIndicator = false
         return collectionView
     }()
 
@@ -144,6 +173,7 @@ final class CreateHabitViewController: UIViewController {
          textFieldContainerView,
          tableView,
          emojiCollectionView,
+         colorCollectionView,
          cancelButton,
          createButton
         ].forEach  {
@@ -185,6 +215,13 @@ final class CreateHabitViewController: UIViewController {
             make.height.equalTo(222)
         }
 
+        colorCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(emojiCollectionView.snp.bottom).offset(16)
+            make.leading.equalToSuperview().offset(18)
+            make.trailing.equalToSuperview().offset(-18)
+            make.height.equalTo(222)
+        }
+
         cancelButton.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.bottom.equalToSuperview().offset(-34)
@@ -208,14 +245,15 @@ final class CreateHabitViewController: UIViewController {
 
     @objc private func createButtonTapped() {
         guard let text = trackersNameTextField.text, !text.isEmpty,
-              let emoji = selectedEmoji else {
+              let emoji = selectedEmoji,
+              let color = selectedColor else {
             return
         }
 
         let newTracker = Tracker(
             id: UUID(),
             title: text,
-            color: .green,
+            color: color,
             emoji: emoji,
             scedule: self.selectedWeekDays,
             completedDays: [])
@@ -322,7 +360,7 @@ extension CreateHabitViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         18
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == emojiCollectionView {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmojiCell.cellID,
@@ -333,7 +371,16 @@ extension CreateHabitViewController: UICollectionViewDataSource {
 
             let emoji = emojis[indexPath.item]
             cell.label.text = emoji
+            return cell
+        } else if collectionView == colorCollectionView {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ColorCell.cellID,
+                                                                for: indexPath) as? ColorCell else {
+                assertionFailure("Could not cast to ColorCell")
+                return UICollectionViewCell()
+            }
 
+            let color = colors[indexPath.item]
+            cell.colorView.backgroundColor = color
             return cell
         }
 
@@ -345,7 +392,15 @@ extension CreateHabitViewController: UICollectionViewDataSource {
             guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
                                                                                    withReuseIdentifier: EmojiHeader.cellID,
                                                                                    for: indexPath) as? EmojiHeader else {
-                assertionFailure("Could not cast to CreateTrackerCell")
+                assertionFailure("Could not cast to EmojiHeader")
+                return UICollectionReusableView()
+            }
+            return headerView
+        } else if collectionView == colorCollectionView {
+            guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
+                                                                                   withReuseIdentifier: ColorHeader.cellID,
+                                                                                   for: indexPath) as? ColorHeader else {
+                assertionFailure("Could not cast to ColorHeader")
                 return UICollectionReusableView()
             }
             return headerView
