@@ -42,6 +42,16 @@ final class CreateHabitViewController: UIViewController {
     private var selectedColor: UIColor?
 
     // MARK: -  UI
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        return scrollView
+    }()
+
+    private lazy var contentView: UIView = {
+        let view = UIView()
+        return view
+    }()
+
     private lazy var navBarLabel: UILabel = {
         let label = UILabel()
         label.text = "Новая привычка"
@@ -154,6 +164,14 @@ final class CreateHabitViewController: UIViewController {
         return button
     }()
 
+    private lazy var buttonStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.spacing = 8
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        return stackView
+    }()
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -166,32 +184,53 @@ final class CreateHabitViewController: UIViewController {
     // MARK: - Setup Views
     private func setupViews() {
         view.backgroundColor = UIColor.white
-        textFieldContainerView.addSubview(trackersNameTextField)
-        trackersNameTextField.addSubview(clearTextFieldButton)
+
+        scrollView.addSubview(contentView)
+        view.addSubview(scrollView)
 
         [navBarLabel,
          textFieldContainerView,
          tableView,
          emojiCollectionView,
          colorCollectionView,
-         cancelButton,
-         createButton
+         buttonStackView
         ].forEach  {
-            view.addSubview($0)
+            contentView.addSubview($0)
+        }
+
+        textFieldContainerView.addSubview(trackersNameTextField)
+        trackersNameTextField.addSubview(clearTextFieldButton)
+
+        [cancelButton,
+         createButton
+        ].forEach {
+            buttonStackView.addArrangedSubview($0)
         }
     }
 
     // MARK: - Setup Constraints
     private func setupConstraints() {
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalTo(view.safeAreaLayoutGuide)
+
+        }
+
+        contentView.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView)
+            make.width.equalTo(scrollView)
+            make.height.greaterThanOrEqualTo(view.bounds.height)
+        }
+
         navBarLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(15)
-            make.centerX.equalToSuperview()
+            make.top.equalTo(scrollView.snp.top).offset(15)
+            make.centerX.equalTo(scrollView.snp.centerX)
+            make.height.equalTo(22)
         }
 
         textFieldContainerView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(88)
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
+            make.top.equalTo(navBarLabel.snp.top).offset(58)
+            make.leading.equalTo(contentView.snp.leading).offset(16)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-16)
             make.height.equalTo(75)
         }
 
@@ -203,37 +242,31 @@ final class CreateHabitViewController: UIViewController {
 
         tableView.snp.makeConstraints { make in
             make.top.equalTo(textFieldContainerView.snp.bottom).offset(24)
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
+            make.leading.equalTo(contentView.snp.leading).offset(16)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-16)
             make.height.equalTo(150)
         }
 
         emojiCollectionView.snp.makeConstraints { make in
             make.top.equalTo(tableView.snp.bottom).offset(32)
-            make.leading.equalToSuperview().offset(18)
-            make.trailing.equalToSuperview().offset(-18)
+            make.leading.equalTo(contentView.snp.leading).offset(18)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-18)
             make.height.equalTo(222)
         }
 
         colorCollectionView.snp.makeConstraints { make in
             make.top.equalTo(emojiCollectionView.snp.bottom).offset(16)
-            make.leading.equalToSuperview().offset(18)
-            make.trailing.equalToSuperview().offset(-18)
+            make.leading.equalTo(contentView.snp.leading).offset(18)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-18)
             make.height.equalTo(222)
         }
 
-        cancelButton.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.bottom.equalToSuperview().offset(-34)
+        buttonStackView.snp.makeConstraints { make in
+//            make.top.equalTo(colorCollectionView.snp.bottom).offset(16)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-60)
+            make.leading.equalTo(contentView.snp.leading).offset(20)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-20)
             make.height.equalTo(60)
-            make.width.equalTo(166)
-        }
-
-        createButton.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-20)
-            make.bottom.equalToSuperview().offset(-34)
-            make.height.equalTo(60)
-            make.width.equalTo(161)
         }
     }
 
