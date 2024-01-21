@@ -43,3 +43,16 @@ final class ColorCell: UICollectionViewCell {
         }
     }
 }
+
+extension ColorCell {
+
+    func highlightColor() {
+        layer.borderWidth = 3.0
+        layer.borderColor = colorView.backgroundColor?.withAlphaComponent(0.3).cgColor
+        layer.cornerRadius = 8
+    }
+
+    func unhighlightColor() {
+        layer.borderWidth = 0.0
+    }
+}

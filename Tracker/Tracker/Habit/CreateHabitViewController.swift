@@ -435,10 +435,27 @@ extension CreateHabitViewController: UICollectionViewDelegateFlowLayout {
 
 extension CreateHabitViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        //TODO
+        if collectionView == emojiCollectionView {
+            let selectedCell = collectionView.cellForItem(at: indexPath) as? EmojiCell
+            selectedEmoji = emojis[indexPath.item]
+
+            selectedCell?.highlightEmoji()
+        } else if collectionView == colorCollectionView {
+            let selectedCell = collectionView.cellForItem(at: indexPath) as? ColorCell
+            selectedColor = colors[indexPath.item]
+
+            selectedCell?.highlightColor()
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        //TODO
+        if collectionView == emojiCollectionView {
+            let deselectedCell = collectionView.cellForItem(at: indexPath) as? EmojiCell
+            deselectedCell?.unhighlightEmoji()
+
+        } else if collectionView == colorCollectionView {
+            let deselectedCell = collectionView.cellForItem(at: indexPath) as? ColorCell
+            deselectedCell?.unhighlightColor()
+        }
     }
 }

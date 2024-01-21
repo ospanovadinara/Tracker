@@ -44,3 +44,14 @@ final class EmojiCell: UICollectionViewCell {
         }
     }
 }
+
+extension EmojiCell {
+    func highlightEmoji() {
+        contentView.backgroundColor = UIColor(named: "YP Gray")
+        contentView.layer.cornerRadius = 16
+    }
+
+    func unhighlightEmoji() {
+        contentView.backgroundColor = .clear
+    }
+}
