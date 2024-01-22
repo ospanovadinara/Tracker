@@ -262,7 +262,6 @@ final class CreateHabitViewController: UIViewController {
         }
 
         buttonStackView.snp.makeConstraints { make in
-//            make.top.equalTo(colorCollectionView.snp.bottom).offset(16)
             make.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-60)
             make.leading.equalTo(contentView.snp.leading).offset(20)
             make.trailing.equalTo(contentView.snp.trailing).offset(-20)

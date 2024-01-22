@@ -35,9 +35,18 @@ final class TrackersCell: UICollectionViewCell {
         return view
     }()
 
+    private lazy var emojiBackground: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = view.frame.width / 2
+        view.layer.opacity = 0.3
+        return view
+    }()
+
     private lazy var emojiLabel: UILabel = {
         let label = UILabel()
-        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
@@ -47,13 +56,6 @@ final class TrackersCell: UICollectionViewCell {
         label.textColor = UIColor.white
         label.textAlignment = .left
         return label
-    }()
-
-    private lazy var stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = 8
-        return stackView
     }()
 
     private lazy var color: UIColor = {
@@ -155,28 +157,35 @@ private extension TrackersCell {
             contentView.addSubview($0)
         }
 
-        trackerContainer.addSubview(stackView)
-        [emojiLabel,
+        [emojiBackground,
+         emojiLabel,
          trackerLabel
         ].forEach {
-            stackView.addArrangedSubview($0)
+            trackerContainer.addSubview($0)
         }
+
+        emojiBackground.addSubview(emojiLabel)
     }
 
     // MARK: - Setup Constraints
     func setupConstraints() {
+        emojiBackground.snp.makeConstraints { make in
+            make.top.equalTo(trackerContainer.snp.top).offset(12)
+            make.leading.equalTo(trackerContainer.snp.leading).offset(12)
+            make.height.equalTo(24)
+            make.width.equalTo(24)
+        }
+
+        trackerLabel.snp.makeConstraints { make in
+            make.leading.equalTo(trackerContainer.snp.leading).offset(12)
+            make.bottom.equalTo(trackerContainer.snp.bottom).offset(-12)
+        }
+
         trackerContainer.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.equalToSuperview()
             make.width.equalTo(167)
             make.height.equalTo(90)
-        }
-
-        stackView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(12)
-            make.leading.equalToSuperview().offset(12)
-            make.trailing.equalToSuperview().offset(-12)
-            make.bottom.equalToSuperview().offset(-12)
         }
 
         trackersDaysCounter.snp.makeConstraints { make in
