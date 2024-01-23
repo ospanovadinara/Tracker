@@ -30,7 +30,7 @@ class DataManager {
                     id: UUID(),
                     title: "География",
                     color: .green,
-                    emoji: "📝",
+                    emoji: "😪",
                     scedule: WeekDay.allCases,
                     completedDays: []
                 )

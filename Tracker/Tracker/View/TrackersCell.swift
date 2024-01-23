@@ -39,14 +39,17 @@ final class TrackersCell: UICollectionViewCell {
         let view = UIView()
         view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
         view.layer.cornerRadius = view.frame.width / 2
-        view.layer.opacity = 0.3
+        view.layer.opacity = 0.6
         return view
     }()
 
     private lazy var emojiLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        label.textAlignment = .center
         return label
     }()
 
@@ -163,8 +166,6 @@ private extension TrackersCell {
         ].forEach {
             trackerContainer.addSubview($0)
         }
-
-        emojiBackground.addSubview(emojiLabel)
     }
 
     // MARK: - Setup Constraints
@@ -174,6 +175,13 @@ private extension TrackersCell {
             make.leading.equalTo(trackerContainer.snp.leading).offset(12)
             make.height.equalTo(24)
             make.width.equalTo(24)
+        }
+
+        emojiLabel.snp.makeConstraints { make in
+            make.centerX.equalTo(emojiBackground.snp.centerX)
+            make.centerY.equalTo(emojiBackground.snp.centerY)
+            make.height.equalTo(18)
+            make.width.equalTo(18)
         }
 
         trackerLabel.snp.makeConstraints { make in
