@@ -151,6 +151,16 @@
 			path = IrregularEvent;
 			sourceTree = "<group>";
 		};
+		276D6DBF2B63AF64007806B7 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				27AA2B1C2B0F97D70073F156 /* TabBar */,
+				2791E1312B121C030045E6C2 /* Tracker */,
+				2702DC172B14B22900F1491D /* Statistics */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		2791E1312B121C030045E6C2 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
@@ -168,6 +178,8 @@
 		27A9BDEE2B5A9B5E00F3BDAA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				27AA2B0F2B0F8D7C0073F156 /* Assets.xcassets */,
+				27AA2B112B0F8D7C0073F156 /* LaunchScreen.storyboard */,
 				27A9BDEF2B5A9B7200F3BDAA /* AppColor.swift */,
 			);
 			path = Resources;
@@ -192,13 +204,9 @@
 		27AA2B052B0F8D7A0073F156 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				276D6DBF2B63AF64007806B7 /* UI */,
 				27A9BDEE2B5A9B5E00F3BDAA /* Resources */,
 				27AA2B1D2B0F97E50073F156 /* App */,
-				27AA2B1C2B0F97D70073F156 /* TabBar */,
-				2791E1312B121C030045E6C2 /* Tracker */,
-				2702DC172B14B22900F1491D /* Statistics */,
-				27AA2B0F2B0F8D7C0073F156 /* Assets.xcassets */,
-				27AA2B112B0F8D7C0073F156 /* LaunchScreen.storyboard */,
 				27AA2B142B0F8D7C0073F156 /* Info.plist */,
 			);
 			path = Tracker;
