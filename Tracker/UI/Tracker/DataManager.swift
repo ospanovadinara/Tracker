@@ -19,8 +19,8 @@ class DataManager {
                     title: "Помыть посуду",
                     color: .blue,
                     emoji: "🍽",
-                    scedule: [WeekDay.saturday, WeekDay.friday],
-                    completedDays: [])
+                    scedule: [WeekDay.saturday, WeekDay.friday]
+                )
             ]
         ),
         TrackerCategory(
@@ -31,8 +31,7 @@ class DataManager {
                     title: "География",
                     color: .green,
                     emoji: "😪",
-                    scedule: WeekDay.allCases,
-                    completedDays: []
+                    scedule: WeekDay.allCases
                 )
             ]
         )

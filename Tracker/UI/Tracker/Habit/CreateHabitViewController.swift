@@ -287,8 +287,7 @@ final class CreateHabitViewController: UIViewController {
             title: text,
             color: color,
             emoji: emoji,
-            scedule: self.selectedWeekDays,
-            completedDays: [])
+            scedule: self.selectedWeekDays)
 
         createHabitViewControllerDelegate?.createButtonidTap(
             tracker: newTracker,
