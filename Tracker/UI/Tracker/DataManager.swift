@@ -6,36 +6,42 @@
 //
 
 import UIKit
+import CoreData
 
-class DataManager {
+final class DataManager {
     static let shared = DataManager()
+    private let modelName = "TrackerModel"
+    var categories: [TrackerCategory] = []
 
-    var categories: [TrackerCategory] = [
-        TrackerCategory(
-            title: "Уборка",
-            trackers: [
-                Tracker(
-                    id: UUID(),
-                    title: "Помыть посуду",
-                    color: .blue,
-                    emoji: "🍽",
-                    scedule: [WeekDay.saturday, WeekDay.friday]
-                )
-            ]
-        ),
-        TrackerCategory(
-            title: "Сделать уроки",
-            trackers: [
-                Tracker(
-                    id: UUID(),
-                    title: "География",
-                    color: .green,
-                    emoji: "😪",
-                    scedule: WeekDay.allCases
-                )
-            ]
-        )
-    ]
+// MARK: - CoreData Stack
+    private lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: modelName)
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error as NSError? {
+                assertionFailure("Unresolved error \(error), \(error.userInfo)")
+            }
+        })
+        return container
+    }()
 
-    private init() {}
+    var context: NSManagedObjectContext {
+        persistentContainer.viewContext
+    }
+
+    private init() {
+        _ = persistentContainer
+    }
+
+    func saveContext () {
+        let context = persistentContainer.viewContext
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                context.rollback()
+                let nserror = error as NSError
+                assertionFailure("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
+        }
+    }
 }

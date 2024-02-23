@@ -287,13 +287,12 @@ final class CreateHabitViewController: UIViewController {
             title: text,
             color: color,
             emoji: emoji,
-            scedule: self.selectedWeekDays)
+            schedule: self.selectedWeekDays)
 
         createHabitViewControllerDelegate?.createButtonidTap(
             tracker: newTracker,
-            category: "Category"
+            category: "Категория"
         )
-        createHabitViewControllerDelegate?.reloadData()
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
 
@@ -350,7 +349,7 @@ extension CreateHabitViewController: UITableViewDataSource {
         }
 
         if indexPath.row == 0 {
-            cell.configureCell(with: "Категория", subtitle: "Category", isFirstCell: true)
+            cell.configureCell(with: "Категория", subtitle: "Категория", isFirstCell: true)
         }  else if indexPath.row == 1 {
             let schedule = selectedWeekDays.isEmpty ? "" : selectedWeekDays.map { $0.shortTitle }.joined(separator: ", ")
             cell.configureCell(with: "Расписание", subtitle: schedule, isFirstCell: false)

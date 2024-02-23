@@ -166,7 +166,7 @@ extension TrackersViewController {
                 let textCondition = filterText.isEmpty ||
                 tracker.title.lowercased().contains(filterText)
 
-                let dateCondition = tracker.scedule.contains { weekDay in
+                let dateCondition = tracker.schedule.contains { weekDay in
                     weekDay.numberValue == filterWeekday
                 } == true
 
