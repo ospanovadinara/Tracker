@@ -45,3 +45,8 @@ final class DataManager {
         }
     }
 }
+
+enum DataError: Error {
+    case dataError
+    case decodingError
+}
