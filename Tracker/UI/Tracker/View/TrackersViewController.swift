@@ -251,7 +251,10 @@ extension TrackersViewController: UICollectionViewDataSource {
 
 
         cell.delegate = self
-        let isCompletedToday = isTrackerCompletedToday(id: tracker.id)
+        let isCompletedToday = completedTrackers.contains(where: { trackerRecord in
+            trackerRecord.trackerID == tracker.id &&
+            trackerRecord.date.yearMonthDayComponents == datePicker.date.yearMonthDayComponents
+        })
         let completedDays = completedTrackers.filter {
             $0.trackerID == tracker.id
         }.count
@@ -259,48 +262,28 @@ extension TrackersViewController: UICollectionViewDataSource {
 
         cell.configureCell(
             with: tracker,
-            isCompletedToday: isCompletedToday, 
+            isCompleted: isCompletedToday,
             completedDays: completedDays,
             indexPath: indexPath
         )
         return cell
     }
-
-    private func isTrackerCompletedToday(id: UUID) -> Bool {
-        completedTrackers.contains { trackerRecord in
-            isSameTrackerRecord(trackerRecord: trackerRecord, id: id)
-        }
-    }
-
-    private func isSameTrackerRecord(trackerRecord: TrackerRecord, id: UUID) -> Bool {
-        let isSameDay = Calendar.current.isDate(trackerRecord.date,
-                                                inSameDayAs: datePicker.date)
-        return trackerRecord.trackerID == id && isSameDay
-    }
 }
 
 // MARK: - TrackersCellDelgate
 extension TrackersViewController: TrackersCellDelgate {
-    func completeTracker(id: UUID, at indexPath: IndexPath) {
-        let currentDate = Date()
-        let calendar = Calendar.current
-        let selectedDay = datePicker.date
-        if calendar.compare(selectedDay, to: currentDate, toGranularity: .day) != .orderedDescending {
-            let trackerRecord = TrackerRecord(date: selectedDay, trackerID: id)
-            completedTrackers.append(trackerRecord)
-            try? trackerRecordStore.addNewTracker(TrackerRecord(date: selectedDay, trackerID: id))
+    func trackerCompleted(id: UUID, at indexPath: IndexPath) {
+        if let index = completedTrackers.firstIndex(where: { trackerRecord in
+            trackerRecord.trackerID == id &&
+            trackerRecord.date.yearMonthDayComponents == datePicker.date.yearMonthDayComponents
+        }) {
+            completedTrackers.remove(at: index)
+            try? trackerRecordStore.deleteTrackerRecord(TrackerRecord(date: datePicker.date, trackerID: id))
+        } else {
+            completedTrackers.append(TrackerRecord(date: datePicker.date, trackerID: id))
+            try? trackerRecordStore.addNewTracker(TrackerRecord(date: datePicker.date, trackerID: id))
         }
-
-        collectionView.reloadData()
-    }
-    
-    func uncompleteTracker(id: UUID, at indexPath: IndexPath) {
-        if let trackerRecordToRemove = completedTrackers.first(
-            where: { isSameTrackerRecord(trackerRecord: $0, id: id) }
-        ) {
-            try? trackerRecordStore.deleteTrackerRecord(trackerRecordToRemove)
-        }
-        collectionView.reloadData()
+            collectionView.reloadItems(at: [indexPath])
     }
 }
 

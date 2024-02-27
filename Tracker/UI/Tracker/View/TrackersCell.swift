@@ -10,8 +10,7 @@ import SnapKit
 
 // MARK: - TrackersCellDelegate
 protocol TrackersCellDelgate: AnyObject {
-    func completeTracker(id: UUID, at indexPath: IndexPath)
-    func uncompleteTracker(id: UUID, at indexPath: IndexPath)
+    func trackerCompleted(id: UUID, at indexPath: IndexPath)
 }
 
 final class TrackersCell: UICollectionViewCell {
@@ -99,12 +98,12 @@ final class TrackersCell: UICollectionViewCell {
     // MARK: - Public Method
     public func configureCell(
         with tracker: Tracker,
-        isCompletedToday: Bool,
+        isCompleted: Bool,
         completedDays:Int,
         indexPath: IndexPath
     ) {
         self.trackerId = tracker.id
-        self.isCompletedToday = isCompletedToday
+        self.isCompletedToday = isCompleted
         self.indexPath = indexPath
 
         emojiLabel.text = tracker.emoji
@@ -115,14 +114,11 @@ final class TrackersCell: UICollectionViewCell {
         let wordDays = convertCompletedDays(completedDays)
         trackersDaysCounter.text = wordDays
 
-        let roundedButtonTitle = isCompletedToday ? "✓" : "+"
+        let roundedButtonTitle = isCompleted ? "✓" : "+"
 
         roundedButton.setTitle(roundedButtonTitle, for: .normal)
-        adjustOpacity(to: isCompletedToday)
-    }
 
-    private func adjustOpacity(to isCompleted: Bool) {
-        if isCompleted {
+        if isCompletedToday == true  {
             roundedButton.layer.opacity = 0.2
         } else {
             roundedButton.layer.opacity = 1
@@ -145,8 +141,6 @@ final class TrackersCell: UICollectionViewCell {
             return "\(completedDays) дней"
         }
     }
-
-
 }
 
 private extension TrackersCell {
@@ -217,11 +211,6 @@ private extension TrackersCell {
             assertionFailure("No trackerId")
             return
         }
-
-        if isCompletedToday {
-            delegate?.uncompleteTracker(id: trackerId, at: indexPath)
-        } else {
-            delegate?.completeTracker(id: trackerId, at: indexPath)
-        }
+        delegate?.trackerCompleted(id: trackerId, at: indexPath)
     }
 }

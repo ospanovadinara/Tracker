@@ -8,6 +8,12 @@
 import Foundation
 
 struct TrackerRecord {
-    let date: Date
+    var date: Date
     let trackerID: UUID
+}
+
+extension Date {
+    var yearMonthDayComponents: DateComponents {
+        Calendar.current.dateComponents([.year, .month, .day], from: self)
+    }
 }
