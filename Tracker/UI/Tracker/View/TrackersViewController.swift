@@ -258,11 +258,12 @@ extension TrackersViewController: UICollectionViewDataSource {
         let completedDays = completedTrackers.filter {
             $0.trackerID == tracker.id
         }.count
-
+        let isEnabled = datePicker.date <= Date() || Date().yearMonthDayComponents == datePicker.date.yearMonthDayComponents
 
         cell.configureCell(
             with: tracker,
             isCompleted: isCompletedToday,
+            isEnabled: isEnabled,
             completedDays: completedDays,
             indexPath: indexPath
         )

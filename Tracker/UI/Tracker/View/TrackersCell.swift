@@ -99,6 +99,7 @@ final class TrackersCell: UICollectionViewCell {
     public func configureCell(
         with tracker: Tracker,
         isCompleted: Bool,
+        isEnabled: Bool,
         completedDays:Int,
         indexPath: IndexPath
     ) {
@@ -123,6 +124,7 @@ final class TrackersCell: UICollectionViewCell {
         } else {
             roundedButton.layer.opacity = 1
         }
+        roundedButton.isEnabled = isEnabled
     }
 
     private func convertCompletedDays(_ completedDays: Int) -> String {
