@@ -160,6 +160,13 @@
 			path = Schedule;
 			sourceTree = "<group>";
 		};
+		271F16372B91FB9500AB3645 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
 		275758E92B301F1600718728 /* Habit */ = {
 			isa = PBXGroup;
 			children = (
@@ -184,6 +191,7 @@
 		276D6DBF2B63AF64007806B7 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				271F16372B91FB9500AB3645 /* Onboarding */,
 				27AA2B1C2B0F97D70073F156 /* TabBar */,
 				2791E1312B121C030045E6C2 /* Tracker */,
 				2702DC172B14B22900F1491D /* Statistics */,
