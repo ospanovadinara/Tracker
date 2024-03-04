@@ -17,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
 
         if UserDefaults.standard.value(forKey: "OnboardingHasLaunchedBefore") == nil {
-            window?.rootViewController = OnboardingViewController()
+            window?.rootViewController = OnboardingPageViewController()
         } else {
             window?.rootViewController = MainTabBarViewController()
         }
