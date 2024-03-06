@@ -21,7 +21,7 @@ final class CategoriesViewModel: NSObject {
     }
     private(set) var selectedCategory: TrackerCategory?
     private let trackerCategoryStore = TrackerCategoryStore.shared
-    weak var delegate: CategoriesViewModelDelegate?
+    private weak var delegate: CategoriesViewModelDelegate?
 
     // MARK: - Lifecycle
     init(
@@ -44,12 +44,17 @@ final class CategoriesViewModel: NSObject {
 
     func selectedCategory(_ category: TrackerCategory) {
         selectedCategory = category
+        delegate?.didSelectCategory(category: category)
         updateClosure?()
     }
 }
 
 extension CategoriesViewModel: TrackerCategoryStoreDelegate {
     func store(_ store: TrackerCategoryStore, didUpdate update: TrackerCategoryStoreUpdate) {
-        categories = trackerCategoryStore.trackerCategories
+        print("Categories updated")
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.categories = trackerCategoryStore.trackerCategories
+        }
     }
 }

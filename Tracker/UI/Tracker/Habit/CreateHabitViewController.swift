@@ -357,7 +357,6 @@ extension CreateHabitViewController: UITableViewDataSource {
         if indexPath.row == 0 {
             let subtitleText = selectedCategoriesTitle
             cell.configureCell(with: "Категория", subtitle: subtitleText, isFirstCell: true)
-            //обратить внимание
         }  else if indexPath.row == 1 {
             let schedule = selectedWeekDays.isEmpty ? "" : selectedWeekDays.map { $0.shortTitle }.joined(separator: ", ")
             cell.configureCell(with: "Расписание", subtitle: schedule, isFirstCell: false)
@@ -375,7 +374,6 @@ extension CreateHabitViewController: UITableViewDelegate {
         if indexPath.row == 0 {
             let categoriesViewController = CategoriesViewController(delegate: self, selectedCategory: category)
             let navigationController = UINavigationController(rootViewController: categoriesViewController)
-            navigationController.isModalInPresentation = true
             present(navigationController, animated: true)
         } else if indexPath.row == 1 {
             let viewController = ScheduleViewController()
@@ -392,7 +390,7 @@ extension CreateHabitViewController: CategoriesViewModelDelegate {
         self.category = category
         let categoryTitle = category.title
         selectedCategoriesTitle = categoryTitle
-
+        tableView.reloadData()
     }
 }
 

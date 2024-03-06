@@ -87,6 +87,7 @@ private extension CategoriesViewController {
         }
 
         viewModel.updateClosure = { [weak self] in
+            print("Update closure called")
             guard let self else { return }
             self.tableView.reloadData()
         }
@@ -98,6 +99,7 @@ private extension CategoriesViewController {
             make.top.equalToSuperview().offset(24)
             make.leading.equalToSuperview().offset(16)
             make.trailing.equalToSuperview().offset(-16)
+            make.bottom.equalTo(addCategoryButton.snp.top).offset(-16)
         }
 
         categoryNotFoundedView.snp.makeConstraints { make in
@@ -118,7 +120,7 @@ private extension CategoriesViewController {
         let addCategoryViewController = AddCategoryViewController()
         addCategoryViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: addCategoryViewController)
-        present(navigationController, animated: true)
+        present(navigationController, animated: true, completion: nil)
     }
 
     func updateNotFoundedCategories()  {
@@ -132,6 +134,7 @@ extension CategoriesViewController: AddCategoryViewControllerDelegate {
     func addedCategory(_ category: TrackerCategory) {
         viewModel.selectCategory(with: category.title)
         viewModel.selectedCategory(category)
+        tableView.reloadData()
     }
 }
 
