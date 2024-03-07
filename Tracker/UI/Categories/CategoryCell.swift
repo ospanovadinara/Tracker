@@ -21,12 +21,6 @@ final class CategoryCell: UITableViewCell {
         return title
     }()
 
-    private lazy var customSeparatorView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(named: "YP Dark Gray")
-        return view
-    }()
-
     private let image: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "checkmark_icon")
@@ -52,16 +46,41 @@ final class CategoryCell: UITableViewCell {
     }
 
     // MARK: - Public Methods
-    func configureCell(with title: String, isSelected: Bool, isFirstCell: Bool) {
+    func configureCell(with title: String, isSelected: Bool) {
         self.title.text = title
         image.isHidden = !isSelected
-        customSeparatorView.isHidden = !isFirstCell
     }
 
     func getSelectedCategoryTitle() -> String {
         guard let selectedCategoryTitle = self.title.text else { return "" }
 
         return selectedCategoryTitle
+    }
+
+    func setRoundedCornersForContentView(top: Bool) {
+        var cornerMask: CACornerMask = []
+
+        if top {
+            cornerMask.insert(.layerMinXMinYCorner)
+            cornerMask.insert(.layerMaxXMinYCorner)
+        }
+
+        contentView.layer.maskedCorners = cornerMask
+        contentView.layer.cornerRadius = 16
+        contentView.clipsToBounds = true
+    }
+
+    func setRoundedCornersForContentView(bottom: Bool) {
+        var cornerMask: CACornerMask = []
+
+        if bottom {
+            cornerMask.insert(.layerMinXMaxYCorner)
+            cornerMask.insert(.layerMaxXMaxYCorner)
+        }
+
+        contentView.layer.maskedCorners = cornerMask
+        contentView.layer.cornerRadius = 16
+        contentView.clipsToBounds = true
     }
 }
 
@@ -71,7 +90,6 @@ private extension CategoryCell {
         contentView.backgroundColor = UIColor(named: "YP Gray")?.withAlphaComponent(0.3)
 
         [title,
-         customSeparatorView,
          image
         ].forEach {
             contentView.addSubview($0)
@@ -85,13 +103,6 @@ private extension CategoryCell {
             make.leading.equalToSuperview().offset(16)
             make.trailing.equalToSuperview().offset(-16)
             make.height.equalTo(22)
-        }
-
-        customSeparatorView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
-            make.height.equalTo(1.0)
-            make.bottom.equalToSuperview()
         }
     }
 }

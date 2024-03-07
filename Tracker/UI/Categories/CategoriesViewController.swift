@@ -90,6 +90,7 @@ private extension CategoriesViewController {
             print("Update closure called")
             guard let self else { return }
             self.tableView.reloadData()
+            self.updateNotFoundedCategories()
         }
     }
 
@@ -126,6 +127,12 @@ private extension CategoriesViewController {
     func updateNotFoundedCategories()  {
         if viewModel.categories.isEmpty {
             tableView.backgroundView = categoryNotFoundedView
+            categoryNotFoundedView.isHidden = false
+            tableView.separatorStyle = .none
+        } else {
+            tableView.backgroundView = nil
+            tableView.separatorStyle = .singleLine
+            categoryNotFoundedView.isHidden = true
         }
     }
 }
@@ -143,10 +150,10 @@ extension CategoriesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let count = viewModel.categories.count
         tableView.isHidden = count == .zero
-
+        updateNotFoundedCategories()
         return count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: CategoryCell.cellID,
@@ -161,15 +168,15 @@ extension CategoriesViewController: UITableViewDataSource {
         if indexPath.row == 0 {
             cell.configureCell(
                 with: category,
-                isSelected: isSelected,
-                isFirstCell: true
+                isSelected: isSelected
             )
+            cell.setRoundedCornersForContentView(top: true)
         } else {
             cell.configureCell(
                 with: category,
-                isSelected: isSelected,
-                isFirstCell: false
+                isSelected: isSelected
             )
+            cell.setRoundedCornersForContentView(bottom: true)
         }
 
         return cell
