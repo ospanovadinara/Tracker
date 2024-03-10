@@ -43,6 +43,7 @@ final class CategoriesViewController: UIViewController {
         tableView.allowsMultipleSelection = false
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.separatorStyle = .none
         return tableView
     }()
 
@@ -169,36 +170,18 @@ extension CategoriesViewController: UITableViewDataSource {
             )
             cell.setRoundedCornersForContentView(top: false,
                                                  bottom: true)
-            cell.separatorInset = UIEdgeInsets(
-                top: 0,
-                left: cell.bounds.size.width + 200,
-                bottom: 0,
-                right: 0
-            )
         } else if indexPath.row == 0 {
             cell.configureCell(
                 with: category
             )
             cell.setRoundedCornersForContentView(top: true,
                                                  bottom: false)
-            cell.separatorInset = UIEdgeInsets(
-                top: 0,
-                left: 16,
-                bottom: 0,
-                right: 16
-            )
         } else {
             cell.configureCell(
                 with: category
             )
             cell.contentView.layer.maskedCorners = []
             cell.contentView.layer.cornerRadius = 0
-            cell.separatorInset = UIEdgeInsets(
-                top: 0,
-                left: 16,
-                bottom: 0,
-                right: 16
-            )
         }
         cell.selectionStyle = .none
         return cell
@@ -212,10 +195,30 @@ extension CategoriesViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let cell = tableView.cellForRow(at: indexPath) as? CategoryCell else { return }
-        cell.checkMarkIconSetup(with: UIImage(named: "checkmark_icon") ?? UIImage())
-        let selectedCategoryTitle = cell.getSelectedCategoryTitle()
-        viewModel.selectCategory(with: selectedCategoryTitle)
-        dismiss(animated: true)
+        if let cell = tableView.cellForRow(at: indexPath) as? CategoryCell  {
+            cell.checkMarkIconSetup(with: UIImage(named: "checkmark_icon") ?? UIImage())
+            let selectedCategoryTitle = cell.getSelectedCategoryTitle()
+            viewModel.selectCategory(with: selectedCategoryTitle)
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let separatorInset: CGFloat = 16
+        let separatorWidth = tableView.bounds.width - separatorInset * 2
+        let separatorHeight: CGFloat = 1.0
+        let separatorX = separatorInset
+        let separatorY = cell.frame.height - separatorHeight
+
+        let isLastCell = indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1
+
+        if !isLastCell {
+            let separatorView = UIView(frame: CGRect(x: separatorX, y: separatorY, width: separatorWidth, height: separatorHeight))
+            separatorView.backgroundColor = UIColor(named: "YP Dark Gray")
+            cell.addSubview(separatorView)
+        }
     }
 }
