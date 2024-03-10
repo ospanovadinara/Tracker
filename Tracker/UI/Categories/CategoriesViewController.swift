@@ -124,13 +124,9 @@ private extension CategoriesViewController {
     }
 
     func updateNotFoundedCategories()  {
-        if viewModel.categories.isEmpty {
-            tableView.backgroundView = categoryNotFoundedView
-            categoryNotFoundedView.isHidden = false
-        } else {
-            tableView.backgroundView = nil
-            categoryNotFoundedView.isHidden = true
-        }
+        let isEmpty = viewModel.categories.isEmpty
+        tableView.isHidden = isEmpty
+        categoryNotFoundedView.isHidden = !isEmpty
     }
 }
 
@@ -150,7 +146,6 @@ extension CategoriesViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let count = viewModel.categories.count
-        tableView.isHidden = count == .zero
         updateNotFoundedCategories()
         return count
     }
@@ -170,8 +165,7 @@ extension CategoriesViewController: UITableViewDataSource {
 
         if indexPath.row == viewModel.categories.count - 1 {
             cell.configureCell(
-                with: category,
-                isSelected: isSelected
+                with: category
             )
             cell.setRoundedCornersForContentView(top: false,
                                                  bottom: true)
@@ -183,8 +177,7 @@ extension CategoriesViewController: UITableViewDataSource {
             )
         } else if indexPath.row == 0 {
             cell.configureCell(
-                with: category,
-                isSelected: isSelected
+                with: category
             )
             cell.setRoundedCornersForContentView(top: true,
                                                  bottom: false)
@@ -196,8 +189,7 @@ extension CategoriesViewController: UITableViewDataSource {
             )
         } else {
             cell.configureCell(
-                with: category,
-                isSelected: isSelected
+                with: category
             )
             cell.contentView.layer.maskedCorners = []
             cell.contentView.layer.cornerRadius = 0
@@ -221,6 +213,7 @@ extension CategoriesViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let cell = tableView.cellForRow(at: indexPath) as? CategoryCell else { return }
+        cell.checkMarkIconSetup(with: UIImage(named: "checkmark_icon") ?? UIImage())
         let selectedCategoryTitle = cell.getSelectedCategoryTitle()
         viewModel.selectCategory(with: selectedCategoryTitle)
         dismiss(animated: true)

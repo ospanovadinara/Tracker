@@ -23,7 +23,7 @@ final class CategoryCell: UITableViewCell {
 
     private let image: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "checkmark_icon")
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
 
@@ -46,9 +46,8 @@ final class CategoryCell: UITableViewCell {
     }
 
     // MARK: - Public Methods
-    func configureCell(with title: String, isSelected: Bool) {
+    func configureCell(with title: String) {
         self.title.text = title
-        image.isHidden = !isSelected
     }
 
     func getSelectedCategoryTitle() -> String {
@@ -74,6 +73,10 @@ final class CategoryCell: UITableViewCell {
         contentView.layer.cornerRadius = 16
         contentView.clipsToBounds = true
     }
+
+    func checkMarkIconSetup(with image: UIImage) {
+        self.image.image = image
+    }
 }
 
 private extension CategoryCell {
@@ -94,7 +97,13 @@ private extension CategoryCell {
             make.top.equalToSuperview().offset(27)
             make.leading.equalToSuperview().offset(16)
             make.trailing.equalToSuperview().offset(-16)
-            make.height.equalTo(22)
+            make.size.equalTo(24)
+        }
+
+        image.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-16)
+            make.centerY.equalToSuperview()
+            make.height.equalTo(14)
         }
     }
 }
