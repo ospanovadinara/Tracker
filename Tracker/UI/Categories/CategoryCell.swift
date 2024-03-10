@@ -57,21 +57,13 @@ final class CategoryCell: UITableViewCell {
         return selectedCategoryTitle
     }
 
-    func setRoundedCornersForContentView(top: Bool) {
+    func setRoundedCornersForContentView(top: Bool, bottom: Bool) {
         var cornerMask: CACornerMask = []
 
         if top {
             cornerMask.insert(.layerMinXMinYCorner)
             cornerMask.insert(.layerMaxXMinYCorner)
         }
-
-        contentView.layer.maskedCorners = cornerMask
-        contentView.layer.cornerRadius = 16
-        contentView.clipsToBounds = true
-    }
-
-    func setRoundedCornersForContentView(bottom: Bool) {
-        var cornerMask: CACornerMask = []
 
         if bottom {
             cornerMask.insert(.layerMinXMaxYCorner)

@@ -39,7 +39,6 @@ final class CategoriesViewController: UIViewController {
             forCellReuseIdentifier: CategoryCell.cellID
         )
         tableView.backgroundColor = .clear
-        tableView.separatorStyle = .none
         tableView.isScrollEnabled = false
         tableView.allowsMultipleSelection = false
         tableView.dataSource = self
@@ -147,6 +146,10 @@ extension CategoriesViewController: AddCategoryViewControllerDelegate {
 
 // MARK: - UITableViewDataSource
 extension CategoriesViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        1
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let count = viewModel.categories.count
         tableView.isHidden = count == .zero
@@ -164,19 +167,29 @@ extension CategoriesViewController: UITableViewDataSource {
         let category = viewModel.categories[indexPath.row].title
         let isSelected = viewModel.selectedCategory?.title != category
 
+        cell.contentView.layer.maskedCorners = []
+        cell.contentView.layer.cornerRadius = 0
 
         if indexPath.row == 0 {
             cell.configureCell(
                 with: category,
                 isSelected: isSelected
             )
-            cell.setRoundedCornersForContentView(top: true)
+            cell.setRoundedCornersForContentView(top: true,
+                                                 bottom: false)
+        } else if indexPath.row == viewModel.categories.count - 1 {
+            cell.configureCell(
+                with: category,
+                isSelected: isSelected
+            )
+            cell.setRoundedCornersForContentView(top: false, bottom: true)
         } else {
             cell.configureCell(
                 with: category,
                 isSelected: isSelected
             )
-            cell.setRoundedCornersForContentView(bottom: true)
+            cell.contentView.layer.maskedCorners = []
+            cell.contentView.layer.cornerRadius = 0
         }
 
         return cell
