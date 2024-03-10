@@ -297,8 +297,7 @@ final class CreateHabitViewController: UIViewController {
 
         createHabitViewControllerDelegate?.createButtonidTap(
             tracker: newTracker,
-            category: "Категория"
-            //изменить
+            category: category?.title ?? "Категория"
         )
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }

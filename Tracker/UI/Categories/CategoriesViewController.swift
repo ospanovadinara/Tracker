@@ -127,10 +127,8 @@ private extension CategoriesViewController {
         if viewModel.categories.isEmpty {
             tableView.backgroundView = categoryNotFoundedView
             categoryNotFoundedView.isHidden = false
-            tableView.separatorStyle = .none
         } else {
             tableView.backgroundView = nil
-            tableView.separatorStyle = .singleLine
             categoryNotFoundedView.isHidden = true
         }
     }
@@ -170,19 +168,32 @@ extension CategoriesViewController: UITableViewDataSource {
         cell.contentView.layer.maskedCorners = []
         cell.contentView.layer.cornerRadius = 0
 
-        if indexPath.row == 0 {
+        if indexPath.row == viewModel.categories.count - 1 {
+            cell.configureCell(
+                with: category,
+                isSelected: isSelected
+            )
+            cell.setRoundedCornersForContentView(top: false,
+                                                 bottom: true)
+            cell.separatorInset = UIEdgeInsets(
+                top: 0,
+                left: cell.bounds.size.width + 200,
+                bottom: 0,
+                right: 0
+            )
+        } else if indexPath.row == 0 {
             cell.configureCell(
                 with: category,
                 isSelected: isSelected
             )
             cell.setRoundedCornersForContentView(top: true,
                                                  bottom: false)
-        } else if indexPath.row == viewModel.categories.count - 1 {
-            cell.configureCell(
-                with: category,
-                isSelected: isSelected
+            cell.separatorInset = UIEdgeInsets(
+                top: 0,
+                left: 16,
+                bottom: 0,
+                right: 16
             )
-            cell.setRoundedCornersForContentView(top: false, bottom: true)
         } else {
             cell.configureCell(
                 with: category,
@@ -190,8 +201,14 @@ extension CategoriesViewController: UITableViewDataSource {
             )
             cell.contentView.layer.maskedCorners = []
             cell.contentView.layer.cornerRadius = 0
+            cell.separatorInset = UIEdgeInsets(
+                top: 0,
+                left: 16,
+                bottom: 0,
+                right: 16
+            )
         }
-
+        cell.selectionStyle = .none
         return cell
     }
 }
