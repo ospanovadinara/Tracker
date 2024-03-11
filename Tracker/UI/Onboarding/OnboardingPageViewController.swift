@@ -10,22 +10,23 @@ import SnapKit
 
 final class OnboardingPageViewController: UIPageViewController {
 
+    // MARK: - Localized Strings
+    private let continueButtonTitle = "Вот это технологии!"
+    private let firstOnboardingPageText = "Отслеживайте только то, что хотите"
+    private let secondOnboardingPageText = "Даже если это не литры воды и йога"
+
+    private struct Keys {
+        static let firstOnboardingPageImage = "onboarding_background_one"
+        static let secondOnboardingPageImage = "onboarding_background_two"
+    }
+
     // MARK: - Private properties
-    private var pages: [UIViewController] = [
-        OnboardingViewController(
-            title: "Отслеживайте только то, что хотите",
-            backgroundImage: UIImage(named: "onboarding_background_one")!
-        ),
-        OnboardingViewController(
-            title: "Даже если это не литры воды и йога",
-            backgroundImage: UIImage(named: "onboarding_background_two")!
-        )
-    ]
+    private var pages: [UIViewController] = []
 
     // MARK: - UI
     private lazy var pageControl: UIPageControl = {
         let pageControl = UIPageControl()
-        pageControl.numberOfPages = pages.count
+        pageControl.numberOfPages = 2
         pageControl.currentPage = 0
         pageControl.pageIndicatorTintColor = UIColor(named: "YP Onboarding Gray")
         pageControl.currentPageIndicatorTintColor = UIColor(named: "YP Black")
@@ -34,7 +35,7 @@ final class OnboardingPageViewController: UIPageViewController {
 
     private lazy var continueButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Вот это технологии!", for: .normal)
+        button.setTitle(continueButtonTitle, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16,
                                                     weight: .medium)
@@ -63,6 +64,7 @@ final class OnboardingPageViewController: UIPageViewController {
         super.viewDidLoad()
         setupViews()
         setupConstraints()
+        setupPages()
         dataSource = self
         delegate = self
 
@@ -112,6 +114,19 @@ private extension OnboardingPageViewController {
             make.bottom.equalToSuperview().offset(-84)
             make.height.equalTo(60)
         }
+    }
+
+    private func setupPages() {
+    pages = [
+        OnboardingViewController(
+            title: firstOnboardingPageText,
+            backgroundImage: UIImage(named: Keys.firstOnboardingPageImage)!
+        ),
+        OnboardingViewController(
+            title: secondOnboardingPageText,
+            backgroundImage: UIImage(named: Keys.secondOnboardingPageImage)!
+        )
+    ]
     }
 }
 
