@@ -113,7 +113,7 @@ final class TrackersCell: UICollectionViewCell {
         roundedButton.backgroundColor = tracker.color
 
         let wordDays = convertCompletedDays(completedDays)
-        trackersDaysCounter.text = wordDays
+        trackersDaysCounter.text = String.localizedStringWithFormat(NSLocalizedString("numberValue", comment: "Completed days of Tracker"),wordDays)
 
         let roundedButtonTitle = isCompleted ? "✓" : "+"
 
@@ -142,6 +142,7 @@ final class TrackersCell: UICollectionViewCell {
         default:
             return "\(completedDays) дней"
         }
+        //изменить
     }
 }
 
