@@ -112,8 +112,8 @@ final class TrackersCell: UICollectionViewCell {
         trackerContainer.backgroundColor = tracker.color
         roundedButton.backgroundColor = tracker.color
 
-        let wordDays = convertCompletedDays(completedDays)
-        trackersDaysCounter.text = String.localizedStringWithFormat(NSLocalizedString("numberValue", comment: "Completed days of Tracker"),wordDays)
+        let completedDaysText = convertCompletedDays(completedDays)
+        trackersDaysCounter.text = completedDaysText
 
         let roundedButtonTitle = isCompleted ? "✓" : "+"
 
@@ -128,20 +128,8 @@ final class TrackersCell: UICollectionViewCell {
     }
 
     private func convertCompletedDays(_ completedDays: Int) -> String {
-        let lasyNumber = completedDays % 10
-        let lastTwoNumbers = completedDays % 100
-        if lastTwoNumbers >= 11 && lastTwoNumbers <= 19 {
-            return "\(completedDays) дней"
-        }
-
-        switch lasyNumber {
-        case 1:
-            return "\(completedDays) день"
-        case 2, 3, 4:
-            return "\(completedDays) дня"
-        default:
-            return "\(completedDays) дней"
-        }
+        let formatString = NSLocalizedString("numberValue", comment: "Completed days of Tracker")
+        return String.localizedStringWithFormat(formatString, completedDays)
     }
 }
 
