@@ -11,7 +11,7 @@ protocol CategoriesViewModelDelegate: AnyObject {
     func didSelectCategory(category: TrackerCategory)
 }
 
-final class CategoriesViewModel: NSObject {
+final class CategoriesViewModel {
     var updateClosure: (() -> Void)?
 
     private(set) var categories = [TrackerCategory]() {
@@ -19,6 +19,11 @@ final class CategoriesViewModel: NSObject {
             updateClosure?()
         }
     }
+
+    var isTableViewHidden: Bool {
+        return categories.isEmpty
+    }
+
     private(set) var selectedCategory: TrackerCategory?
     private let trackerCategoryStore = TrackerCategoryStore.shared
     private weak var delegate: CategoriesViewModelDelegate?
@@ -30,8 +35,6 @@ final class CategoriesViewModel: NSObject {
     ) {
         self.selectedCategory = selectedCategory
         self.delegate = delegate
-
-        super.init()
 
         trackerCategoryStore.delegate = self
         categories = trackerCategoryStore.trackerCategories

@@ -14,7 +14,7 @@ final class CategoryCell: UITableViewCell {
     public static let cellID = String(describing: CategoryCell.self)
 
     // MARK: - UI
-    private let title: UILabel = {
+    private let titleLabel: UILabel = {
         let title = UILabel()
         title.textColor = UIColor(named: "YP Black")
         title.font = UIFont.systemFont(ofSize: 17, weight: .regular)
@@ -47,11 +47,11 @@ final class CategoryCell: UITableViewCell {
 
     // MARK: - Public Methods
     func configureCell(with title: String) {
-        self.title.text = title
+        self.titleLabel.text = title
     }
 
     func getSelectedCategoryTitle() -> String {
-        guard let selectedCategoryTitle = self.title.text else { return "" }
+        guard let selectedCategoryTitle = self.titleLabel.text else { return "" }
 
         return selectedCategoryTitle
     }
@@ -84,7 +84,7 @@ private extension CategoryCell {
     func setupViews() {
         contentView.backgroundColor = UIColor(named: "YP Gray")?.withAlphaComponent(0.3)
 
-        [title,
+        [titleLabel,
          image
         ].forEach {
             contentView.addSubview($0)
@@ -93,7 +93,7 @@ private extension CategoryCell {
 
     // MARK: Setup Constraints
     func setupConstraints() {
-        title.snp.makeConstraints { make in
+        titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(27)
             make.leading.equalToSuperview().offset(16)
             make.trailing.equalToSuperview().offset(-16)

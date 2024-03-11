@@ -9,13 +9,12 @@ import UIKit
 import SnapKit
 
 protocol AddCategoryViewControllerDelegate: AnyObject {
-    func addedCategory(_ category: TrackerCategory)
+    func addCategory(_ category: TrackerCategory)
 }
 
 final class AddCategoryViewController: UIViewController {
     weak var delegate: AddCategoryViewControllerDelegate?
     private let trackerCategoryStore = TrackerCategoryStore.shared
-    private var viewModel: CategoriesViewModel?
 
     // MARK: - UI
     private lazy var textField: UITextField = {
@@ -111,7 +110,7 @@ private extension AddCategoryViewController {
             trackers: []
         )
         try? trackerCategoryStore.addNewTrackerCategory(category)
-        delegate?.addedCategory(category)
+        delegate?.addCategory(category)
         dismiss(animated: true)
     }
 }

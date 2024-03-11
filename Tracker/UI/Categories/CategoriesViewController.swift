@@ -125,14 +125,13 @@ private extension CategoriesViewController {
     }
 
     func updateNotFoundedCategories()  {
-        let isEmpty = viewModel.categories.isEmpty
-        tableView.isHidden = isEmpty
-        categoryNotFoundedView.isHidden = !isEmpty
+        tableView.isHidden = viewModel.isTableViewHidden
+        categoryNotFoundedView.isHidden = !viewModel.isTableViewHidden
     }
 }
 
 extension CategoriesViewController: AddCategoryViewControllerDelegate {
-    func addedCategory(_ category: TrackerCategory) {
+    func addCategory(_ category: TrackerCategory) {
         viewModel.selectCategory(with: category.title)
         viewModel.selectedCategory(category)
         tableView.reloadData()
@@ -159,7 +158,6 @@ extension CategoriesViewController: UITableViewDataSource {
             fatalError("Could not cast to CategoryCell")
         }
         let category = viewModel.categories[indexPath.row].title
-        let isSelected = viewModel.selectedCategory?.title != category
 
         cell.contentView.layer.maskedCorners = []
         cell.contentView.layer.cornerRadius = 0
@@ -201,8 +199,8 @@ extension CategoriesViewController: UITableViewDelegate {
             viewModel.selectCategory(with: selectedCategoryTitle)
             tableView.deselectRow(at: indexPath, animated: true)
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.dismiss(animated: true, completion: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.dismiss(animated: true, completion: nil)
         }
     }
 
