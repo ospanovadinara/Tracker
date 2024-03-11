@@ -11,9 +11,9 @@ import SnapKit
 final class OnboardingPageViewController: UIPageViewController {
 
     // MARK: - Localized Strings
-    private let continueButtonTitle = "Вот это технологии!"
-    private let firstOnboardingPageText = "Отслеживайте только то, что хотите"
-    private let secondOnboardingPageText = "Даже если это не литры воды и йога"
+    private let continueButtonTitle = NSLocalizedString("continueButtonTitle", comment: "Text displayed on Onboarding Page button") 
+    private let firstOnboardingPageText = NSLocalizedString("firstOnboardingPageText", comment: "Text displayed on first Onboarding Page")
+    private let secondOnboardingPageText = NSLocalizedString("secondOnboardingPageText", comment: "Text displayed on second Onboarding Page")
 
     private struct Keys {
         static let firstOnboardingPageImage = "onboarding_background_one"

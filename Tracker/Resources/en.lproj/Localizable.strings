@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Dinara on 11.03.2024.
+  
+*/
+"continueButtonTitle" = "These are technologies!";
+"firstOnboardingPageText" = "Track only what you want";
+"secondOnboardingPageText" = "Even if it's not liters of water and yoga";
