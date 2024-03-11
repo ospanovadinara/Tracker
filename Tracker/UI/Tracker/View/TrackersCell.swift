@@ -142,7 +142,6 @@ final class TrackersCell: UICollectionViewCell {
         default:
             return "\(completedDays) дней"
         }
-        //изменить
     }
 }
 
