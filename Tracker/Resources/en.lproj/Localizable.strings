@@ -8,3 +8,8 @@
 "continueButtonTitle" = "These are technologies!";
 "firstOnboardingPageText" = "Track only what you want";
 "secondOnboardingPageText" = "Even if it's not liters of water and yoga";
+
+
+"navBarTitleText" = "Trackers";
+"trackersTabItemTitle" =  "Trackers";
+"statisticsTabItemTitle" = "Statistics";

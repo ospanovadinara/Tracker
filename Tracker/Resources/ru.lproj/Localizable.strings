@@ -8,3 +8,8 @@
 "continueButtonTitle" = "Вот это технологии!";
 "firstOnboardingPageText" = "Отслеживайте только то, что хотите";
 "secondOnboardingPageText" = "Даже если это не литры воды и йога";
+
+
+"navBarTitleText" = "Трекеры";
+"trackersTabItemTitle" =  "Трекеры";
+"statisticsTabItemTitle" = "Статистика";

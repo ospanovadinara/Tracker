@@ -22,11 +22,14 @@ final class TrackersViewController: UIViewController {
 
     private let trackerCategoryStore = TrackerCategoryStore.shared
     private let trackerRecordStore = TrackerRecordStore.shared
+    
+    // MARK: - Localized Strings
+    private let navBarTitleText = NSLocalizedString("navBarTitleText", comment: "Text displayed on the main screen title")
 
     // MARK: - UI
     private lazy var navBarTitle: UILabel = {
         let title = UILabel()
-        title.text = "Трекеры"
+        title.text = navBarTitleText
         title.font = UIFont.boldSystemFont(ofSize: 34)
         title.textColor = UIColor.black
         title.sizeToFit()
