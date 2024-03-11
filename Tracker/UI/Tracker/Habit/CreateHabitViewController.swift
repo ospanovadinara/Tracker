@@ -40,6 +40,12 @@ final class CreateHabitViewController: UIViewController {
 
     private var selectedEmoji: String?
     private var selectedColor: UIColor?
+    private lazy var category: TrackerCategory? = nil {
+        didSet {
+            checkCorrectness()
+        }
+    }
+    private var selectedCategoriesTitle = ""
 
     // MARK: -  UI
     private lazy var scrollView: UIScrollView = {
@@ -291,7 +297,7 @@ final class CreateHabitViewController: UIViewController {
 
         createHabitViewControllerDelegate?.createButtonidTap(
             tracker: newTracker,
-            category: "Категория"
+            category: category?.title ?? "Категория"
         )
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
@@ -349,7 +355,8 @@ extension CreateHabitViewController: UITableViewDataSource {
         }
 
         if indexPath.row == 0 {
-            cell.configureCell(with: "Категория", subtitle: "Категория", isFirstCell: true)
+            let subtitleText = selectedCategoriesTitle
+            cell.configureCell(with: "Категория", subtitle: subtitleText, isFirstCell: true)
         }  else if indexPath.row == 1 {
             let schedule = selectedWeekDays.isEmpty ? "" : selectedWeekDays.map { $0.shortTitle }.joined(separator: ", ")
             cell.configureCell(with: "Расписание", subtitle: schedule, isFirstCell: false)
@@ -364,9 +371,10 @@ extension CreateHabitViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension CreateHabitViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.row == 0 {
-            print("Category Selected")
+            let categoriesViewController = CategoriesViewController(delegate: self, selectedCategory: category)
+            let navigationController = UINavigationController(rootViewController: categoriesViewController)
+            present(navigationController, animated: true)
         } else if indexPath.row == 1 {
             let viewController = ScheduleViewController()
             viewController.delegate = self
@@ -374,6 +382,15 @@ extension CreateHabitViewController: UITableViewDelegate {
             present(viewController, animated: true, completion: nil)
         }
         checkCorrectness()
+    }
+}
+
+extension CreateHabitViewController: CategoriesViewModelDelegate {
+    func didSelectCategory(category: TrackerCategory) {
+        self.category = category
+        let categoryTitle = category.title
+        selectedCategoriesTitle = categoryTitle
+        tableView.reloadData()
     }
 }
 
