@@ -22,9 +22,12 @@ final class TrackersViewController: UIViewController {
 
     private let trackerCategoryStore = TrackerCategoryStore.shared
     private let trackerRecordStore = TrackerRecordStore.shared
-    
+    private var selectedFilter: Filters?
+
     // MARK: - Localized Strings
     private let navBarTitleText = NSLocalizedString("navBarTitleText", comment: "Text displayed on the main screen title")
+    private let filterButtonTitleText = NSLocalizedString("filterButtonTitleText", comment: "Text displayed on the filter button")
+
 
     // MARK: - UI
     private lazy var navBarTitle: UILabel = {
@@ -49,7 +52,7 @@ final class TrackersViewController: UIViewController {
         datePicker.preferredDatePickerStyle = .compact
         datePicker.locale = Locale(identifier: "ru_Ru")
         datePicker.addTarget(self,
-                             action: #selector(datePickerValueChanged(sender:)),
+                             action: #selector(datePickerValueChanged),
                              for: .valueChanged)
         return datePicker
     }()
@@ -92,12 +95,26 @@ final class TrackersViewController: UIViewController {
         return view
     }()
 
+    private lazy var filterButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle(filterButtonTitleText, for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17,
+                                                    weight: .regular)
+        button.addTarget(self, action: #selector(filterButtonTapped(sender:)), for: .touchUpInside)
+        button.layer.cornerRadius = 16
+        button.backgroundColor = UIColor(named: "YP Blue")
+        return button
+    }()
+
+    
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setWeekDay()
-        reloadVisibleCategories()
+        reloadVisibleCategories(with: trackerCategoryStore.trackerCategories)
         setupNavigationBar()
         setupViews()
         setupConstraints()
@@ -122,7 +139,8 @@ final class TrackersViewController: UIViewController {
         [collectionView,
          navBarTitle,
          searchTextField,
-         emptyView
+         emptyView,
+         filterButton
         ].forEach {
             view.addSubview($0)
         }
@@ -151,6 +169,13 @@ final class TrackersViewController: UIViewController {
         emptyView.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
+
+        filterButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-16)
+            make.centerX.equalToSuperview()
+            make.height.equalTo(50)
+            make.width.equalTo(114)
+        }
     }
 
     // MARK: - Actions
@@ -160,12 +185,19 @@ final class TrackersViewController: UIViewController {
         present(viewController, animated: true, completion: nil)
     }
 
-    @objc private func datePickerValueChanged(sender: UIDatePicker) {
+    @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
         let components = Calendar.current.dateComponents([.weekday], from: sender.date)
         if let day = components.weekday {
             currentDate = day
-            reloadVisibleCategories()
+            reloadVisibleCategories(with: trackerCategoryStore.trackerCategories)
         }
+    }
+
+    @objc func filterButtonTapped(sender: AnyObject) {
+        let filtersViewController = FiltersViewController()
+        filtersViewController.selectedFilter = selectedFilter
+        filtersViewController.delegate = self
+        present(filtersViewController, animated: true)
     }
 
     private func setWeekDay() {
@@ -173,20 +205,37 @@ final class TrackersViewController: UIViewController {
         currentDate = components.weekday
     }
 
-    private func reloadVisibleCategories() {
+    private func reloadVisibleCategories(with categories: [TrackerCategory]) {
         var newCategories = [TrackerCategory]()
-        visibleCategories = trackerCategoryStore.trackerCategories
 
-        for category in visibleCategories {
+        for category in categories {
             var newTrackers = [Tracker]()
             for tracker in category.visibleTrackers(filterString: searchText) {
-                guard let schedule = tracker.schedule else { return }
+                guard let schedule = tracker.schedule else { continue }
                 let scheduleIntegers = schedule.map { $0.numberValue }
-                if let day = currentDate, scheduleIntegers.contains(day) && (
-                    searchText.isEmpty ||
-                    tracker.title.lowercased().contains(searchText.lowercased())
-                ) {
-                    newTrackers.append(tracker)
+                if let day = currentDate, scheduleIntegers.contains(day) {
+
+                    if selectedFilter == .completed {
+                        updateNotFoundedFilter(filter: .completed)
+                        if !completedTrackers.contains(where: { record in
+                            record.trackerID == tracker.id &&
+                            record.date.yearMonthDayComponents == datePicker.date.yearMonthDayComponents
+                        }) {
+                            continue
+                        }
+                    }
+                    if selectedFilter == .incompleted {
+                        updateNotFoundedFilter(filter: .incompleted)
+                        if completedTrackers.contains(where: { record in
+                            record.trackerID == tracker.id &&
+                            record.date.yearMonthDayComponents == datePicker.date.yearMonthDayComponents
+                        }) {
+                            continue
+                        }
+                        newTrackers.append(tracker)
+                    } else {
+                        newTrackers.append(tracker)
+                    }
                 }
             }
 
@@ -208,6 +257,17 @@ final class TrackersViewController: UIViewController {
             emptyView.isHidden = true
         }
     }
+
+    private func updateNotFoundedFilter(filter: Filters) {
+        var isNotFounded = false
+        if selectedFilter == filter {
+            isNotFounded = true
+        }
+
+        if isNotFounded {
+            collectionView.backgroundView = trackerNotFoundedView
+        }
+    }
 }
 
 // MARK: - UISearchBarDelegate
@@ -217,7 +277,7 @@ extension TrackersViewController: UITextFieldDelegate {
         searchText = searchTextField.text ?? ""
         reloadPlaceHolder()
         visibleCategories = trackerCategoryStore.predicateFetch(trackerTitle: searchText)
-        reloadVisibleCategories()
+        reloadVisibleCategories(with: trackerCategoryStore.trackerCategories)
         return true
     }
 }
@@ -371,7 +431,7 @@ extension TrackersViewController: CreateHabitViewControllerDelegate {
             ))
         }
 
-        reloadVisibleCategories()
+        reloadVisibleCategories(with: trackerCategoryStore.trackerCategories)
     }
 
     func cancelButtonDidTap() {
@@ -383,6 +443,26 @@ extension TrackersViewController: TrackerCategoryStoreDelegate {
     func store(_ store: TrackerCategoryStore, didUpdate update: TrackerCategoryStoreUpdate) {
         visibleCategories = trackerCategoryStore.trackerCategories
         collectionView.reloadData()
+    }
+}
+
+extension TrackersViewController: FiltersViewControllerDelegate {
+    func filterSelected(filter: Filters) {
+        selectedFilter = filter
+        searchText = ""
+
+        switch filter {
+        case .all:
+            reloadVisibleCategories(with: trackerCategoryStore.trackerCategories)
+        case .completed:
+            reloadVisibleCategories(with: trackerCategoryStore.trackerCategories)
+        case .incompleted:
+            reloadVisibleCategories(with: trackerCategoryStore.trackerCategories)
+        case .today:
+            datePicker.date = Date()
+            datePickerValueChanged(datePicker)
+            reloadVisibleCategories(with: trackerCategoryStore.trackerCategories)
+        }
     }
 }
 
