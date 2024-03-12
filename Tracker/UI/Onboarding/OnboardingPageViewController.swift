@@ -41,7 +41,7 @@ final class OnboardingPageViewController: UIPageViewController {
                                                     weight: .medium)
         button.addTarget(self, action: #selector(continueButtonTapped), for: .touchUpInside)
         button.layer.cornerRadius = 16
-        button.backgroundColor = UIColor(named: "YP Black")
+        button.backgroundColor = .black
         return button
     }()
 

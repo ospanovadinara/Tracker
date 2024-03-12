@@ -22,7 +22,7 @@ final class OnboardingViewController: UIViewController {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
-        label.textColor = UIColor(named: "YP Black")
+        label.textColor = .black
         return label
     }()
 
