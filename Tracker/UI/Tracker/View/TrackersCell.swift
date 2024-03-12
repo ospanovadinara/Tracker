@@ -36,7 +36,7 @@ final class TrackersCell: UICollectionViewCell {
 
     private lazy var emojiBackground: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "YP White")
         view.translatesAutoresizingMaskIntoConstraints = false
         view.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
         view.layer.cornerRadius = view.frame.width / 2
@@ -55,7 +55,7 @@ final class TrackersCell: UICollectionViewCell {
     private lazy var trackerLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.textColor = UIColor.white
+        label.textColor = UIColor(named: "YP White")
         label.textAlignment = .left
         return label
     }()
@@ -67,18 +67,19 @@ final class TrackersCell: UICollectionViewCell {
 
     private lazy var roundedButton: UIButton = {
         let button = UIButton(type: .custom)
+        button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.tintColor = UIColor(named: "YP White")
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 16
         button.addTarget(self,
                          action: #selector(roundedButtonDidTap),
                          for: .touchUpInside)
-        button.setTitle("+", for: .normal)
         return button
     }()
 
     private lazy var trackersDaysCounter: UILabel = {
         let label = UILabel()
-        label.textColor = .black
+        label.textColor = UIColor(named: "YP Black")
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.text = "0 день"
         return label
@@ -115,9 +116,7 @@ final class TrackersCell: UICollectionViewCell {
         let completedDaysText = convertCompletedDays(completedDays)
         trackersDaysCounter.text = completedDaysText
 
-        let roundedButtonTitle = isCompleted ? "✓" : "+"
-
-        roundedButton.setTitle(roundedButtonTitle, for: .normal)
+        roundedButton.setImage(isCompletedToday ? UIImage(systemName: "checkmark")! : UIImage(systemName: "plus")!, for: .normal)
 
         if isCompletedToday == true  {
             roundedButton.layer.opacity = 0.2

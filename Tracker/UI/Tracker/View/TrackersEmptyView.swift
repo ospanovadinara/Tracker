@@ -20,7 +20,7 @@ final class TrackersEmptyView: UIView {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = UIColor.black
+        label.textColor = UIColor(named: "YP Black")
         label.text = "Что будем отслеживать?"
         label.textAlignment = .center
         return label

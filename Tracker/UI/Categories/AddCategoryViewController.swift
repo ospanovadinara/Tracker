@@ -44,7 +44,7 @@ final class AddCategoryViewController: UIViewController {
     private lazy var doneButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Готово", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(named: "YP White"), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16,
                                                     weight: .medium)
         button.backgroundColor = UIColor(named: "YP Dark Gray")
@@ -64,7 +64,7 @@ final class AddCategoryViewController: UIViewController {
 private extension AddCategoryViewController {
     // MARK: - Setup Views
     func setupViews() {
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor(named: "YP White")
         navigationItem.title = "Новая категория"
 
         [textField,

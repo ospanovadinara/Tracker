@@ -78,7 +78,7 @@ final class CreateHabitViewController: UIViewController {
         textField.backgroundColor = .clear
         textField.textAlignment = .left
         textField.placeholder = "Введите название трекера"
-        textField.textColor = UIColor.black
+        textField.textColor = UIColor(named: "YP Black")
         textField.font = UIFont.systemFont(ofSize: 17)
         textField.delegate = self
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
@@ -149,7 +149,7 @@ final class CreateHabitViewController: UIViewController {
         button.setTitleColor(UIColor(named: "YP Red"), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16,
                                                     weight: .medium)
-        button.backgroundColor = .white
+        button.backgroundColor = UIColor(named: "YP White")
         button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         button.layer.cornerRadius = 16
         button.layer.borderWidth = 1.0
@@ -160,10 +160,10 @@ final class CreateHabitViewController: UIViewController {
     private lazy var createButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Создать", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(named: "YP White"), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16,
                                                     weight: .medium)
-        button.backgroundColor = .white
+        button.backgroundColor = UIColor(named: "YP White")
         button.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
         button.layer.cornerRadius = 16
         button.backgroundColor = UIColor(named: "YP Dark Gray")
@@ -189,7 +189,7 @@ final class CreateHabitViewController: UIViewController {
 
     // MARK: - Setup Views
     private func setupViews() {
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor(named: "YP White")
 
         scrollView.addSubview(contentView)
         view.addSubview(scrollView)

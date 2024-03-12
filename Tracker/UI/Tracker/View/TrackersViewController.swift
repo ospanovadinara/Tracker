@@ -34,15 +34,14 @@ final class TrackersViewController: UIViewController {
         let title = UILabel()
         title.text = navBarTitleText
         title.font = UIFont.boldSystemFont(ofSize: 34)
-        title.textColor = UIColor.black
+        title.textColor = UIColor(named: "YP Black")
         title.sizeToFit()
         return title
     }()
 
-    private lazy var addNavBarButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "plus_icon"), for: .normal)
-        button.addTarget(self, action: #selector(addNavBarButtonTapped), for: .touchUpInside)
+    private lazy var addNavBarButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNavBarButtonTapped))
+        button.tintColor = UIColor(named: "YP Black")
         return button
     }()
 
@@ -98,7 +97,7 @@ final class TrackersViewController: UIViewController {
     private lazy var filterButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(filterButtonTitleText, for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(named: "YP White"), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17,
                                                     weight: .regular)
         button.addTarget(self, action: #selector(filterButtonTapped(sender:)), for: .touchUpInside)
@@ -130,7 +129,7 @@ final class TrackersViewController: UIViewController {
 
     // MARK: - Setup NavigationBar
     private func setupNavigationBar() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: addNavBarButton)
+        navigationItem.leftBarButtonItem = addNavBarButton
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
     }
 

@@ -16,7 +16,7 @@ final class EmojiHeader: UICollectionReusableView {
     private lazy var label: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 19, weight: .bold)
-        label.textColor = .black
+        label.textColor = UIColor(named: "YP Black")
         label.text = "Emoji"
         return label
     }()

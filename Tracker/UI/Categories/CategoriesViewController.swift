@@ -55,7 +55,7 @@ final class CategoriesViewController: UIViewController {
     private lazy var addCategoryButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Добавить категорию", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(named: "YP White"), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16,
                                                     weight: .medium)
         button.addTarget(self, action: #selector(addCategoryButtonTapped), for: .touchUpInside)
@@ -77,7 +77,7 @@ private extension CategoriesViewController {
     // MARK: - Setup Views
     func setupViews() {
         navigationItem.title = "Категория"
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor(named: "YP White")
 
         [tableView,
          categoryNotFoundedView,

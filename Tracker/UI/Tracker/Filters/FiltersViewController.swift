@@ -56,7 +56,7 @@ final class FiltersViewController: UIViewController {
 private extension FiltersViewController {
     // MARK: Setup Views
     func setupViews() {
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor(named: "YP White")
 
         [navBarLabel,
          tableView
