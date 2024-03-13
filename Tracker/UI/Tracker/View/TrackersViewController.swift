@@ -117,13 +117,7 @@ final class TrackersViewController: UIViewController {
         setupNavigationBar()
         setupViews()
         setupConstraints()
-
-        do {
-            completedTrackers = try trackerRecordStore.fetchTrackerRecords()
-        } catch {
-            print("Error with fetchTrackers: \(error.localizedDescription)")
-        }
-
+        completedTrackers = trackerRecordStore.trackerRecords
         trackerCategoryStore.delegate = self
     }
 
@@ -341,7 +335,8 @@ extension TrackersViewController: TrackersCellDelgate {
             trackerRecord.date.yearMonthDayComponents == datePicker.date.yearMonthDayComponents
         }) {
             completedTrackers.remove(at: index)
-            try? trackerRecordStore.deleteTrackerRecord(TrackerRecord(date: datePicker.date, trackerID: id))
+//            try? trackerRecordStore.deleteTrackerRecord(TrackerRecord(date: datePicker.date, trackerID: id))
+            try? trackerRecordStore.deleteTrackerRecord(with: id)
         } else {
             completedTrackers.append(TrackerRecord(date: datePicker.date, trackerID: id))
             try? trackerRecordStore.addNewTracker(TrackerRecord(date: datePicker.date, trackerID: id))
