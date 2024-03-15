@@ -74,6 +74,12 @@ final class TrackerCategoryStore: NSObject {
         return trackerCategories
     }
 
+    func category(_ categoryTitle: String) -> TrackerCategoryCoreData? {
+        return fetchedResultsController.fetchedObjects?.first {
+            $0.title == categoryTitle
+        }
+    }
+
     func trackerCategory(from trackerCategoryCoreData: TrackerCategoryCoreData) throws -> TrackerCategory {
         guard let category = trackerCategoryCoreData.title else {
             throw DataError.decodingError
@@ -89,13 +95,15 @@ final class TrackerCategoryStore: NSObject {
                 let color = trackerCoreDataColor,
                 let emoji = trackerCoreData.emoji
             else { return nil }
+            let pinned = trackerCoreData.isPinned
 
             return Tracker(
                 id: id,
                 title: title,
                 color: color,
                 emoji: emoji,
-                schedule: trackerCoreData.schedule?.compactMap { WeekDay(rawValue: $0) }
+                schedule: trackerCoreData.schedule?.compactMap { WeekDay(rawValue: $0) },
+                isPinned: pinned
             )
         } ?? []
 

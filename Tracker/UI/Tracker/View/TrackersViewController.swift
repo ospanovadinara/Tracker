@@ -23,6 +23,8 @@ final class TrackersViewController: UIViewController {
     private let trackerCategoryStore = TrackerCategoryStore.shared
     private let trackerRecordStore = TrackerRecordStore.shared
     private var selectedFilter: Filters?
+    private let trackerStore = TrackerStore.shared
+    private var pinnedTrackers: [Tracker] = []
 
     // MARK: - Localized Strings
     private let navBarTitleText = NSLocalizedString("navBarTitleText", comment: "Text displayed on the main screen title")
@@ -261,6 +263,19 @@ final class TrackersViewController: UIViewController {
             collectionView.backgroundView = trackerNotFoundedView
         }
     }
+
+    func setupContextMenu(_ indexPath: IndexPath) -> UIMenu {
+        let tracker: Tracker
+        tracker = pinnedTrackers[indexPath.row]
+        //обратить внимание
+
+        let pinActionTitle = tracker.isPinned == true ? "Открепить" : "Закрепить"
+        let pinAction = UIAction(title: pinActionTitle, image: nil) { [weak self] action in
+            try? self?.trackerStore.changeTrackerPinStatus(tracker)
+        }
+
+        return UIMenu(children: [])
+    }
 }
 
 // MARK: - UISearchBarDelegate
@@ -335,7 +350,6 @@ extension TrackersViewController: TrackersCellDelgate {
             trackerRecord.date.yearMonthDayComponents == datePicker.date.yearMonthDayComponents
         }) {
             completedTrackers.remove(at: index)
-//            try? trackerRecordStore.deleteTrackerRecord(TrackerRecord(date: datePicker.date, trackerID: id))
             try? trackerRecordStore.deleteTrackerRecord(with: id)
         } else {
             completedTrackers.append(TrackerRecord(date: datePicker.date, trackerID: id))
@@ -346,7 +360,7 @@ extension TrackersViewController: TrackersCellDelgate {
 }
 
 // MARK: - UICollectionViewDelegate
-extension TrackersViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         viewForSupplementaryElementOfKind kind: String,
                         at indexPath: IndexPath) -> UICollectionReusableView {
@@ -456,6 +470,20 @@ extension TrackersViewController: FiltersViewControllerDelegate {
             datePicker.date = Date()
             datePickerValueChanged(datePicker)
             reloadVisibleCategories(with: trackerCategoryStore.trackerCategories)
+        }
+    }
+}
+
+extension TrackersViewController: UICollectionViewDelegate {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        contextMenuConfigurationForItemAt indexPath: IndexPath,
+        point: CGPoint
+    ) -> UIContextMenuConfiguration? {
+        let identifier = "\(indexPath.row):\(indexPath.section)" as NSString
+
+        return UIContextMenuConfiguration(identifier: identifier, previewProvider: nil) { _ in
+            return self.setupContextMenu(indexPath)
         }
     }
 }
