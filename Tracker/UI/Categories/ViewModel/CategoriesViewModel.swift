@@ -50,6 +50,10 @@ final class CategoriesViewModel {
         delegate?.didSelectCategory(category: category)
         updateClosure?()
     }
+
+    func deleteCategory(_ category: TrackerCategory) {
+        try? self.trackerCategoryStore.deleteCategory(category)
+    }
 }
 
 extension CategoriesViewModel: TrackerCategoryStoreDelegate {

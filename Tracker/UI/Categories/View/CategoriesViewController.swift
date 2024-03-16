@@ -128,6 +128,49 @@ private extension CategoriesViewController {
         tableView.isHidden = viewModel.isTableViewHidden
         categoryNotFoundedView.isHidden = !viewModel.isTableViewHidden
     }
+
+    func showAlert(categoryToDelete: TrackerCategory) {
+        let alert = UIAlertController(
+            title: nil,
+            message: "Эта категория точно не нужна?",
+            preferredStyle: .actionSheet
+        )
+
+        let deleteAction = UIAlertAction(
+            title: "Удалить",
+            style: .destructive,
+            handler: { [weak self] _ in
+                self?.viewModel.deleteCategory(categoryToDelete)
+            })
+
+        alert.addAction(deleteAction)
+
+        let cancelAction = UIAlertAction(
+            title: "Отменить",
+            style: .cancel) { _ in
+
+            }
+
+        alert.addAction(cancelAction)
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    func showContextMenu(_ indexPath: IndexPath) -> UIMenu {
+        let category = viewModel.categories[indexPath.row]
+
+        let editAction = UIAction(title: "Редактировать", image: nil) { [weak self] action in
+            let editCategoryViewController = EditCategoryViewController()
+            let navigationController = UINavigationController(rootViewController: editCategoryViewController)
+            editCategoryViewController.categoryToEdit = category
+            self?.present(navigationController, animated: true)
+        }
+
+        let deleteAction = UIAction(title: "Удалить") { [weak self] action in
+            self?.showAlert(categoryToDelete: category)
+        }
+
+        return UIMenu(children: [editAction, deleteAction])
+    }
 }
 
 extension CategoriesViewController: AddCategoryViewControllerDelegate {
@@ -225,6 +268,16 @@ extension CategoriesViewController: UITableViewDelegate {
             let separatorView = UIView(frame: CGRect(x: separatorX, y: separatorY, width: separatorWidth, height: separatorHeight))
             separatorView.backgroundColor = UIColor(named: "YP Dark Gray")
             cell.addSubview(separatorView)
+        }
+    }
+
+    func tableView(
+        _ tableView: UITableView,
+        contextMenuConfigurationForRowAt indexPath: IndexPath,
+        point: CGPoint
+    ) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { action in
+            return self.showContextMenu(indexPath)
         }
     }
 }
