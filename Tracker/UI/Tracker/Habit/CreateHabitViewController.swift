@@ -38,8 +38,18 @@ final class CreateHabitViewController: UIViewController {
         AppColor.color16.uiColor, AppColor.color17.uiColor, AppColor.color18.uiColor
     ]
 
-    private var selectedEmoji: String?
-    private var selectedColor: UIColor?
+    private var selectedEmoji: String = "" {
+        didSet {
+            checkCorrectness()
+        }
+    }
+
+    private var selectedColor: UIColor? = nil {
+        didSet {
+            checkCorrectness()
+        }
+    }
+
     private lazy var category: TrackerCategory? = nil {
         didSet {
             checkCorrectness()
@@ -283,7 +293,6 @@ final class CreateHabitViewController: UIViewController {
 
     @objc private func createButtonTapped() {
         guard let text = trackersNameTextField.text, !text.isEmpty,
-              let emoji = selectedEmoji,
               let color = selectedColor else {
             return
         }
@@ -292,8 +301,8 @@ final class CreateHabitViewController: UIViewController {
             id: UUID(),
             title: text,
             color: color,
-            emoji: emoji,
-            schedule: self.selectedWeekDays, 
+            emoji: selectedEmoji,
+            schedule: self.selectedWeekDays,
             isPinned: false
         )
 
@@ -310,11 +319,10 @@ final class CreateHabitViewController: UIViewController {
     }
 
     private func checkCorrectness() {
-        if let text = trackersNameTextField.text, !text.isEmpty || !selectedWeekDays.isEmpty {
-            createButton.isEnabled = true
+        createButton.isEnabled = trackersNameTextField.text?.isEmpty == false && selectedColor != nil && !selectedEmoji.isEmpty
+        if createButton.isEnabled {
             createButton.backgroundColor = UIColor(named: "YP Black")
         } else {
-            createButton.isEnabled = false
             createButton.backgroundColor = UIColor(named: "YP Dark Gray")
         }
     }

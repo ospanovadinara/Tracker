@@ -19,7 +19,7 @@ final class ScheduleViewController: UIViewController {
     weak var delegate: ScheduleViewControllerDelegate?
 
     // MARK: - Private properties
-    private var selectedWeekDays: Set<WeekDay> = []
+    var selectedWeekDays: Set<WeekDay> = []
 
     // MARK: - UI
     private lazy var navBarLabel: UILabel = {
