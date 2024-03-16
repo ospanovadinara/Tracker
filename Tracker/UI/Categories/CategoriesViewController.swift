@@ -39,11 +39,11 @@ final class CategoriesViewController: UIViewController {
             forCellReuseIdentifier: CategoryCell.cellID
         )
         tableView.backgroundColor = .clear
-        tableView.isScrollEnabled = false
+        tableView.layer.cornerRadius = 16
+        tableView.separatorStyle = .none
         tableView.allowsMultipleSelection = false
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.separatorStyle = .none
         return tableView
     }()
 
@@ -158,29 +158,37 @@ extension CategoriesViewController: UITableViewDataSource {
             fatalError("Could not cast to CategoryCell")
         }
         let category = viewModel.categories[indexPath.row].title
-
-        cell.contentView.layer.maskedCorners = []
-        cell.contentView.layer.cornerRadius = 0
+        cell.configureCell(
+            with: category
+        )
 
         if indexPath.row == viewModel.categories.count - 1 {
-            cell.configureCell(
-                with: category
-            )
-            cell.setRoundedCornersForContentView(top: false,
-                                                 bottom: true)
+            cell.contentView.clipsToBounds = true
+            cell.contentView.layer.cornerRadius = 16
+            cell.contentView.layer.maskedCorners = [
+                .layerMaxXMaxYCorner,
+                .layerMinXMaxYCorner
+            ]
         } else if indexPath.row == 0 {
-            cell.configureCell(
-                with: category
-            )
-            cell.setRoundedCornersForContentView(top: true,
-                                                 bottom: false)
+            cell.contentView.clipsToBounds = true
+            cell.contentView.layer.cornerRadius = 16
+            cell.contentView.layer.maskedCorners = [
+                .layerMaxXMinYCorner,
+                .layerMinXMinYCorner
+            ]
         } else {
-            cell.configureCell(
-                with: category
-            )
-            cell.contentView.layer.maskedCorners = []
             cell.contentView.layer.cornerRadius = 0
         }
+
+        if viewModel.categories.count == 1 {
+            cell.contentView.layer.maskedCorners = [
+                .layerMaxXMinYCorner,
+                .layerMinXMinYCorner,
+                .layerMaxXMaxYCorner,
+                .layerMinXMaxYCorner
+            ]
+        }
+
         cell.selectionStyle = .none
         return cell
     }
