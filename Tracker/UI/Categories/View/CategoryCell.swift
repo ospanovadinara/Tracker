@@ -55,25 +55,7 @@ final class CategoryCell: UITableViewCell {
 
         return selectedCategoryTitle
     }
-
-//    func setRoundedCornersForContentView(top: Bool, bottom: Bool) {
-//        var cornerMask: CACornerMask = []
-//
-//        if top {
-//            cornerMask.insert(.layerMinXMinYCorner)
-//            cornerMask.insert(.layerMaxXMinYCorner)
-//        }
-//
-//        if bottom {
-//            cornerMask.insert(.layerMinXMaxYCorner)
-//            cornerMask.insert(.layerMaxXMaxYCorner)
-//        }
-//
-//        contentView.layer.maskedCorners = cornerMask
-//        contentView.layer.cornerRadius = 16
-//        contentView.clipsToBounds = true
-//    }
-
+    
     func checkMarkIconSetup(with image: UIImage) {
         self.image.image = image
     }

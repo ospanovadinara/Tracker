@@ -148,7 +148,6 @@
 			children = (
 				27936A372B120AEA00514242 /* Tracker.swift */,
 				27936A3B2B120B2900514242 /* TrackerRecord.swift */,
-				27936A392B120B0600514242 /* TrackerCategory.swift */,
 				273B5CB32B9F5B4600941439 /* Filters.swift */,
 			);
 			path = Model;
@@ -253,11 +252,9 @@
 		276B765A2B95F6E60067EB05 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				276B76612B96EE6E0067EB05 /* CategoriesViewModel.swift */,
-				276B765B2B95F7060067EB05 /* CategoriesViewController.swift */,
-				276B76632B97098E0067EB05 /* AddCategoryViewController.swift */,
-				276B765D2B95F8550067EB05 /* CategoryNotFoundedView.swift */,
-				276B765F2B95FAB20067EB05 /* CategoryCell.swift */,
+				277FB3682BA603D700F45F6D /* Model */,
+				277FB3662BA6038900F45F6D /* View */,
+				277FB3672BA6038F00F45F6D /* ViewModel */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -272,6 +269,33 @@
 				2702DC172B14B22900F1491D /* Statistics */,
 			);
 			path = UI;
+			sourceTree = "<group>";
+		};
+		277FB3662BA6038900F45F6D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				276B765F2B95FAB20067EB05 /* CategoryCell.swift */,
+				276B765B2B95F7060067EB05 /* CategoriesViewController.swift */,
+				276B76632B97098E0067EB05 /* AddCategoryViewController.swift */,
+				276B765D2B95F8550067EB05 /* CategoryNotFoundedView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		277FB3672BA6038F00F45F6D /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				276B76612B96EE6E0067EB05 /* CategoriesViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		277FB3682BA603D700F45F6D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				27936A392B120B0600514242 /* TrackerCategory.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		278368BD2BA0D83B0074D50B /* TrackerTests */ = {
