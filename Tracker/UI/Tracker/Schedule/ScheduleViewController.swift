@@ -140,6 +140,7 @@ extension ScheduleViewController: UITableViewDataSource {
             isLastCell: indexPath.row == 6,
             isSelected: selectedWeekDays.contains(weekDay)
         )
+        cell.selectionStyle = .none
         cell.delegate = self
         return cell
     }
