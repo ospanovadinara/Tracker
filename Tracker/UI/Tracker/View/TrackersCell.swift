@@ -10,7 +10,7 @@ import SnapKit
 
 // MARK: - TrackersCellDelegate
 protocol TrackersCellDelgate: AnyObject {
-    func trackerCompleted(id: UUID, at indexPath: IndexPath)
+    func trackerCompleted(id: UUID)
 }
 
 final class TrackersCell: UICollectionViewCell {
@@ -85,6 +85,14 @@ final class TrackersCell: UICollectionViewCell {
         return label
     }()
 
+    private lazy var pinImageView: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: "pin_square")
+        image.isHidden = false
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
+
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -98,20 +106,22 @@ final class TrackersCell: UICollectionViewCell {
 
     // MARK: - Public Method
     public func configureCell(
-        with tracker: Tracker,
+        _ id: UUID,
+        title: String,
+        color: UIColor,
+        emoji: String,
         isCompleted: Bool,
         isEnabled: Bool,
         completedDays:Int,
-        indexPath: IndexPath
+        isPinned: Bool
     ) {
-        self.trackerId = tracker.id
-        self.isCompletedToday = isCompleted
-        self.indexPath = indexPath
-
-        emojiLabel.text = tracker.emoji
-        trackerLabel.text = tracker.title
-        trackerContainer.backgroundColor = tracker.color
-        roundedButton.backgroundColor = tracker.color
+        trackerId = id
+        trackerLabel.text = title
+        trackerContainer.backgroundColor = color
+        roundedButton.backgroundColor = color
+        emojiLabel.text = emoji
+        pinImageView.isHidden = !isPinned
+        isCompletedToday = isCompleted
 
         let completedDaysText = convertCompletedDays(completedDays)
         trackersDaysCounter.text = completedDaysText
@@ -138,7 +148,8 @@ private extension TrackersCell {
 
         [trackerContainer,
          roundedButton,
-         trackersDaysCounter
+         trackersDaysCounter,
+         pinImageView
         ].forEach {
             contentView.addSubview($0)
         }
@@ -192,14 +203,21 @@ private extension TrackersCell {
             make.height.equalTo(34)
             make.width.equalTo(34)
         }
+
+        pinImageView.snp.makeConstraints { make in
+            make.height.equalTo(12)
+            make.width.equalTo(8)
+            make.top.equalTo(trackerContainer.snp.top).offset(18)
+            make.trailing.equalTo(trackerContainer.snp.trailing).offset(-12)
+        }
     }
 
     // MARK: - Actions
     @objc func roundedButtonDidTap() {
-        guard let trackerId = trackerId, let indexPath = indexPath else {
+        guard let trackerId = trackerId else {
             assertionFailure("No trackerId")
             return
         }
-        delegate?.trackerCompleted(id: trackerId, at: indexPath)
+        delegate?.trackerCompleted(id: trackerId)
     }
 }

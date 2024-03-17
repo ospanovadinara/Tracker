@@ -88,11 +88,22 @@ final class TrackerCategoryStore: NSObject {
         try context.save()
     }
 
-    func deleteCategory(_ categoryToDelete: TrackerCategory) throws {
+    func category(forTracker tracker: Tracker) -> TrackerCategory? {
+        let request = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCategoryCoreData")
+        request.returnsObjectsAsFaults = false
+        request.predicate = NSPredicate(format: "ANY trackers.id == %@", tracker.id.uuidString)
+        guard let trackerCategoriesCoreData = try? context.fetch(request) else { return nil }
+        guard let categories = try? trackerCategoriesCoreData.map({ try self.trackerCategory(from: $0)})
+        else { return nil }
+        return categories.first
+    }
+
+    func deleteCategory(
+        _ categoryToDelete: TrackerCategory)
+    throws {
         let category = fetchedResultsController.fetchedObjects?.first {
             $0.title == categoryToDelete.title
         }
-
         if let category = category {
             context.delete(category)
             try context.save()

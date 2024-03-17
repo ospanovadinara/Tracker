@@ -86,12 +86,12 @@ final class TrackerRecordStore: NSObject {
         try context.save()
     }
 
-    func deleteTrackerRecord(with id: UUID) throws {
-        let request = TrackerRecordCoreData.fetchRequest()
-        let trackerRecordFromCoreData = try context.fetch(request)
-        let record = trackerRecordFromCoreData.first {
-            $0.id == id
+    func deleteTrackerRecord(with id: UUID, date: Date) throws {
+        let record = fetchedResultsController.fetchedObjects?.first {
+            $0.id == id &&
+            $0.date?.yearMonthDayComponents == date.yearMonthDayComponents
         }
+
         if let record = record {
             context.delete(record)
             try context.save()
