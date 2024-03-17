@@ -346,8 +346,6 @@ final class TrackersViewController: UIViewController {
     func deleteTracker(_ tracker: Tracker) {
         try? self.trackerStore.deleteTracker(tracker)
         trackerRecordStore.reload()
-        //здесь указать обновление статистики
-
         do {
             try trackerStore.deleteTracker(tracker)
         } catch {
@@ -359,8 +357,6 @@ final class TrackersViewController: UIViewController {
         } catch {
             print("Ошибка при удалении записей: \(error)")
         }
-
-        //здесь указать обновление статистики
     }
 }
 
