@@ -116,7 +116,7 @@ final class TrackersViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        updateEmptyView()
         setWeekDay()
         reloadVisibleCategories(with: trackerCategoryStore.trackerCategories)
         setupNavigationBar()
@@ -174,9 +174,7 @@ final class TrackersViewController: UIViewController {
         }
 
         emptyView.snp.makeConstraints { make in
-            make.top.equalTo(searchTextField.snp.bottom)
-            make.leading.trailing.bottom.equalToSuperview()
-            make.centerX.equalToSuperview()
+            make.edges.equalToSuperview()
 
         }
 
@@ -290,15 +288,8 @@ final class TrackersViewController: UIViewController {
     }
 
     private func updateEmptyView() {
-        if visibleCategories.isEmpty {
-            print("visibleCategories is empty")
-            collectionView.backgroundView = emptyView
-            emptyView.isHidden = false
-        } else {
-            collectionView.backgroundView = nil
-            emptyView.isHidden = true
-        }
-        collectionView.reloadData()
+        let count = visibleCategories.count
+        emptyView.isHidden = count > 0
     }
 
     func setupContextMenu(_ indexPath: IndexPath) -> UIMenu {
@@ -395,6 +386,7 @@ extension TrackersViewController: UITextFieldDelegate {
 extension TrackersViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         let count = visibleCategories.count
+        emptyView.isHidden = count > 0
         collectionView.isHidden = count == 0 && pinnedTrackers.count == 0
         filterButton.isHidden = collectionView.isHidden && selectedFilter == nil
         return count + 1
