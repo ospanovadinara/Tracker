@@ -38,6 +38,7 @@ final class ColorHeader: UICollectionReusableView {
         label.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.equalToSuperview().offset(10)
+            make.height.equalTo(18)
         }
     }
 }

@@ -38,7 +38,7 @@ final class CreateHabitViewController: UIViewController {
         AppColor.color16.uiColor, AppColor.color17.uiColor, AppColor.color18.uiColor
     ]
 
-    private var selectedEmoji: String = "" {
+    private var selectedEmoji: String? = nil {
         didSet {
             checkCorrectness()
         }
@@ -71,6 +71,9 @@ final class CreateHabitViewController: UIViewController {
     // MARK: -  UI
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
+        scrollView.frame = view.bounds
+        scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height)
+        scrollView.isScrollEnabled = true
         return scrollView
     }()
 
@@ -145,7 +148,7 @@ final class CreateHabitViewController: UIViewController {
         collectionView.delegate = self
         collectionView.allowsMultipleSelection = false
         collectionView.showsVerticalScrollIndicator = false
-
+        collectionView.isScrollEnabled = false
         return collectionView
     }()
 
@@ -162,6 +165,7 @@ final class CreateHabitViewController: UIViewController {
         collectionView.delegate = self
         collectionView.allowsMultipleSelection = false
         collectionView.showsVerticalScrollIndicator = false
+        collectionView.isScrollEnabled = false
         return collectionView
     }()
 
@@ -228,12 +232,11 @@ final class CreateHabitViewController: UIViewController {
     }
 
     private func setupSelectedCells() {
-        if let indexPathEmoji = emojis.firstIndex(where: { $0 == selectedEmoji }) {
-            if let cellEmoji = emojiCollectionView.cellForItem(at: IndexPath(row: indexPathEmoji, section: 0)) as? EmojiCell {
-                cellEmoji.highlightEmoji()
-                selectedEmojiCell = IndexPath(row: indexPathEmoji, section: 0)
-            }
-        }
+        guard let indexPathEmoji = emojis.firstIndex(where: {$0 == selectedEmoji}) else { return }
+        let cellEmoji = self.emojiCollectionView.cellForItem(at: IndexPath(row: indexPathEmoji, section: 0))
+        cellEmoji?.backgroundColor = UIColor(named: "YP Gray")
+        cellEmoji?.layer.cornerRadius = 16
+        selectedEmojiCell = IndexPath(row: indexPathEmoji, section: 0)
 
         let hexString = UIColorMarshalling().hexString(from: selectedColor ?? .red)
         if let selectedColor = selectedColor,
@@ -342,23 +345,24 @@ final class CreateHabitViewController: UIViewController {
         }
 
         emojiCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(tableView.snp.bottom).offset(32)
+            make.top.equalTo(tableView.snp.bottom).offset(30)
             make.leading.equalTo(contentView.snp.leading).offset(18)
             make.trailing.equalTo(contentView.snp.trailing).offset(-18)
-            make.height.equalTo(222)
+            make.height.equalTo(204)
         }
 
         colorCollectionView.snp.makeConstraints { make in
             make.top.equalTo(emojiCollectionView.snp.bottom).offset(16)
             make.leading.equalTo(contentView.snp.leading).offset(18)
             make.trailing.equalTo(contentView.snp.trailing).offset(-18)
-            make.height.equalTo(222)
+            make.height.equalTo(204)
         }
 
         buttonStackView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-60)
+            make.top.equalTo(colorCollectionView.snp.bottom).offset(-16)
             make.leading.equalTo(contentView.snp.leading).offset(20)
             make.trailing.equalTo(contentView.snp.trailing).offset(-20)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             make.height.equalTo(60)
         }
     }
@@ -382,7 +386,7 @@ final class CreateHabitViewController: UIViewController {
                 id: UUID(),
                 title: text,
                 color: color,
-                emoji: selectedEmoji,
+                emoji: selectedEmoji ?? "",
                 schedule: self.selectedWeekDays,
                 isPinned: false
             )
@@ -399,7 +403,7 @@ final class CreateHabitViewController: UIViewController {
             
             try? trackerStore.updateTracker(
                 newTitle: trackersNameTextField.text ?? "",
-                newEmoji: selectedEmoji,
+                newEmoji: selectedEmoji ?? "",
                 newColor: color,
                 newSchedule: selectedWeekDays,
                 categoryTitle: category?.title ?? "Без категории",
@@ -416,7 +420,7 @@ final class CreateHabitViewController: UIViewController {
     }
 
     private func checkCorrectness() {
-        createButton.isEnabled = trackersNameTextField.text?.isEmpty == false && selectedColor != nil && !selectedEmoji.isEmpty
+        createButton.isEnabled = trackersNameTextField.text?.isEmpty == false && selectedColor != nil && selectedEmoji != nil
         if createButton.isEnabled {
             createButton.backgroundColor = UIColor(named: "YP Black")
         } else {
@@ -589,26 +593,48 @@ extension CreateHabitViewController: UICollectionViewDelegateFlowLayout {
 
 extension CreateHabitViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let section = indexPath.section
 
         if collectionView == emojiCollectionView {
-            let selectedCell = collectionView.cellForItem(at: indexPath) as? EmojiCell
-            selectedEmoji = emojis[indexPath.item]
-            selectedCell?.highlightEmoji()
+            guard let emojiCell = collectionView.cellForItem(at: indexPath) as? EmojiCell else { return }
+
+            if section == 0 {
+                if selectedEmojiCell != nil {
+                    collectionView.deselectItem(at: selectedEmojiCell!, animated: true)
+                    collectionView.cellForItem(at: selectedEmojiCell!)?.backgroundColor = UIColor(named: "YP White")
+                }
+                emojiCell.backgroundColor = UIColor(named: "YP Gray")
+                emojiCell.layer.cornerRadius = 16
+                selectedEmoji = emojis[indexPath.item]
+                selectedEmojiCell = indexPath
+            }
         } else if collectionView == colorCollectionView {
             let selectedCell = collectionView.cellForItem(at: indexPath) as? ColorCell
             selectedColor = colors[indexPath.item]
-            selectedCell?.highlightColor()
+            selectedCell?.layer.borderWidth = 3.0
+            selectedCell?.layer.borderColor = selectedCell?.colorView.backgroundColor?.withAlphaComponent(0.3).cgColor
+            selectedCell?.layer.cornerRadius = 8
+
         }
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        if collectionView == emojiCollectionView {
-            let deselectedCell = collectionView.cellForItem(at: indexPath) as? EmojiCell
-            deselectedCell?.unhighlightEmoji()
+        let section = indexPath.section
 
+        if collectionView == emojiCollectionView {
+            guard let emojiCell = collectionView.cellForItem(at: indexPath) as? EmojiCell else { return }
+
+            if section == 0 {
+                collectionView.deselectItem(at: indexPath, animated: true)
+                emojiCell.backgroundColor = UIColor(named: "YP White")
+                emojiCell.layer.borderWidth = 0
+
+                selectedEmojiCell = nil
+                selectedEmoji = nil
+            }
         } else if collectionView == colorCollectionView {
             let deselectedCell = collectionView.cellForItem(at: indexPath) as? ColorCell
-            deselectedCell?.unhighlightColor()
+            deselectedCell?.layer.borderWidth = 0
         }
     }
 }
