@@ -25,6 +25,7 @@ final class TrackersViewController: UIViewController {
     private var selectedFilter: Filters?
     private let trackerStore = TrackerStore.shared
     private var pinnedTrackers: [Tracker] = []
+    weak var statisticsViewControllerDelegate: StatisticsViewControllerDelegate?
 
     // MARK: - Localized Strings
     private let navBarTitleText = NSLocalizedString("navBarTitleText", comment: "Text displayed on the main screen title")
@@ -181,6 +182,8 @@ final class TrackersViewController: UIViewController {
 
     // MARK: - Actions
     @objc private func addNavBarButtonTapped() {
+        let statisticsViewController = StatisticsViewController()
+        statisticsViewController.delegate = self
         let viewController = ChooseTrackerViewController()
         viewController.trackersViewController = self
         present(viewController, animated: true, completion: nil)
@@ -348,6 +351,7 @@ final class TrackersViewController: UIViewController {
     func deleteTracker(_ tracker: Tracker) {
         try? self.trackerStore.deleteTracker(tracker)
         trackerRecordStore.reload()
+        updateStatistics()
         do {
             try trackerStore.deleteTracker(tracker)
         } catch {
@@ -359,6 +363,7 @@ final class TrackersViewController: UIViewController {
         } catch {
             print("Ошибка при удалении записей: \(error)")
         }
+        updateStatistics()
     }
 }
 
@@ -446,6 +451,7 @@ extension TrackersViewController: TrackersCellDelgate {
             try? trackerRecordStore.addNewTracker(TrackerRecord(date: datePicker.date, trackerID: id))
         }
         reloadVisibleCategories(with: trackerCategoryStore.trackerCategories)
+        statisticsViewControllerDelegate?.updateStatistics()
         trackerRecordStore.reload()
     }
 }
@@ -564,6 +570,12 @@ extension TrackersViewController: TrackerRecordStoreDelegate {
     func store(_ store: TrackerRecordStore, didUpdate update: TrackerRecordStoreUpdate) {
         completedTrackers = trackerRecordStore.trackerRecords
         collectionView.reloadData()
+    }
+}
+
+extension TrackersViewController: StatisticsViewControllerDelegate {
+    func updateStatistics() {
+        return
     }
 }
 
