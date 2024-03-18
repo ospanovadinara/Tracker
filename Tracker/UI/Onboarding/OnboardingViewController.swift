@@ -9,6 +9,8 @@ import UIKit
 import SnapKit
 
 final class OnboardingViewController: UIViewController {
+    
+    private let analyticsService = AnalyticsService()
 
     // MARK: - UI
     private lazy var backgroundView: UIImageView = {

@@ -26,6 +26,7 @@ final class TrackersViewController: UIViewController {
     private let trackerStore = TrackerStore.shared
     private var pinnedTrackers: [Tracker] = []
     weak var statisticsViewControllerDelegate: StatisticsViewControllerDelegate?
+    private let analyticsService = AnalyticsService()
 
     // MARK: - Localized Strings
     private let navBarTitleText = NSLocalizedString("navBarTitleText", comment: "Text displayed on the main screen title")
@@ -125,6 +126,13 @@ final class TrackersViewController: UIViewController {
         trackerCategoryStore.delegate = self
         trackerRecordStore.delegate = self
         trackerStore.delegate = self
+
+        analyticsService.report(event: .open, params: ["Screen" : "Main"])
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.report(event: .close, params: ["Screen" : "Main"])
     }
 
     // MARK: - Setup NavigationBar
@@ -187,6 +195,7 @@ final class TrackersViewController: UIViewController {
         let viewController = ChooseTrackerViewController()
         viewController.trackersViewController = self
         present(viewController, animated: true, completion: nil)
+        analyticsService.report(event: .click, params: ["Screen" : "Main", "Item" : Items.add_track.rawValue])
     }
 
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
@@ -198,6 +207,7 @@ final class TrackersViewController: UIViewController {
     }
 
     @objc func filterButtonTapped(sender: AnyObject) {
+        analyticsService.report(event: .click, params: ["Screen" : "Main", "Item" : Items.filter.rawValue])
         let filtersViewController = FiltersViewController()
         filtersViewController.selectedFilter = selectedFilter
         filtersViewController.delegate = self
@@ -313,6 +323,7 @@ final class TrackersViewController: UIViewController {
         }
 
         let editAction = UIAction(title: "Редактировать") { [weak self] action in
+            self?.analyticsService.report(event: .click, params: ["Screen" : "Main", "Item" : Items.edit.rawValue])
             let editTrackerViewController = CreateHabitViewController()
             editTrackerViewController.editTracker = tracker
             editTrackerViewController.editTrackerDate = self?.datePicker.date ?? Date()
@@ -322,6 +333,7 @@ final class TrackersViewController: UIViewController {
 
         let deleteAction = UIAction(title: "Удалить", image: nil, attributes: .destructive) { [weak self] action in
             self?.showAlert(tracker: tracker)
+            self?.analyticsService.report(event: .click, params: ["Screen" : "Main", "Item" : Items.delete.rawValue])
         }
         return UIMenu(children: [pinAction, editAction, deleteAction])
     }
@@ -449,6 +461,7 @@ extension TrackersViewController: TrackersCellDelgate {
         } else {
             completedTrackers.append(TrackerRecord(date: datePicker.date, trackerID: id))
             try? trackerRecordStore.addNewTracker(TrackerRecord(date: datePicker.date, trackerID: id))
+            analyticsService.report(event: .click, params: ["Screen" : "Main", "Item" : Items.track.rawValue])
         }
         reloadVisibleCategories(with: trackerCategoryStore.trackerCategories)
         statisticsViewControllerDelegate?.updateStatistics()
