@@ -122,6 +122,7 @@ final class TrackersViewController: UIViewController {
         completedTrackers = trackerRecordStore.trackerRecords
         trackerCategoryStore.delegate = self
         trackerRecordStore.delegate = self
+        trackerStore.delegate = self
     }
 
     // MARK: - Setup NavigationBar
@@ -544,9 +545,16 @@ extension TrackersViewController: CreateHabitViewControllerDelegate {
     }
 }
 
+extension TrackersViewController: TrackerStoreDelegate {
+    func store(_ store: TrackerStore, didUpdate update: TrackerStoreUpdate) {
+        reloadVisibleCategories(with: trackerCategoryStore.trackerCategories)
+        collectionView.reloadData()
+    }
+}
+
 extension TrackersViewController: TrackerCategoryStoreDelegate {
     func store(_ store: TrackerCategoryStore, didUpdate update: TrackerCategoryStoreUpdate) {
-        visibleCategories = trackerCategoryStore.trackerCategories
+        reloadVisibleCategories(with: trackerCategoryStore.trackerCategories)
         collectionView.reloadData()
     }
 }
