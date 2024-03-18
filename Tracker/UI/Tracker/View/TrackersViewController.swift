@@ -82,6 +82,7 @@ final class TrackersViewController: UIViewController {
         collectionView.register(TrackerHeaderView.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: TrackerHeaderView.cellID)
+        collectionView.alwaysBounceVertical = true
 
         return collectionView
     }()
