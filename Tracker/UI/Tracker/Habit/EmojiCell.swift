@@ -5,8 +5,8 @@
 //  Created by Dinara on 18.01.2024.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 final class EmojiCell: UICollectionViewCell {
     // MARK: - Public properties

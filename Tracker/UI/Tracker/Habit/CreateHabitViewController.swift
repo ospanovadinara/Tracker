@@ -5,8 +5,8 @@
 //  Created by Dinara on 02.12.2023.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 protocol CreateHabitViewControllerDelegate: AnyObject {
     func createButtonidTap(tracker: Tracker, category: String)

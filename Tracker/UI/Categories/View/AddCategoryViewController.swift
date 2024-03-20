@@ -5,8 +5,8 @@
 //  Created by Dinara on 05.03.2024.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 protocol AddCategoryViewControllerDelegate: AnyObject {
     func addCategory(_ category: TrackerCategory)

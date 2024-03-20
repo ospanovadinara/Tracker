@@ -5,8 +5,8 @@
 //  Created by Dinara on 04.03.2024.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 final class OnboardingViewController: UIViewController {
     

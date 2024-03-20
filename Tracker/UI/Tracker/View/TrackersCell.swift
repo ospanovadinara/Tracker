@@ -5,8 +5,8 @@
 //  Created by Dinara on 26.11.2023.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 // MARK: - TrackersCellDelegate
 protocol TrackersCellDelgate: AnyObject {

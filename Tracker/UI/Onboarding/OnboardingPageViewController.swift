@@ -5,8 +5,8 @@
 //  Created by Dinara on 01.03.2024.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 final class OnboardingPageViewController: UIPageViewController {
 
@@ -88,6 +88,7 @@ extension OnboardingPageViewController {
         let viewController = MainTabBarViewController()
         guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
         window.rootViewController = viewController
+        UserDefaults.standard.isFirstLaunch = false
     }
 }
 

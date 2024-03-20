@@ -5,8 +5,8 @@
 //  Created by Dinara on 07.12.2023.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 final class CreateHabitCell: UITableViewCell {
     // MARK: - Public properties

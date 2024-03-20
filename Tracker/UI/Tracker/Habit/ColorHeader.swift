@@ -5,8 +5,8 @@
 //  Created by Dinara on 19.01.2024.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 final class ColorHeader: UICollectionReusableView {
     // MARK: - Public properties

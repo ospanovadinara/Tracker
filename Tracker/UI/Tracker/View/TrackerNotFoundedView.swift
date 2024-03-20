@@ -5,8 +5,8 @@
 //  Created by Dinara on 10.01.2024.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 final class TrackerNotFoundedView: UIView {
     // MARK: - UI

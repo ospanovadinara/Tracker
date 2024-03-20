@@ -5,8 +5,8 @@
 //  Created by Dinara on 23.11.2023.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 final class TrackersViewController: UIViewController {
 

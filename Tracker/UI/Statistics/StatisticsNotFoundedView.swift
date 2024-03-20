@@ -5,8 +5,8 @@
 //  Created by Dinara on 18.03.2024.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 final class StatisticsNotFoundedView: UIView {
 
@@ -39,7 +39,7 @@ final class StatisticsNotFoundedView: UIView {
 
 private extension StatisticsNotFoundedView {
     // MARK: - Setup Views
-    private func setupViews() {
+    func setupViews() {
         [imageView,
          titleLabel
         ].forEach {
@@ -48,7 +48,7 @@ private extension StatisticsNotFoundedView {
     }
 
     // MARK: - Setup Constraints
-    private func setupConstraints() {
+    func setupConstraints() {
         imageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()

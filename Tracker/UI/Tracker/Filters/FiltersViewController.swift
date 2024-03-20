@@ -5,8 +5,8 @@
 //  Created by Dinara on 11.03.2024.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 protocol FiltersViewControllerDelegate: AnyObject {
     func filterSelected(filter: Filters)

@@ -5,8 +5,8 @@
 //  Created by Dinara on 23.02.2024.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 struct TrackerStoreUpdate {
     struct Move: Hashable {

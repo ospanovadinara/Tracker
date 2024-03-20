@@ -5,8 +5,8 @@
 //  Created by Dinara on 23.11.2023.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 protocol StatisticsViewControllerDelegate: AnyObject {
     func updateStatistics()
@@ -77,7 +77,7 @@ final class StatisticsViewController: UIViewController {
 
 private extension StatisticsViewController {
     // MARK: - Setup Views
-    private func setupViews() {
+    func setupViews() {
         view.backgroundColor = UIColor.systemBackground
 
         [titleLabel,
@@ -95,7 +95,7 @@ private extension StatisticsViewController {
     }
 
     // MARK: - Setup Constraints
-    private func setupConstraints() {
+    func setupConstraints() {
         navBarLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(88)
             make.leading.equalToSuperview().offset(16)
@@ -127,7 +127,7 @@ private extension StatisticsViewController {
         }
     }
 
-    private func updateTrackerRecords() {
+    func updateTrackerRecords() {
         completedTrackers = trackerRecordStore.trackerRecords
         titleLabel.text = "\(completedTrackers.count)"
         subtitleLabel.text = String.localizedStringWithFormat(NSLocalizedString("trackersCompleted", comment: "число дней"), completedTrackers.count)
@@ -139,6 +139,7 @@ private extension StatisticsViewController {
     }
 }
 
+// MARK: - TrackerRecordStoreDelegate
 extension StatisticsViewController: TrackerRecordStoreDelegate {
     func store(_ store: TrackerRecordStore, didUpdate update: TrackerRecordStoreUpdate) {
         DispatchQueue.main.async{
@@ -147,59 +148,11 @@ extension StatisticsViewController: TrackerRecordStoreDelegate {
     }
 }
 
+// MARK: - StatisticsViewControllerDelegate
 extension StatisticsViewController: StatisticsViewControllerDelegate {
     func updateStatistics() {
         DispatchQueue.main.async{
             self.updateTrackerRecords()
         }
-    }
-}
-
-
-extension UIView {
-    private static let kLayerNameGradientBorder = "GradientBorderLayer"
-
-    func addGradienBorder(
-        colors: [UIColor],
-        width: CGFloat,
-        startPoint: CGPoint = CGPoint(x: 0, y: 0.5),
-        endPoint: CGPoint = CGPoint(x: 1, y: 0.5)
-    ) {
-        let existingBorder = gradientBorderLayer()
-        let border = existingBorder ?? CAGradientLayer()
-        border.frame = bounds
-        border.colors = colors.map { $0.cgColor }
-        border.startPoint = startPoint
-        border.endPoint = endPoint
-
-        let mask = CAShapeLayer()
-        mask.path = UIBezierPath(
-            roundedRect: bounds,
-            cornerRadius: 16
-        ).cgPath
-        mask.fillColor = UIColor.clear.cgColor
-        mask.strokeColor = UIColor.white.cgColor
-        mask.lineWidth = width
-
-        border.mask = mask
-
-        let isAlreadyAdded = existingBorder != nil
-        if !isAlreadyAdded {
-            layer.addSublayer(border)
-        }
-    }
-
-    private func gradientBorderLayer() -> CAGradientLayer? {
-        let borderLayers = layer.sublayers?.filter {
-            $0.name == UIView.kLayerNameGradientBorder
-        }
-        if borderLayers?.count ?? 0 > 1 {
-            fatalError()
-        }
-        return borderLayers?.first as? CAGradientLayer
-    }
-
-    func removeGradientBorder() {
-        self.gradientBorderLayer()?.removeFromSuperlayer()
     }
 }
