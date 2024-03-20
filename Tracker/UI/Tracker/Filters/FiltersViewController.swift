@@ -34,6 +34,7 @@ final class FiltersViewController: UIViewController {
             FiltersCell.self,
             forCellReuseIdentifier: FiltersCell.cellID
         )
+        tableView.layer.cornerRadius = 16
         tableView.isScrollEnabled = false
         tableView.allowsMultipleSelection = false
         tableView.showsVerticalScrollIndicator = false

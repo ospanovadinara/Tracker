@@ -295,7 +295,11 @@ final class TrackersViewController: UIViewController {
 
     private func updateEmptyView() {
         let count = visibleCategories.count
-        emptyView.isHidden = count > 0
+           if count == 0 {
+               collectionView.backgroundView = trackerNotFoundedView
+           } else {
+               collectionView.backgroundView = nil
+           }
     }
 
     func setupContextMenu(_ indexPath: IndexPath) -> UIMenu {
@@ -381,9 +385,8 @@ extension TrackersViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         searchText = searchTextField.text ?? ""
+        reloadVisibleCategories(with: trackerCategoryStore.predicateFetch(trackerTitle: searchText))
         reloadPlaceHolder()
-        visibleCategories = trackerCategoryStore.predicateFetch(trackerTitle: searchText)
-        reloadVisibleCategories(with: trackerCategoryStore.trackerCategories)
         return true
     }
 }
