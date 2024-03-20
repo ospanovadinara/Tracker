@@ -57,6 +57,11 @@ final class TrackersViewController: UIViewController {
         datePicker.addTarget(self,
                              action: #selector(datePickerValueChanged),
                              for: .valueChanged)
+        datePicker.layer.cornerRadius = 8
+        datePicker.tintColor = .black
+        datePicker.backgroundColor = UIColor(named: "YP Light Gray")
+        datePicker.overrideUserInterfaceStyle = .light
+        datePicker.layer.masksToBounds = true
         return datePicker
     }()
 
@@ -85,7 +90,7 @@ final class TrackersViewController: UIViewController {
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: TrackerHeaderView.cellID)
         collectionView.alwaysBounceVertical = true
-
+        collectionView.backgroundColor = UIColor(named: "YP White")
         return collectionView
     }()
 
@@ -102,7 +107,7 @@ final class TrackersViewController: UIViewController {
     private lazy var filterButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(filterButtonTitleText, for: .normal)
-        button.setTitleColor(UIColor(named: "YP White"), for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17,
                                                     weight: .regular)
         button.addTarget(self, action: #selector(filterButtonTapped(sender:)), for: .touchUpInside)
@@ -143,6 +148,7 @@ final class TrackersViewController: UIViewController {
 
     // MARK: - Setup Views
     private func setupViews() {
+        view.backgroundColor = UIColor(named: "YP White")
         [collectionView,
          navBarTitle,
          searchTextField,

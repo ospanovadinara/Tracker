@@ -36,7 +36,7 @@ final class OnboardingPageViewController: UIPageViewController {
     private lazy var continueButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(continueButtonTitle, for: .normal)
-        button.setTitleColor(UIColor(named: "YP White"), for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16,
                                                     weight: .medium)
         button.addTarget(self, action: #selector(continueButtonTapped), for: .touchUpInside)
