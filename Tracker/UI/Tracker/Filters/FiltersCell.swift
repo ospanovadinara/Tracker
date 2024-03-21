@@ -1,29 +1,31 @@
 //
-//  CategoryCell.swift
+//  FiltersCell.swift
 //  Tracker
 //
-//  Created by Dinara on 04.03.2024.
+//  Created by Dinara on 11.03.2024.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
-final class CategoryCell: UITableViewCell {
+final class FiltersCell: UITableViewCell {
 
     // MARK: - Public properties
-    public static let cellID = String(describing: CategoryCell.self)
+    public static let cellID = String(describing: FiltersCell.self)
 
     // MARK: - UI
-    private let titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let title = UILabel()
         title.textColor = UIColor(named: "YP Black")
         title.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         return title
     }()
 
-    private let image: UIImageView = {
+    private lazy var image: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
+        imageView.isHidden = true
+        imageView.image = UIImage(named: "checkmark_icon")
         return imageView
     }()
 
@@ -46,14 +48,16 @@ final class CategoryCell: UITableViewCell {
     }
 
     // MARK: - Public Methods
-    func configureCell(with title: String) {
+    func configureCell(
+        with title: String,
+        isHidden: Bool
+    ) {
         self.titleLabel.text = title
+        self.image.isHidden = isHidden
     }
 
-    func getSelectedCategoryTitle() -> String {
-        guard let selectedCategoryTitle = self.titleLabel.text else { return "" }
-
-        return selectedCategoryTitle
+    func checkMarkImageSetup(isHidden: Bool) {
+        self.image.isHidden = isHidden
     }
 
     func setRoundedCornersForContentView(top: Bool, bottom: Bool) {
@@ -73,16 +77,12 @@ final class CategoryCell: UITableViewCell {
         contentView.layer.cornerRadius = 16
         contentView.clipsToBounds = true
     }
-
-    func checkMarkIconSetup(with image: UIImage) {
-        self.image.image = image
-    }
 }
 
-private extension CategoryCell {
+private extension FiltersCell {
     // MARK: Setup Views
     func setupViews() {
-        contentView.backgroundColor = UIColor(named: "YP Gray")?.withAlphaComponent(0.3)
+        self.backgroundColor = UIColor(named: "YP Gray")?.withAlphaComponent(0.3)
 
         [titleLabel,
          image
@@ -94,16 +94,14 @@ private extension CategoryCell {
     // MARK: Setup Constraints
     func setupConstraints() {
         titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(27)
+            make.centerY.equalToSuperview()
             make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
-            make.size.equalTo(24)
         }
 
         image.snp.makeConstraints { make in
             make.trailing.equalToSuperview().offset(-16)
             make.centerY.equalToSuperview()
-            make.height.equalTo(14)
+            make.size.equalTo(14)
         }
     }
 }

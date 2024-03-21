@@ -1,27 +1,27 @@
 //
-//  CategoryNotFoundedView.swift
+//  StatisticsNotFoundedView.swift
 //  Tracker
 //
-//  Created by Dinara on 04.03.2024.
+//  Created by Dinara on 18.03.2024.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
-final class CategoryNotFoundedView: UIView {
-        // MARK: - UI
-    private lazy var image: UIImageView = {
+final class StatisticsNotFoundedView: UIView {
+
+    // MARK: - UI
+    private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "star_icon")
+        imageView.image = UIImage(named: "statistics_notFounded")
         return imageView
     }()
 
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textColor = UIColor(named: "YP Black")
-        label.text = "Привычки и события можно объединить по смыслу"
-        label.textAlignment = .center
+        label.text = "Анализировать пока нечего"
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         return label
     }()
 
@@ -35,10 +35,12 @@ final class CategoryNotFoundedView: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
 
+private extension StatisticsNotFoundedView {
     // MARK: - Setup Views
-    private func setupViews() {
-        [image,
+    func setupViews() {
+        [imageView,
          titleLabel
         ].forEach {
             self.addSubview($0)
@@ -46,16 +48,16 @@ final class CategoryNotFoundedView: UIView {
     }
 
     // MARK: - Setup Constraints
-    private func setupConstraints() {
-        image.snp.makeConstraints { make in
+    func setupConstraints() {
+        imageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
             make.size.equalTo(80)
         }
 
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(image.snp.bottom).offset(8)
-            make.centerX.equalToSuperview()
+            make.top.equalTo(imageView.snp.bottom).offset(8)
+            make.centerX.equalTo(imageView.snp.centerX)
         }
     }
 }

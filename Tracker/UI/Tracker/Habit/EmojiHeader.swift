@@ -5,8 +5,8 @@
 //  Created by Dinara on 18.01.2024.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 final class EmojiHeader: UICollectionReusableView {
     
@@ -16,7 +16,7 @@ final class EmojiHeader: UICollectionReusableView {
     private lazy var label: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 19, weight: .bold)
-        label.textColor = .black
+        label.textColor = UIColor(named: "YP Black")
         label.text = "Emoji"
         return label
     }()
@@ -39,6 +39,7 @@ final class EmojiHeader: UICollectionReusableView {
         label.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.equalToSuperview().offset(10)
+            make.height.equalTo(18)
         }
     }
 }

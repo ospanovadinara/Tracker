@@ -5,8 +5,8 @@
 //  Created by Dinara on 18.01.2024.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 final class EmojiCell: UICollectionViewCell {
     // MARK: - Public properties
@@ -42,16 +42,5 @@ final class EmojiCell: UICollectionViewCell {
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
         }
-    }
-}
-
-extension EmojiCell {
-    func highlightEmoji() {
-        contentView.backgroundColor = UIColor(named: "YP Gray")
-        contentView.layer.cornerRadius = 16
-    }
-
-    func unhighlightEmoji() {
-        contentView.backgroundColor = .clear
     }
 }

@@ -5,8 +5,8 @@
 //  Created by Dinara on 09.01.2024.
 //
 
-import UIKit
 import CoreData
+import UIKit
 
 final class DataManager {
     static let shared = DataManager()

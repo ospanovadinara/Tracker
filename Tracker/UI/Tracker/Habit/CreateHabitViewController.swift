@@ -5,8 +5,8 @@
 //  Created by Dinara on 02.12.2023.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 protocol CreateHabitViewControllerDelegate: AnyObject {
     func createButtonidTap(tracker: Tracker, category: String)
@@ -38,18 +38,42 @@ final class CreateHabitViewController: UIViewController {
         AppColor.color16.uiColor, AppColor.color17.uiColor, AppColor.color18.uiColor
     ]
 
-    private var selectedEmoji: String?
-    private var selectedColor: UIColor?
-    private lazy var category: TrackerCategory? = nil {
+    private var selectedEmoji: String? = nil {
+        didSet {
+            checkCorrectness()
+        }
+    }
+
+    private var selectedColor: UIColor? = nil {
+        didSet {
+            checkCorrectness()
+        }
+    }
+    
+    lazy var category: TrackerCategory? = nil {
         didSet {
             checkCorrectness()
         }
     }
     private var selectedCategoriesTitle = ""
 
+    private var completedTrackers: [TrackerRecord] = []
+    private let trackerRecordStore = TrackerRecordStore()
+    private let trackerStore = TrackerStore()
+    var editTrackerTitle = "Редактирование привычки"
+    var editTracker: Tracker?
+    var editTrackerDate: Date?
+    var selectedCategory: TrackerCategory?
+    private var selectedEmojiCell: IndexPath? = nil
+    private var selectedColorCell: IndexPath? = nil
+    private let uiColorMarshalling = UIColorMarshalling()
+
     // MARK: -  UI
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
+        scrollView.frame = view.bounds
+        scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height)
+        scrollView.isScrollEnabled = true
         return scrollView
     }()
 
@@ -60,7 +84,7 @@ final class CreateHabitViewController: UIViewController {
 
     private lazy var navBarLabel: UILabel = {
         let label = UILabel()
-        label.text = "Новая привычка"
+        label.text = editTracker == nil ? "Новая привычка" : editTrackerTitle
         label.textColor = UIColor(named: "YP Black")
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return label
@@ -77,8 +101,9 @@ final class CreateHabitViewController: UIViewController {
         let textField = UITextField()
         textField.backgroundColor = .clear
         textField.textAlignment = .left
+        textField.setupLeftView(size: 10)
         textField.placeholder = "Введите название трекера"
-        textField.textColor = UIColor.black
+        textField.textColor = UIColor(named: "YP Black")
         textField.font = UIFont.systemFont(ofSize: 17)
         textField.delegate = self
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
@@ -123,7 +148,7 @@ final class CreateHabitViewController: UIViewController {
         collectionView.delegate = self
         collectionView.allowsMultipleSelection = false
         collectionView.showsVerticalScrollIndicator = false
-
+        collectionView.isScrollEnabled = false
         return collectionView
     }()
 
@@ -140,6 +165,7 @@ final class CreateHabitViewController: UIViewController {
         collectionView.delegate = self
         collectionView.allowsMultipleSelection = false
         collectionView.showsVerticalScrollIndicator = false
+        collectionView.isScrollEnabled = false
         return collectionView
     }()
 
@@ -149,7 +175,7 @@ final class CreateHabitViewController: UIViewController {
         button.setTitleColor(UIColor(named: "YP Red"), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16,
                                                     weight: .medium)
-        button.backgroundColor = .white
+        button.backgroundColor = UIColor(named: "YP White")
         button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         button.layer.cornerRadius = 16
         button.layer.borderWidth = 1.0
@@ -159,11 +185,12 @@ final class CreateHabitViewController: UIViewController {
 
     private lazy var createButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Создать", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        let title = editTracker == nil ? "Создать" : "Сохранить"
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(UIColor(named: "YP White"), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16,
                                                     weight: .medium)
-        button.backgroundColor = .white
+        button.backgroundColor = UIColor(named: "YP White")
         button.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
         button.layer.cornerRadius = 16
         button.backgroundColor = UIColor(named: "YP Dark Gray")
@@ -178,23 +205,78 @@ final class CreateHabitViewController: UIViewController {
         return stackView
     }()
 
+    // MARK: - Edit Tracker UI
+    private lazy var completedDaysLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor(named: "YP Black")
+        label.text = "дней"
+        label.font = UIFont.systemFont(ofSize: 32, weight: .bold)
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }()
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         scheduleViewControllerdelegate = self
         setupViews()
+        setupEditTracker()
         setupConstraints()
         checkCorrectness()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        setupSelectedCells()
+    }
+
+    private func setupSelectedCells() {
+        guard let indexPathEmoji = emojis.firstIndex(where: {$0 == selectedEmoji}) else { return }
+        let cellEmoji = self.emojiCollectionView.cellForItem(at: IndexPath(row: indexPathEmoji, section: 0))
+        cellEmoji?.backgroundColor = UIColor(named: "YP Gray")
+        cellEmoji?.layer.cornerRadius = 16
+        selectedEmojiCell = IndexPath(row: indexPathEmoji, section: 0)
+
+        let hexString = UIColorMarshalling().hexString(from: selectedColor ?? .red)
+        if let selectedColor = selectedColor,
+           let indexPathColor = colors.firstIndex(where: { UIColorMarshalling().hexString(from: $0) == hexString }) {
+            if let cellColor = colorCollectionView.cellForItem(at: IndexPath(row: indexPathColor, section: 1)) as? ColorCell {
+                cellColor.layer.borderWidth = 3
+                cellColor.layer.cornerRadius = 8
+                cellColor.layer.borderColor = selectedColor.withAlphaComponent(0.3).cgColor
+                selectedColorCell = IndexPath(row: indexPathColor, section: 1)
+            }
+        }
+    }
+
+    private func setupEditTracker() {
+        if let editTracker = editTracker {
+            selectedWeekDays = editTracker.schedule ?? []
+            trackersNameTextField.text = editTracker.title
+            selectedEmoji =  editTracker.emoji
+            selectedColor = editTracker.color
+            didSelectDays(selectedWeekDays)
+            selectedCategoriesTitle = category?.title ?? ""
+            completedDaysLabel.isHidden = false
+
+            completedTrackers = trackerRecordStore.trackerRecords
+            let completedCount = completedTrackers.filter({ record in
+                record.trackerID == editTracker.id
+            }).count
+            completedDaysLabel.text = String.localizedStringWithFormat(NSLocalizedString("numberValue", comment: "дней"), completedCount)
+        }
+    }
+
     // MARK: - Setup Views
     private func setupViews() {
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor(named: "YP White")
 
         scrollView.addSubview(contentView)
         view.addSubview(scrollView)
 
         [navBarLabel,
+         completedDaysLabel,
          textFieldContainerView,
          tableView,
          emojiCollectionView,
@@ -216,6 +298,8 @@ final class CreateHabitViewController: UIViewController {
 
     // MARK: - Setup Constraints
     private func setupConstraints() {
+        let trackersNameTextFieldTop: CGFloat = editTracker == nil ? 58 : 102
+
         scrollView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
 
@@ -233,8 +317,15 @@ final class CreateHabitViewController: UIViewController {
             make.height.equalTo(22)
         }
 
+        completedDaysLabel.snp.makeConstraints { make in
+            make.top.equalTo(navBarLabel.snp.top).offset(24)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(343)
+            make.height.equalTo(38)
+        }
+
         textFieldContainerView.snp.makeConstraints { make in
-            make.top.equalTo(navBarLabel.snp.top).offset(58)
+            make.top.equalTo(navBarLabel.snp.top).offset(trackersNameTextFieldTop)
             make.leading.equalTo(contentView.snp.leading).offset(16)
             make.trailing.equalTo(contentView.snp.trailing).offset(-16)
             make.height.equalTo(75)
@@ -254,23 +345,24 @@ final class CreateHabitViewController: UIViewController {
         }
 
         emojiCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(tableView.snp.bottom).offset(32)
+            make.top.equalTo(tableView.snp.bottom).offset(30)
             make.leading.equalTo(contentView.snp.leading).offset(18)
             make.trailing.equalTo(contentView.snp.trailing).offset(-18)
-            make.height.equalTo(222)
+            make.height.equalTo(204)
         }
 
         colorCollectionView.snp.makeConstraints { make in
             make.top.equalTo(emojiCollectionView.snp.bottom).offset(16)
             make.leading.equalTo(contentView.snp.leading).offset(18)
             make.trailing.equalTo(contentView.snp.trailing).offset(-18)
-            make.height.equalTo(222)
+            make.height.equalTo(204)
         }
 
         buttonStackView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-60)
+            make.top.equalTo(colorCollectionView.snp.bottom).offset(-16)
             make.leading.equalTo(contentView.snp.leading).offset(20)
             make.trailing.equalTo(contentView.snp.trailing).offset(-20)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             make.height.equalTo(60)
         }
     }
@@ -282,23 +374,43 @@ final class CreateHabitViewController: UIViewController {
     }
 
     @objc private func createButtonTapped() {
-        guard let text = trackersNameTextField.text, !text.isEmpty,
-              let emoji = selectedEmoji,
-              let color = selectedColor else {
-            return
+        var newTracker: Tracker?
+
+        if editTracker == nil {
+            guard let text = trackersNameTextField.text, !text.isEmpty,
+                  let color = selectedColor else {
+                return
+            }
+
+            newTracker = Tracker(
+                id: UUID(),
+                title: text,
+                color: color,
+                emoji: selectedEmoji ?? "",
+                schedule: self.selectedWeekDays,
+                isPinned: false
+            )
+
+            guard let newTracker = newTracker else { return }
+
+            createHabitViewControllerDelegate?.createButtonidTap(
+                tracker: newTracker,
+                category: category?.title ?? "Категория"
+            )
+        } else {
+            guard let editTracker = editTracker else { return }
+            let color = uiColorMarshalling.hexString(from: selectedColor ?? .black)
+            
+            try? trackerStore.updateTracker(
+                newTitle: trackersNameTextField.text ?? "",
+                newEmoji: selectedEmoji ?? "",
+                newColor: color,
+                newSchedule: selectedWeekDays,
+                categoryTitle: category?.title ?? "Без категории",
+                editableTracker: editTracker
+            )
         }
 
-        let newTracker = Tracker(
-            id: UUID(),
-            title: text,
-            color: color,
-            emoji: emoji,
-            schedule: self.selectedWeekDays)
-
-        createHabitViewControllerDelegate?.createButtonidTap(
-            tracker: newTracker,
-            category: category?.title ?? "Категория"
-        )
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
 
@@ -308,11 +420,10 @@ final class CreateHabitViewController: UIViewController {
     }
 
     private func checkCorrectness() {
-        if let text = trackersNameTextField.text, !text.isEmpty || !selectedWeekDays.isEmpty {
-            createButton.isEnabled = true
+        createButton.isEnabled = trackersNameTextField.text?.isEmpty == false && selectedColor != nil && selectedEmoji != nil
+        if createButton.isEnabled {
             createButton.backgroundColor = UIColor(named: "YP Black")
         } else {
-            createButton.isEnabled = false
             createButton.backgroundColor = UIColor(named: "YP Dark Gray")
         }
     }
@@ -482,27 +593,57 @@ extension CreateHabitViewController: UICollectionViewDelegateFlowLayout {
 
 extension CreateHabitViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if collectionView == emojiCollectionView {
-            let selectedCell = collectionView.cellForItem(at: indexPath) as? EmojiCell
-            selectedEmoji = emojis[indexPath.item]
+        let section = indexPath.section
 
-            selectedCell?.highlightEmoji()
+        if collectionView == emojiCollectionView {
+            guard let emojiCell = collectionView.cellForItem(at: indexPath) as? EmojiCell else { return }
+
+            if section == 0 {
+                if selectedEmojiCell != nil {
+                    collectionView.deselectItem(at: selectedEmojiCell!, animated: true)
+                    collectionView.cellForItem(at: selectedEmojiCell!)?.backgroundColor = UIColor(named: "YP White")
+                }
+                emojiCell.backgroundColor = UIColor(named: "YP Gray")
+                emojiCell.layer.cornerRadius = 16
+                selectedEmoji = emojis[indexPath.item]
+                selectedEmojiCell = indexPath
+            }
         } else if collectionView == colorCollectionView {
             let selectedCell = collectionView.cellForItem(at: indexPath) as? ColorCell
             selectedColor = colors[indexPath.item]
+            selectedCell?.layer.borderWidth = 3.0
+            selectedCell?.layer.borderColor = selectedCell?.colorView.backgroundColor?.withAlphaComponent(0.3).cgColor
+            selectedCell?.layer.cornerRadius = 8
 
-            selectedCell?.highlightColor()
         }
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        if collectionView == emojiCollectionView {
-            let deselectedCell = collectionView.cellForItem(at: indexPath) as? EmojiCell
-            deselectedCell?.unhighlightEmoji()
+        let section = indexPath.section
 
+        if collectionView == emojiCollectionView {
+            guard let emojiCell = collectionView.cellForItem(at: indexPath) as? EmojiCell else { return }
+
+            if section == 0 {
+                collectionView.deselectItem(at: indexPath, animated: true)
+                emojiCell.backgroundColor = UIColor(named: "YP White")
+                emojiCell.layer.borderWidth = 0
+
+                selectedEmojiCell = nil
+                selectedEmoji = nil
+            }
         } else if collectionView == colorCollectionView {
             let deselectedCell = collectionView.cellForItem(at: indexPath) as? ColorCell
-            deselectedCell?.unhighlightColor()
+            deselectedCell?.layer.borderWidth = 0
         }
+    }
+}
+
+extension CreateHabitViewController: TrackerRecordStoreDelegate {
+    func store(
+        _ store: TrackerRecordStore,
+        didUpdate update: TrackerRecordStoreUpdate
+    ) {
+        completedTrackers = trackerRecordStore.trackerRecords
     }
 }

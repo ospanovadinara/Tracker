@@ -5,10 +5,12 @@
 //  Created by Dinara on 04.03.2024.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 final class OnboardingViewController: UIViewController {
+    
+    private let analyticsService = AnalyticsService()
 
     // MARK: - UI
     private lazy var backgroundView: UIImageView = {
@@ -22,7 +24,7 @@ final class OnboardingViewController: UIViewController {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
-        label.textColor = UIColor.black
+        label.textColor = .black
         return label
     }()
 

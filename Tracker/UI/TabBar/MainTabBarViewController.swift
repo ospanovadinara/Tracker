@@ -9,6 +9,11 @@ import UIKit
 
 final class MainTabBarViewController: UITabBarController {
 
+    // MARK: - Localized Strings
+    private let trackersTabItemTitle = NSLocalizedString("trackersTabItemTitle", comment: "Text displayed on the Trackers TabBarItem")
+    private let statisticsTabItemTitle = NSLocalizedString("statisticsTabItemTitle", comment: "Text displayed on the Statistics TabBarItem")
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabBar()
@@ -18,13 +23,13 @@ final class MainTabBarViewController: UITabBarController {
         view.backgroundColor = .systemBackground
         let tracker = UINavigationController(rootViewController: TrackersViewController())
         let statistics = UINavigationController(rootViewController: StatisticsViewController())
-        tracker.tabBarItem = tabItem(for: .tracker, title: "Трекеры")
-        statistics.tabBarItem = tabItem(for: .statistics, title: "Статистика")
+        tracker.tabBarItem = tabItem(for: .tracker, title: trackersTabItemTitle)
+        statistics.tabBarItem = tabItem(for: .statistics, title: statisticsTabItemTitle)
         setViewControllers([tracker, statistics], animated: true)
         selectedIndex = 0
 
-        tabBar.layer.borderWidth = 1
-        tabBar.layer.borderColor = UIColor.systemGray5.cgColor
+        tabBar.layer.borderWidth = 0.3
+        tabBar.layer.borderColor = UIColor(red: 0.0/255.0, green: 0.0/255.0, blue: 0.0/255.0, alpha: 0.2).cgColor
     }
 
     private func tabItem(for type: TabItem, title: String) -> UITabBarItem {

@@ -5,8 +5,8 @@
 //  Created by Dinara on 27.11.2023.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 final class TrackerHeaderView: UICollectionReusableView {
     // MARK: - Public properties
@@ -18,7 +18,7 @@ final class TrackerHeaderView: UICollectionReusableView {
         return view
     }()
 
-    private lazy var title: UILabel = {
+    lazy var title: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 19)
         label.textAlignment = .left
@@ -34,11 +34,6 @@ final class TrackerHeaderView: UICollectionReusableView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    // MARK: - Public Method
-    public func configureCell(with model: TrackerCategory) {
-        title.text = model.title
     }
 }
 

@@ -5,8 +5,8 @@
 //  Created by Dinara on 08.12.2023.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 protocol ScheduleCellDelegate: AnyObject {
     func switchButtonDidTap(to isSelected: Bool, of weekDay: WeekDay)
@@ -25,7 +25,7 @@ final class ScheduleCell: UITableViewCell {
     // MARK: - UI
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor.black
+        label.textColor = UIColor(named: "YP Black")
         label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         return label
     }()

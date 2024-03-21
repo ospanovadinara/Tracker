@@ -5,8 +5,8 @@
 //  Created by Dinara on 08.12.2023.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 // MARK: - Protocol
 protocol ScheduleViewControllerDelegate: AnyObject {
@@ -19,7 +19,7 @@ final class ScheduleViewController: UIViewController {
     weak var delegate: ScheduleViewControllerDelegate?
 
     // MARK: - Private properties
-    private var selectedWeekDays: Set<WeekDay> = []
+    var selectedWeekDays: Set<WeekDay> = []
 
     // MARK: - UI
     private lazy var navBarLabel: UILabel = {
@@ -46,7 +46,7 @@ final class ScheduleViewController: UIViewController {
     private lazy var doneButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Готово", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(named: "YP White"), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16,
                                                     weight: .medium)
         button.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
@@ -64,7 +64,7 @@ final class ScheduleViewController: UIViewController {
 
     // MARK: - Setup Views
     private func setupViews() {
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor(named: "YP White")
 
         [navBarLabel,
          tableView,
@@ -140,6 +140,7 @@ extension ScheduleViewController: UITableViewDataSource {
             isLastCell: indexPath.row == 6,
             isSelected: selectedWeekDays.contains(weekDay)
         )
+        cell.selectionStyle = .none
         cell.delegate = self
         return cell
     }

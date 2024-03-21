@@ -5,8 +5,8 @@
 //  Created by Dinara on 23.02.2024.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 struct TrackerCategoryStoreUpdate {
     struct Move: Hashable {
@@ -74,6 +74,42 @@ final class TrackerCategoryStore: NSObject {
         return trackerCategories
     }
 
+    func category(_ categoryTitle: String) -> TrackerCategoryCoreData? {
+        return fetchedResultsController.fetchedObjects?.first {
+            $0.title == categoryTitle
+        }
+    }
+
+    func updateCategoryTitle(_ newCategoryTitle: String, _ categoryToEdit: TrackerCategory) throws {
+        let category = fetchedResultsController.fetchedObjects?.first {
+            $0.title == categoryToEdit.title
+        }
+        category?.title = newCategoryTitle
+        try context.save()
+    }
+
+    func category(forTracker tracker: Tracker) -> TrackerCategory? {
+        let request = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCategoryCoreData")
+        request.returnsObjectsAsFaults = false
+        request.predicate = NSPredicate(format: "ANY trackers.id == %@", tracker.id.uuidString)
+        guard let trackerCategoriesCoreData = try? context.fetch(request) else { return nil }
+        guard let categories = try? trackerCategoriesCoreData.map({ try self.trackerCategory(from: $0)})
+        else { return nil }
+        return categories.first
+    }
+
+    func deleteCategory(
+        _ categoryToDelete: TrackerCategory)
+    throws {
+        let category = fetchedResultsController.fetchedObjects?.first {
+            $0.title == categoryToDelete.title
+        }
+        if let category = category {
+            context.delete(category)
+            try context.save()
+        }
+    }
+
     func trackerCategory(from trackerCategoryCoreData: TrackerCategoryCoreData) throws -> TrackerCategory {
         guard let category = trackerCategoryCoreData.title else {
             throw DataError.decodingError
@@ -89,13 +125,15 @@ final class TrackerCategoryStore: NSObject {
                 let color = trackerCoreDataColor,
                 let emoji = trackerCoreData.emoji
             else { return nil }
+            let pinned = trackerCoreData.isPinned
 
             return Tracker(
                 id: id,
                 title: title,
                 color: color,
                 emoji: emoji,
-                schedule: trackerCoreData.schedule?.compactMap { WeekDay(rawValue: $0) }
+                schedule: trackerCoreData.schedule?.compactMap { WeekDay(rawValue: $0) },
+                isPinned: pinned
             )
         } ?? []
 
@@ -150,7 +188,7 @@ final class TrackerCategoryStore: NSObject {
         } else {
             let request = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCategoryCoreData")
             request.returnsObjectsAsFaults = false
-            request.predicate = NSPredicate(format: "ANY trackers.title CONTAINS[cd] $@", trackerTitle)
+            request.predicate = NSPredicate(format: "ANY trackers.title CONTAINS[cd] %@", trackerTitle)
 
             guard let trackerCategoryCoreData = try? context.fetch(request)
             else { return [] }

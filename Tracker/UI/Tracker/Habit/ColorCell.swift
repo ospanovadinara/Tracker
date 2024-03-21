@@ -5,8 +5,8 @@
 //  Created by Dinara on 19.01.2024.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 final class ColorCell: UICollectionViewCell {
     // MARK: - Public properties
@@ -41,18 +41,5 @@ final class ColorCell: UICollectionViewCell {
             make.centerY.equalToSuperview()
             make.size.equalTo(40)
         }
-    }
-}
-
-extension ColorCell {
-
-    func highlightColor() {
-        layer.borderWidth = 3.0
-        layer.borderColor = colorView.backgroundColor?.withAlphaComponent(0.3).cgColor
-        layer.cornerRadius = 8
-    }
-
-    func unhighlightColor() {
-        layer.borderWidth = 0.0
     }
 }

@@ -5,12 +5,12 @@
 //  Created by Dinara on 26.11.2023.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 // MARK: - TrackersCellDelegate
 protocol TrackersCellDelgate: AnyObject {
-    func trackerCompleted(id: UUID, at indexPath: IndexPath)
+    func trackerCompleted(id: UUID)
 }
 
 final class TrackersCell: UICollectionViewCell {
@@ -36,7 +36,7 @@ final class TrackersCell: UICollectionViewCell {
 
     private lazy var emojiBackground: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "YP White")
         view.translatesAutoresizingMaskIntoConstraints = false
         view.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
         view.layer.cornerRadius = view.frame.width / 2
@@ -55,7 +55,7 @@ final class TrackersCell: UICollectionViewCell {
     private lazy var trackerLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.textColor = UIColor.white
+        label.textColor = .white
         label.textAlignment = .left
         return label
     }()
@@ -67,21 +67,30 @@ final class TrackersCell: UICollectionViewCell {
 
     private lazy var roundedButton: UIButton = {
         let button = UIButton(type: .custom)
+        button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.tintColor = UIColor(named: "YP White")
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 16
         button.addTarget(self,
                          action: #selector(roundedButtonDidTap),
                          for: .touchUpInside)
-        button.setTitle("+", for: .normal)
         return button
     }()
 
     private lazy var trackersDaysCounter: UILabel = {
         let label = UILabel()
-        label.textColor = .black
+        label.textColor = UIColor(named: "YP Black")
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.text = "0 день"
         return label
+    }()
+
+    private lazy var pinImageView: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: "pin_square")
+        image.isHidden = false
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
     }()
 
     // MARK: - Lifecycle
@@ -97,27 +106,27 @@ final class TrackersCell: UICollectionViewCell {
 
     // MARK: - Public Method
     public func configureCell(
-        with tracker: Tracker,
+        _ id: UUID,
+        title: String,
+        color: UIColor,
+        emoji: String,
         isCompleted: Bool,
         isEnabled: Bool,
         completedDays:Int,
-        indexPath: IndexPath
+        isPinned: Bool
     ) {
-        self.trackerId = tracker.id
-        self.isCompletedToday = isCompleted
-        self.indexPath = indexPath
+        trackerId = id
+        trackerLabel.text = title
+        trackerContainer.backgroundColor = color
+        roundedButton.backgroundColor = color
+        emojiLabel.text = emoji
+        pinImageView.isHidden = !isPinned
+        isCompletedToday = isCompleted
 
-        emojiLabel.text = tracker.emoji
-        trackerLabel.text = tracker.title
-        trackerContainer.backgroundColor = tracker.color
-        roundedButton.backgroundColor = tracker.color
+        let completedDaysText = convertCompletedDays(completedDays)
+        trackersDaysCounter.text = completedDaysText
 
-        let wordDays = convertCompletedDays(completedDays)
-        trackersDaysCounter.text = wordDays
-
-        let roundedButtonTitle = isCompleted ? "✓" : "+"
-
-        roundedButton.setTitle(roundedButtonTitle, for: .normal)
+        roundedButton.setImage(isCompletedToday ? UIImage(systemName: "checkmark")! : UIImage(systemName: "plus")!, for: .normal)
 
         if isCompletedToday == true  {
             roundedButton.layer.opacity = 0.2
@@ -128,20 +137,8 @@ final class TrackersCell: UICollectionViewCell {
     }
 
     private func convertCompletedDays(_ completedDays: Int) -> String {
-        let lasyNumber = completedDays % 10
-        let lastTwoNumbers = completedDays % 100
-        if lastTwoNumbers >= 11 && lastTwoNumbers <= 19 {
-            return "\(completedDays) дней"
-        }
-
-        switch lasyNumber {
-        case 1:
-            return "\(completedDays) день"
-        case 2, 3, 4:
-            return "\(completedDays) дня"
-        default:
-            return "\(completedDays) дней"
-        }
+        let formatString = NSLocalizedString("numberValue", comment: "Completed days of Tracker")
+        return String.localizedStringWithFormat(formatString, completedDays)
     }
 }
 
@@ -151,7 +148,8 @@ private extension TrackersCell {
 
         [trackerContainer,
          roundedButton,
-         trackersDaysCounter
+         trackersDaysCounter,
+         pinImageView
         ].forEach {
             contentView.addSubview($0)
         }
@@ -205,14 +203,21 @@ private extension TrackersCell {
             make.height.equalTo(34)
             make.width.equalTo(34)
         }
+
+        pinImageView.snp.makeConstraints { make in
+            make.height.equalTo(12)
+            make.width.equalTo(8)
+            make.top.equalTo(trackerContainer.snp.top).offset(18)
+            make.trailing.equalTo(trackerContainer.snp.trailing).offset(-12)
+        }
     }
 
     // MARK: - Actions
     @objc func roundedButtonDidTap() {
-        guard let trackerId = trackerId, let indexPath = indexPath else {
+        guard let trackerId = trackerId else {
             assertionFailure("No trackerId")
             return
         }
-        delegate?.trackerCompleted(id: trackerId, at: indexPath)
+        delegate?.trackerCompleted(id: trackerId)
     }
 }

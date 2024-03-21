@@ -5,8 +5,8 @@
 //  Created by Dinara on 02.12.2023.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 final class ChooseTrackerViewController: UIViewController {
     weak var trackersViewController: TrackersViewController?
@@ -23,7 +23,7 @@ final class ChooseTrackerViewController: UIViewController {
     private lazy var trackerButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Привычка", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(named: "YP White"), for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.backgroundColor = UIColor(named: "YP Black")
         button.addTarget(self, action: #selector(trackerButtonTapped), for: .touchUpInside)
@@ -34,7 +34,7 @@ final class ChooseTrackerViewController: UIViewController {
     private lazy var irregularEventButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Нерегулярное событие", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(named: "YP White"), for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.backgroundColor = UIColor(named: "YP Black")
         button.addTarget(self, action: #selector(irregularEventButtonTapped), for: .touchUpInside)
@@ -51,7 +51,7 @@ final class ChooseTrackerViewController: UIViewController {
 
     // MARK: - Setup Views
     private func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "YP White")
         [navBarLabel,
          trackerButton,
          irregularEventButton

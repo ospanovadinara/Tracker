@@ -5,8 +5,8 @@
 //  Created by Dinara on 07.12.2023.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 final class CreateHabitCell: UITableViewCell {
     // MARK: - Public properties
@@ -15,7 +15,7 @@ final class CreateHabitCell: UITableViewCell {
     // MARK: - UI
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor.black
+        label.textColor = UIColor(named: "YP Black")
         label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         return label
     }()

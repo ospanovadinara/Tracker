@@ -5,8 +5,8 @@
 //  Created by Dinara on 10.01.2024.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 final class TrackerNotFoundedView: UIView {
     // MARK: - UI
@@ -19,7 +19,7 @@ final class TrackerNotFoundedView: UIView {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = UIColor.black
+        label.textColor = UIColor(named: "YP Black")
         label.text = "Ничего не найдено"
         label.textAlignment = .center
         return label

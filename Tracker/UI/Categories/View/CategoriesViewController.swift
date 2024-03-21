@@ -5,8 +5,8 @@
 //  Created by Dinara on 04.03.2024.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 protocol CategoriesViewControllerDelegate: AnyObject {
     func categoryConfirmed(_ category: TrackerCategory)
@@ -39,11 +39,11 @@ final class CategoriesViewController: UIViewController {
             forCellReuseIdentifier: CategoryCell.cellID
         )
         tableView.backgroundColor = .clear
-        tableView.isScrollEnabled = false
+        tableView.layer.cornerRadius = 16
+        tableView.separatorStyle = .none
         tableView.allowsMultipleSelection = false
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.separatorStyle = .none
         return tableView
     }()
 
@@ -55,7 +55,7 @@ final class CategoriesViewController: UIViewController {
     private lazy var addCategoryButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Добавить категорию", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(named: "YP White"), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16,
                                                     weight: .medium)
         button.addTarget(self, action: #selector(addCategoryButtonTapped), for: .touchUpInside)
@@ -77,7 +77,7 @@ private extension CategoriesViewController {
     // MARK: - Setup Views
     func setupViews() {
         navigationItem.title = "Категория"
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor(named: "YP White")
 
         [tableView,
          categoryNotFoundedView,
@@ -128,6 +128,49 @@ private extension CategoriesViewController {
         tableView.isHidden = viewModel.isTableViewHidden
         categoryNotFoundedView.isHidden = !viewModel.isTableViewHidden
     }
+
+    func showAlert(categoryToDelete: TrackerCategory) {
+        let alert = UIAlertController(
+            title: nil,
+            message: "Эта категория точно не нужна?",
+            preferredStyle: .actionSheet
+        )
+
+        let deleteAction = UIAlertAction(
+            title: "Удалить",
+            style: .destructive,
+            handler: { [weak self] _ in
+                self?.viewModel.deleteCategory(categoryToDelete)
+            })
+
+        alert.addAction(deleteAction)
+
+        let cancelAction = UIAlertAction(
+            title: "Отменить",
+            style: .cancel) { _ in
+
+            }
+
+        alert.addAction(cancelAction)
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    func showContextMenu(_ indexPath: IndexPath) -> UIMenu {
+        let category = viewModel.categories[indexPath.row]
+
+        let editAction = UIAction(title: "Редактировать", image: nil) { [weak self] action in
+            let editCategoryViewController = EditCategoryViewController()
+            let navigationController = UINavigationController(rootViewController: editCategoryViewController)
+            editCategoryViewController.categoryToEdit = category
+            self?.present(navigationController, animated: true)
+        }
+
+        let deleteAction = UIAction(title: "Удалить") { [weak self] action in
+            self?.showAlert(categoryToDelete: category)
+        }
+
+        return UIMenu(children: [editAction, deleteAction])
+    }
 }
 
 extension CategoriesViewController: AddCategoryViewControllerDelegate {
@@ -158,29 +201,37 @@ extension CategoriesViewController: UITableViewDataSource {
             fatalError("Could not cast to CategoryCell")
         }
         let category = viewModel.categories[indexPath.row].title
-
-        cell.contentView.layer.maskedCorners = []
-        cell.contentView.layer.cornerRadius = 0
+        cell.configureCell(
+            with: category
+        )
 
         if indexPath.row == viewModel.categories.count - 1 {
-            cell.configureCell(
-                with: category
-            )
-            cell.setRoundedCornersForContentView(top: false,
-                                                 bottom: true)
+            cell.contentView.clipsToBounds = true
+            cell.contentView.layer.cornerRadius = 16
+            cell.contentView.layer.maskedCorners = [
+                .layerMaxXMaxYCorner,
+                .layerMinXMaxYCorner
+            ]
         } else if indexPath.row == 0 {
-            cell.configureCell(
-                with: category
-            )
-            cell.setRoundedCornersForContentView(top: true,
-                                                 bottom: false)
+            cell.contentView.clipsToBounds = true
+            cell.contentView.layer.cornerRadius = 16
+            cell.contentView.layer.maskedCorners = [
+                .layerMaxXMinYCorner,
+                .layerMinXMinYCorner
+            ]
         } else {
-            cell.configureCell(
-                with: category
-            )
-            cell.contentView.layer.maskedCorners = []
             cell.contentView.layer.cornerRadius = 0
         }
+
+        if viewModel.categories.count == 1 {
+            cell.contentView.layer.maskedCorners = [
+                .layerMaxXMinYCorner,
+                .layerMinXMinYCorner,
+                .layerMaxXMaxYCorner,
+                .layerMinXMaxYCorner
+            ]
+        }
+
         cell.selectionStyle = .none
         return cell
     }
@@ -217,6 +268,16 @@ extension CategoriesViewController: UITableViewDelegate {
             let separatorView = UIView(frame: CGRect(x: separatorX, y: separatorY, width: separatorWidth, height: separatorHeight))
             separatorView.backgroundColor = UIColor(named: "YP Dark Gray")
             cell.addSubview(separatorView)
+        }
+    }
+
+    func tableView(
+        _ tableView: UITableView,
+        contextMenuConfigurationForRowAt indexPath: IndexPath,
+        point: CGPoint
+    ) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { action in
+            return self.showContextMenu(indexPath)
         }
     }
 }
