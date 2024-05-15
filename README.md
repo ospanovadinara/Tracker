@@ -16,3 +16,16 @@ Tracker - приложение для формирования и отслежи
 - У приложения есть статистика, которая отражает количество завершенных привычек пользователя.
 - В приложении реализована локализация, темная тема, экран Онбординга.
 
+# Стек технологий 
+
+- Swift
+- Архитектура: MVC,MVVM
+- Вёрстка кодом
+- UIKit, UITableView, UICollectionView, UITabBarController, UINavigationController, UIScrollView
+- CocoaPods
+- Core Data
+- Yandex Metrica
+- Локализация
+- Темная тема
+- XCTest, SnapshotTesting
+
